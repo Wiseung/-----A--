@@ -1,0 +1,3140 @@
+{
+  "candidates": [
+    {
+      "active_core_count": 4,
+      "actual_group_count": 8,
+      "added_copy_bytes": 68136,
+      "cache_hit_rate": 0.10893230736498706,
+      "candidate_id": "case_019_n4_partp2_schedp2_7b5c8f3a9961",
+      "case": "case_019",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 0.10754712531343102,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "199ccf5f40c65b63ef88efcf05a0ccbf6b9368963d7a62cabd240d7b98847429",
+      "m_cycles_by_core": {
+        "0": 12508,
+        "1": 9084,
+        "2": 19200,
+        "3": 7644
+      },
+      "ncores": 4,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 26947,
+      "partition_added_copy_bytes": 68136,
+      "partition_problem": 2,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 43560,
+        "estimated_new_copy_bytes": 255120,
+        "estimated_partition_added_copy_bytes": 68136,
+        "estimated_partition_added_copy_bytes_recomputed": 68136,
+        "estimated_read_copy_bytes": 225608,
+        "estimated_repeated_input_bytes": 4608,
+        "estimated_write_copy_bytes": 29512,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 24584,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 12230.0,
+            "group_id": 2,
+            "group_start": 70.0,
+            "rank": 34484.600000000006
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 21350.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 21350.0,
+                  "PIPE_MTE2": 742.0,
+                  "PIPE_V": 20826.0
+                },
+                "score": [
+                  21350.0,
+                  18438.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 9190.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 9190.0,
+                  "PIPE_MTE2": 318.0,
+                  "PIPE_V": 8666.0
+                },
+                "score": [
+                  12230.0,
+                  18438.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 9190.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 9190.0,
+                  "PIPE_MTE2": 318.0,
+                  "PIPE_V": 8666.0
+                },
+                "score": [
+                  12230.0,
+                  18438.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 9190.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 9190.0,
+                  "PIPE_MTE2": 318.0,
+                  "PIPE_V": 8666.0
+                },
+                "score": [
+                  12230.0,
+                  18438.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 18438,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 9190.0,
+            "group_id": 3,
+            "group_start": 70.0,
+            "rank": 32424.333333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 23738.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 23702.0,
+                  "PIPE_MTE2": 1248.0,
+                  "PIPE_V": 23738.0
+                },
+                "score": [
+                  23738.0,
+                  49152.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 20698.0,
+                "group_start": 9190.0,
+                "pipe_ends": {
+                  "PIPE_M": 20662.0,
+                  "PIPE_MTE2": 1142.0,
+                  "PIPE_V": 20698.0
+                },
+                "score": [
+                  20698.0,
+                  49152.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 11611.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 11575.0,
+                  "PIPE_MTE2": 824.0,
+                  "PIPE_V": 11611.0
+                },
+                "score": [
+                  12230.0,
+                  49152.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 11611.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 11575.0,
+                  "PIPE_MTE2": 824.0,
+                  "PIPE_V": 11611.0
+                },
+                "score": [
+                  12230.0,
+                  49152.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 49152,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 11611.0,
+            "group_id": 5,
+            "group_start": 103.0,
+            "rank": 29911.933333333334
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 12288,
+                "delta_read_bytes": 30726,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 6150,
+                "group_finish": 22694.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 22658.0,
+                  "PIPE_MTE2": 9760.0,
+                  "PIPE_MTE3": 21226.0,
+                  "PIPE_V": 22694.0
+                },
+                "score": [
+                  22694.0,
+                  36876.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 32774,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8198,
+                "group_finish": 19654.0,
+                "group_start": 9190.0,
+                "pipe_ends": {
+                  "PIPE_M": 19618.0,
+                  "PIPE_MTE2": 12800.0,
+                  "PIPE_MTE3": 18186.0,
+                  "PIPE_V": 19654.0
+                },
+                "score": [
+                  19654.0,
+                  40972.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 38918,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 22039.0,
+                "group_start": 11575.0,
+                "pipe_ends": {
+                  "PIPE_M": 22003.0,
+                  "PIPE_MTE2": 12905.0,
+                  "PIPE_MTE3": 20571.0,
+                  "PIPE_V": 22039.0
+                },
+                "score": [
+                  22039.0,
+                  53260.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 38918,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 14243.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 14207.0,
+                  "PIPE_MTE2": 12905.0,
+                  "PIPE_MTE3": 13029.0,
+                  "PIPE_V": 14243.0
+                },
+                "score": [
+                  14243.0,
+                  53260.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 28672,
+            "delta_read_bytes": 38918,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 14342,
+            "group_finish": 14243.0,
+            "group_id": 4,
+            "group_start": 70.0,
+            "rank": 25743.533333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 19826.0,
+                "group_start": 11706.0,
+                "pipe_ends": {
+                  "PIPE_M": 19802.0,
+                  "PIPE_MTE2": 970.0,
+                  "PIPE_MTE3": 13995.0,
+                  "PIPE_V": 19826.0
+                },
+                "score": [
+                  19826.0,
+                  32514.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 16786.0,
+                "group_start": 8666.0,
+                "pipe_ends": {
+                  "PIPE_M": 16762.0,
+                  "PIPE_MTE2": 864.0,
+                  "PIPE_MTE3": 10955.0,
+                  "PIPE_V": 16786.0
+                },
+                "score": [
+                  16786.0,
+                  32514.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 19731.0,
+                "group_start": 11575.0,
+                "pipe_ends": {
+                  "PIPE_M": 19707.0,
+                  "PIPE_MTE2": 1370.0,
+                  "PIPE_MTE3": 13900.0,
+                  "PIPE_V": 19731.0
+                },
+                "score": [
+                  19731.0,
+                  32514.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 22363.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 22339.0,
+                  "PIPE_MTE2": 13451.0,
+                  "PIPE_MTE3": 16532.0,
+                  "PIPE_V": 22363.0
+                },
+                "score": [
+                  22363.0,
+                  32514.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 32512,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 2,
+            "group_finish": 16786.0,
+            "group_id": 0,
+            "group_start": 8666.0,
+            "rank": 23488.533333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 25921.0,
+                "group_start": 15003.0,
+                "pipe_ends": {
+                  "PIPE_M": 24711.0,
+                  "PIPE_MTE2": 15003.0,
+                  "PIPE_MTE3": 12265.0,
+                  "PIPE_V": 25921.0
+                },
+                "score": [
+                  25921.0,
+                  34304.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 27680.0,
+                "group_start": 16762.0,
+                "pipe_ends": {
+                  "PIPE_M": 26470.0,
+                  "PIPE_MTE2": 15003.0,
+                  "PIPE_MTE3": 10955.0,
+                  "PIPE_V": 27680.0
+                },
+                "score": [
+                  27680.0,
+                  34304.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 3584,
+                "delta_repeated_input_bytes": 4608,
+                "delta_write_bytes": 1536,
+                "group_finish": 22529.0,
+                "group_start": 11611.0,
+                "pipe_ends": {
+                  "PIPE_M": 21319.0,
+                  "PIPE_MTE2": 14795.0,
+                  "PIPE_V": 22529.0
+                },
+                "score": [
+                  22529.0,
+                  5120.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 24576,
+                "delta_read_bytes": 18944,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 12288,
+                "group_finish": 25125.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 23915.0,
+                  "PIPE_MTE2": 13225.0,
+                  "PIPE_MTE3": 13029.0,
+                  "PIPE_V": 25125.0
+                },
+                "score": [
+                  25125.0,
+                  31232.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 3072,
+            "delta_read_bytes": 3584,
+            "delta_repeated_input_bytes": 4608,
+            "delta_write_bytes": 1536,
+            "group_finish": 22529.0,
+            "group_id": 6,
+            "group_start": 11611.0,
+            "rank": 18502.333333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 21434.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 20966.0,
+                  "PIPE_MTE2": 17312.0,
+                  "PIPE_MTE3": 21324.0,
+                  "PIPE_V": 21434.0
+                },
+                "score": [
+                  22529.0,
+                  37640.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 5376,
+                "delta_repeated_input_bytes": 24576,
+                "delta_write_bytes": 8,
+                "group_finish": 25966.0,
+                "group_start": 16762.0,
+                "pipe_ends": {
+                  "PIPE_M": 25498.0,
+                  "PIPE_MTE2": 955.0,
+                  "PIPE_MTE3": 25856.0,
+                  "PIPE_V": 25966.0
+                },
+                "score": [
+                  25966.0,
+                  5384.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 31301.0,
+                "group_start": 21319.0,
+                "pipe_ends": {
+                  "PIPE_M": 30833.0,
+                  "PIPE_MTE2": 17312.0,
+                  "PIPE_MTE3": 31191.0,
+                  "PIPE_V": 31301.0
+                },
+                "score": [
+                  31301.0,
+                  37640.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 23411.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 22943.0,
+                  "PIPE_MTE2": 17312.0,
+                  "PIPE_MTE3": 23301.0,
+                  "PIPE_V": 23411.0
+                },
+                "score": [
+                  23411.0,
+                  37640.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 7680,
+            "delta_read_bytes": 33792,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 3848,
+            "group_finish": 21434.0,
+            "group_id": 1,
+            "group_start": 12230.0,
+            "rank": 16920.533333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 4132,
+                "delta_read_bytes": 24626,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9782,
+                "group_finish": 29538.0,
+                "group_start": 20966.0,
+                "pipe_ends": {
+                  "PIPE_M": 24266.0,
+                  "PIPE_MTE2": 23107.0,
+                  "PIPE_MTE3": 29539.0,
+                  "PIPE_V": 29538.0
+                },
+                "score": [
+                  29539.0,
+                  34408.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 4160,
+                "delta_read_bytes": 24640,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9796,
+                "group_finish": 24890.0,
+                "group_start": 16762.0,
+                "pipe_ends": {
+                  "PIPE_M": 20062.0,
+                  "PIPE_MTE2": 23114.0,
+                  "PIPE_MTE3": 24891.0,
+                  "PIPE_V": 24890.0
+                },
+                "score": [
+                  24891.0,
+                  34436.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 64,
+                "delta_read_bytes": 22592,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 7748,
+                "group_finish": 30633.0,
+                "group_start": 21319.0,
+                "pipe_ends": {
+                  "PIPE_M": 24619.0,
+                  "PIPE_MTE2": 21943.0,
+                  "PIPE_MTE3": 30634.0,
+                  "PIPE_V": 30633.0
+                },
+                "score": [
+                  30634.0,
+                  30340.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4136,
+                "delta_read_bytes": 24628,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9784,
+                "group_finish": 24339.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 17507.0,
+                  "PIPE_MTE2": 23108.0,
+                  "PIPE_MTE3": 24340.0,
+                  "PIPE_V": 24339.0
+                },
+                "score": [
+                  24340.0,
+                  34412.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 4136,
+            "delta_read_bytes": 24628,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 9784,
+            "group_finish": 24339.0,
+            "group_id": 7,
+            "group_start": 14207.0,
+            "rank": 8104
+          }
+        ],
+        "original_graph_copy_bytes": 186984
+      },
+      "plan_hash": "ecad39df7f8b09b3c74d79c501f7e2a1285ba0a684a7c6d47040894179b02cdd",
+      "plan_path": "results_round2/r01_partition_schedule/7b5c8f3a9961/schedules/case_019_n4_partp2_schedp2_7b5c8f3a9961.json",
+      "requested_group_count": 8,
+      "run_id": "7b5c8f3a9961",
+      "schedule_problem": 2,
+      "solver_code_hash": "25a77afafc6deb51f8e2aea4d36369ca2dfe22cbab664c9383f68e99e510c184",
+      "spill_added_copy_bytes": 0,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 11520,
+        "1": 10484,
+        "2": 3478,
+        "3": 14794
+      }
+    },
+    {
+      "active_core_count": 4,
+      "actual_group_count": 8,
+      "added_copy_bytes": 68136,
+      "cache_hit_rate": 0.10893230736498706,
+      "candidate_id": "case_019_n4_partp2_schedp3_7b5c8f3a9961",
+      "case": "case_019",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 0.10110058262944221,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "199ccf5f40c65b63ef88efcf05a0ccbf6b9368963d7a62cabd240d7b98847429",
+      "m_cycles_by_core": {
+        "0": 12508,
+        "1": 9084,
+        "2": 19200,
+        "3": 7644
+      },
+      "ncores": 4,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 26947,
+      "partition_added_copy_bytes": 68136,
+      "partition_problem": 2,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 43560,
+        "estimated_new_copy_bytes": 255120,
+        "estimated_partition_added_copy_bytes": 68136,
+        "estimated_partition_added_copy_bytes_recomputed": 68136,
+        "estimated_read_copy_bytes": 225608,
+        "estimated_repeated_input_bytes": 4608,
+        "estimated_write_copy_bytes": 29512,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 24584,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 12230.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 12230.0,
+                  "PIPE_MTE2": 424.0,
+                  "PIPE_V": 11706.0
+                },
+                "score": [
+                  12230.0,
+                  24584.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 24584,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 12230.0,
+            "group_id": 2,
+            "group_start": 70.0,
+            "rank": 34484.600000000006
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 21350.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 21350.0,
+                  "PIPE_MTE2": 742.0,
+                  "PIPE_V": 20826.0
+                },
+                "score": [
+                  21350.0,
+                  18438.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 9190.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 9190.0,
+                  "PIPE_MTE2": 318.0,
+                  "PIPE_V": 8666.0
+                },
+                "score": [
+                  12230.0,
+                  18438.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 9190.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 9190.0,
+                  "PIPE_MTE2": 318.0,
+                  "PIPE_V": 8666.0
+                },
+                "score": [
+                  12230.0,
+                  18438.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 18438,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 9190.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 9190.0,
+                  "PIPE_MTE2": 318.0,
+                  "PIPE_V": 8666.0
+                },
+                "score": [
+                  12230.0,
+                  18438.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 18438,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 9190.0,
+            "group_id": 3,
+            "group_start": 70.0,
+            "rank": 32424.333333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 23738.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 23702.0,
+                  "PIPE_MTE2": 1248.0,
+                  "PIPE_V": 23738.0
+                },
+                "score": [
+                  23738.0,
+                  49152.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 20698.0,
+                "group_start": 9190.0,
+                "pipe_ends": {
+                  "PIPE_M": 20662.0,
+                  "PIPE_MTE2": 1142.0,
+                  "PIPE_V": 20698.0
+                },
+                "score": [
+                  20698.0,
+                  49152.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 11611.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 11575.0,
+                  "PIPE_MTE2": 824.0,
+                  "PIPE_V": 11611.0
+                },
+                "score": [
+                  12230.0,
+                  49152.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 49152,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 11611.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 11575.0,
+                  "PIPE_MTE2": 824.0,
+                  "PIPE_V": 11611.0
+                },
+                "score": [
+                  12230.0,
+                  49152.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 49152,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 11611.0,
+            "group_id": 5,
+            "group_start": 103.0,
+            "rank": 29911.933333333334
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 12288,
+                "delta_read_bytes": 30726,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 6150,
+                "group_finish": 22694.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 22658.0,
+                  "PIPE_MTE2": 9760.0,
+                  "PIPE_MTE3": 21226.0,
+                  "PIPE_V": 22694.0
+                },
+                "score": [
+                  22694.0,
+                  36876.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 32774,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8198,
+                "group_finish": 19654.0,
+                "group_start": 9190.0,
+                "pipe_ends": {
+                  "PIPE_M": 19618.0,
+                  "PIPE_MTE2": 12800.0,
+                  "PIPE_MTE3": 18186.0,
+                  "PIPE_V": 19654.0
+                },
+                "score": [
+                  19654.0,
+                  40972.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 38918,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 22039.0,
+                "group_start": 11575.0,
+                "pipe_ends": {
+                  "PIPE_M": 22003.0,
+                  "PIPE_MTE2": 12905.0,
+                  "PIPE_MTE3": 20571.0,
+                  "PIPE_V": 22039.0
+                },
+                "score": [
+                  22039.0,
+                  53260.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 38918,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 14243.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 14207.0,
+                  "PIPE_MTE2": 12905.0,
+                  "PIPE_MTE3": 13029.0,
+                  "PIPE_V": 14243.0
+                },
+                "score": [
+                  14243.0,
+                  53260.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 28672,
+            "delta_read_bytes": 38918,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 14342,
+            "group_finish": 14243.0,
+            "group_id": 4,
+            "group_start": 70.0,
+            "rank": 25743.533333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 19826.0,
+                "group_start": 11706.0,
+                "pipe_ends": {
+                  "PIPE_M": 19802.0,
+                  "PIPE_MTE2": 970.0,
+                  "PIPE_MTE3": 13995.0,
+                  "PIPE_V": 19826.0
+                },
+                "score": [
+                  19826.0,
+                  32514.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 16786.0,
+                "group_start": 8666.0,
+                "pipe_ends": {
+                  "PIPE_M": 16762.0,
+                  "PIPE_MTE2": 864.0,
+                  "PIPE_MTE3": 10955.0,
+                  "PIPE_V": 16786.0
+                },
+                "score": [
+                  16786.0,
+                  32514.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 19731.0,
+                "group_start": 11575.0,
+                "pipe_ends": {
+                  "PIPE_M": 19707.0,
+                  "PIPE_MTE2": 1370.0,
+                  "PIPE_MTE3": 13900.0,
+                  "PIPE_V": 19731.0
+                },
+                "score": [
+                  19731.0,
+                  32514.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 22363.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 22339.0,
+                  "PIPE_MTE2": 13451.0,
+                  "PIPE_MTE3": 16532.0,
+                  "PIPE_V": 22363.0
+                },
+                "score": [
+                  22363.0,
+                  32514.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 32512,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 2,
+            "group_finish": 16786.0,
+            "group_id": 0,
+            "group_start": 8666.0,
+            "rank": 23488.533333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 25921.0,
+                "group_start": 15003.0,
+                "pipe_ends": {
+                  "PIPE_M": 24711.0,
+                  "PIPE_MTE2": 15003.0,
+                  "PIPE_MTE3": 12265.0,
+                  "PIPE_V": 25921.0
+                },
+                "score": [
+                  25921.0,
+                  34304.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 27680.0,
+                "group_start": 16762.0,
+                "pipe_ends": {
+                  "PIPE_M": 26470.0,
+                  "PIPE_MTE2": 15003.0,
+                  "PIPE_MTE3": 10955.0,
+                  "PIPE_V": 27680.0
+                },
+                "score": [
+                  27680.0,
+                  34304.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 3584,
+                "delta_repeated_input_bytes": 4608,
+                "delta_write_bytes": 1536,
+                "group_finish": 22529.0,
+                "group_start": 11611.0,
+                "pipe_ends": {
+                  "PIPE_M": 21319.0,
+                  "PIPE_MTE2": 14795.0,
+                  "PIPE_V": 22529.0
+                },
+                "score": [
+                  22529.0,
+                  5120.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 24576,
+                "delta_read_bytes": 18944,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 12288,
+                "group_finish": 25125.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 23915.0,
+                  "PIPE_MTE2": 13167.0,
+                  "PIPE_MTE3": 13029.0,
+                  "PIPE_V": 25125.0
+                },
+                "score": [
+                  25125.0,
+                  31232.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 3072,
+            "delta_read_bytes": 3584,
+            "delta_repeated_input_bytes": 4608,
+            "delta_write_bytes": 1536,
+            "group_finish": 22529.0,
+            "group_id": 6,
+            "group_start": 11611.0,
+            "rank": 18502.333333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 21434.0,
+                "group_start": 12230.0,
+                "pipe_ends": {
+                  "PIPE_M": 20966.0,
+                  "PIPE_MTE2": 17312.0,
+                  "PIPE_MTE3": 21324.0,
+                  "PIPE_V": 21434.0
+                },
+                "score": [
+                  22529.0,
+                  37640.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 5376,
+                "delta_repeated_input_bytes": 24576,
+                "delta_write_bytes": 8,
+                "group_finish": 25966.0,
+                "group_start": 16762.0,
+                "pipe_ends": {
+                  "PIPE_M": 25498.0,
+                  "PIPE_MTE2": 955.0,
+                  "PIPE_MTE3": 25856.0,
+                  "PIPE_V": 25966.0
+                },
+                "score": [
+                  25966.0,
+                  5384.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 31301.0,
+                "group_start": 21319.0,
+                "pipe_ends": {
+                  "PIPE_M": 30833.0,
+                  "PIPE_MTE2": 17312.0,
+                  "PIPE_MTE3": 31191.0,
+                  "PIPE_V": 31301.0
+                },
+                "score": [
+                  31301.0,
+                  37640.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 23411.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 22943.0,
+                  "PIPE_MTE2": 17312.0,
+                  "PIPE_MTE3": 23301.0,
+                  "PIPE_V": 23411.0
+                },
+                "score": [
+                  23411.0,
+                  37640.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 7680,
+            "delta_read_bytes": 33792,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 3848,
+            "group_finish": 21434.0,
+            "group_id": 1,
+            "group_start": 12230.0,
+            "rank": 16920.533333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 4132,
+                "delta_read_bytes": 24626,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9782,
+                "group_finish": 29538.0,
+                "group_start": 20966.0,
+                "pipe_ends": {
+                  "PIPE_M": 24266.0,
+                  "PIPE_MTE2": 23107.0,
+                  "PIPE_MTE3": 29539.0,
+                  "PIPE_V": 29538.0
+                },
+                "score": [
+                  29539.0,
+                  34408.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 4160,
+                "delta_read_bytes": 24640,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9796,
+                "group_finish": 24890.0,
+                "group_start": 16762.0,
+                "pipe_ends": {
+                  "PIPE_M": 20062.0,
+                  "PIPE_MTE2": 23114.0,
+                  "PIPE_MTE3": 24891.0,
+                  "PIPE_V": 24890.0
+                },
+                "score": [
+                  24891.0,
+                  34436.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 64,
+                "delta_read_bytes": 22592,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 7748,
+                "group_finish": 30633.0,
+                "group_start": 21319.0,
+                "pipe_ends": {
+                  "PIPE_M": 24619.0,
+                  "PIPE_MTE2": 21943.0,
+                  "PIPE_MTE3": 30634.0,
+                  "PIPE_V": 30633.0
+                },
+                "score": [
+                  30634.0,
+                  30340.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4136,
+                "delta_read_bytes": 24628,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9784,
+                "group_finish": 24339.0,
+                "group_start": 14207.0,
+                "pipe_ends": {
+                  "PIPE_M": 17507.0,
+                  "PIPE_MTE2": 23108.0,
+                  "PIPE_MTE3": 24340.0,
+                  "PIPE_V": 24339.0
+                },
+                "score": [
+                  24340.0,
+                  34412.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 4136,
+            "delta_read_bytes": 24628,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 9784,
+            "group_finish": 24339.0,
+            "group_id": 7,
+            "group_start": 14207.0,
+            "rank": 8104
+          }
+        ],
+        "original_graph_copy_bytes": 186984
+      },
+      "plan_hash": "ecad39df7f8b09b3c74d79c501f7e2a1285ba0a684a7c6d47040894179b02cdd",
+      "plan_path": "results_round2/r01_partition_schedule/7b5c8f3a9961/schedules/case_019_n4_partp2_schedp3_7b5c8f3a9961.json",
+      "requested_group_count": 8,
+      "run_id": "7b5c8f3a9961",
+      "schedule_problem": 3,
+      "solver_code_hash": "25a77afafc6deb51f8e2aea4d36369ca2dfe22cbab664c9383f68e99e510c184",
+      "spill_added_copy_bytes": 0,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 11520,
+        "1": 10484,
+        "2": 3478,
+        "3": 14794
+      }
+    },
+    {
+      "active_core_count": 2,
+      "actual_group_count": 8,
+      "added_copy_bytes": 65060,
+      "cache_hit_rate": 0.0,
+      "candidate_id": "case_019_n4_partp3_schedp2_7b5c8f3a9961",
+      "case": "case_019",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 0.10317025007680058,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "199ccf5f40c65b63ef88efcf05a0ccbf6b9368963d7a62cabd240d7b98847429",
+      "m_cycles_by_core": {
+        "0": 29484,
+        "1": 18952,
+        "2": 0,
+        "3": 0
+      },
+      "ncores": 4,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 56214,
+      "partition_added_copy_bytes": 65060,
+      "partition_problem": 3,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 40484,
+        "estimated_new_copy_bytes": 252044,
+        "estimated_partition_added_copy_bytes": 65060,
+        "estimated_partition_added_copy_bytes_recomputed": 65060,
+        "estimated_read_copy_bytes": 224070,
+        "estimated_repeated_input_bytes": 4608,
+        "estimated_write_copy_bytes": 27974,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 32512,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 2,
+            "group_finish": 8631.0,
+            "group_id": 0,
+            "group_start": 424.0,
+            "rank": 66950.4
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 5376,
+                "delta_repeated_input_bytes": 24576,
+                "delta_write_bytes": 8,
+                "group_finish": 17798.0,
+                "group_start": 8607.0,
+                "pipe_ends": {
+                  "PIPE_M": 17343.0,
+                  "PIPE_MTE2": 637.0,
+                  "PIPE_MTE3": 17701.0,
+                  "PIPE_V": 17798.0
+                },
+                "score": [
+                  17798.0,
+                  5384.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 9615.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 9160.0,
+                  "PIPE_MTE2": 9157.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 9615.0
+                },
+                "score": [
+                  9615.0,
+                  37640.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 9615.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 9160.0,
+                  "PIPE_MTE2": 9157.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 9615.0
+                },
+                "score": [
+                  9615.0,
+                  37640.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 9615.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 9160.0,
+                  "PIPE_MTE2": 9157.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 9615.0
+                },
+                "score": [
+                  9615.0,
+                  37640.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 7680,
+            "delta_read_bytes": 33792,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 3848,
+            "group_finish": 9615.0,
+            "group_id": 1,
+            "group_start": 424.0,
+            "rank": 60382.399999999994
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 128,
+                "delta_read_bytes": 22600,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 64,
+                "group_finish": 20580.0,
+                "group_start": 8607.0,
+                "pipe_ends": {
+                  "PIPE_M": 19252.0,
+                  "PIPE_MTE2": 10119.0,
+                  "PIPE_MTE3": 8644.0,
+                  "PIPE_V": 20580.0
+                },
+                "score": [
+                  20580.0,
+                  22664.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 22536,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 20199.0,
+                "group_start": 9227.0,
+                "pipe_ends": {
+                  "PIPE_M": 18871.0,
+                  "PIPE_MTE2": 9546.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 20199.0
+                },
+                "score": [
+                  20199.0,
+                  22536.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 128,
+                "delta_read_bytes": 22600,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 64,
+                "group_finish": 20580.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 19252.0,
+                  "PIPE_MTE2": 10119.0,
+                  "PIPE_V": 20580.0
+                },
+                "score": [
+                  20580.0,
+                  22664.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 128,
+                "delta_read_bytes": 22600,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 64,
+                "group_finish": 20580.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 19252.0,
+                  "PIPE_MTE2": 10119.0,
+                  "PIPE_V": 20580.0
+                },
+                "score": [
+                  20580.0,
+                  22664.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 22536,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 20199.0,
+            "group_id": 2,
+            "group_start": 9227.0,
+            "rank": 51564.26666666666
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 28678,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8192,
+                "group_finish": 31281.0,
+                "group_start": 20973.0,
+                "pipe_ends": {
+                  "PIPE_M": 31281.0,
+                  "PIPE_MTE2": 20973.0,
+                  "PIPE_MTE3": 8644.0,
+                  "PIPE_V": 30757.0
+                },
+                "score": [
+                  31281.0,
+                  36870.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 20486,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 30507.0,
+                "group_start": 20199.0,
+                "pipe_ends": {
+                  "PIPE_M": 30507.0,
+                  "PIPE_MTE2": 9899.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 29983.0
+                },
+                "score": [
+                  30507.0,
+                  20486.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 28678,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8192,
+                "group_finish": 31281.0,
+                "group_start": 20973.0,
+                "pipe_ends": {
+                  "PIPE_M": 31281.0,
+                  "PIPE_MTE2": 20973.0,
+                  "PIPE_V": 30757.0
+                },
+                "score": [
+                  31281.0,
+                  36870.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 28678,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8192,
+                "group_finish": 31281.0,
+                "group_start": 20973.0,
+                "pipe_ends": {
+                  "PIPE_M": 31281.0,
+                  "PIPE_MTE2": 20973.0,
+                  "PIPE_V": 30757.0
+                },
+                "score": [
+                  31281.0,
+                  36870.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 20486,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 30507.0,
+            "group_id": 3,
+            "group_start": 20199.0,
+            "rank": 43474.2
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 45062,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 33621.0,
+                "group_start": 8607.0,
+                "pipe_ends": {
+                  "PIPE_M": 33621.0,
+                  "PIPE_MTE2": 31077.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 33321.0
+                },
+                "score": [
+                  33621.0,
+                  59404.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 30726,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 6,
+                "group_finish": 42243.0,
+                "group_start": 30507.0,
+                "pipe_ends": {
+                  "PIPE_M": 42243.0,
+                  "PIPE_MTE2": 10423.0,
+                  "PIPE_MTE3": 39503.0,
+                  "PIPE_V": 41943.0
+                },
+                "score": [
+                  42243.0,
+                  30732.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 45062,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 33621.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 33621.0,
+                  "PIPE_MTE2": 31077.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 33321.0
+                },
+                "score": [
+                  33621.0,
+                  59404.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 45062,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 33621.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 33621.0,
+                  "PIPE_MTE2": 31077.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 33321.0
+                },
+                "score": [
+                  33621.0,
+                  59404.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 28672,
+            "delta_read_bytes": 45062,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 14342,
+            "group_finish": 33621.0,
+            "group_id": 4,
+            "group_start": 8607.0,
+            "rank": 36061.13333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 43008,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 43821.0,
+                "group_start": 33621.0,
+                "pipe_ends": {
+                  "PIPE_M": 43785.0,
+                  "PIPE_MTE2": 31798.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 43821.0
+                },
+                "score": [
+                  43821.0,
+                  43008.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 44544,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1536,
+                "group_finish": 44109.0,
+                "group_start": 30507.0,
+                "pipe_ends": {
+                  "PIPE_M": 44073.0,
+                  "PIPE_MTE2": 34173.0,
+                  "PIPE_MTE3": 30542.0,
+                  "PIPE_V": 44109.0
+                },
+                "score": [
+                  44109.0,
+                  46080.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 44544,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1536,
+                "group_finish": 44109.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 44073.0,
+                  "PIPE_MTE2": 34173.0,
+                  "PIPE_V": 44109.0
+                },
+                "score": [
+                  44109.0,
+                  46080.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 44544,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1536,
+                "group_finish": 44109.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 44073.0,
+                  "PIPE_MTE2": 34173.0,
+                  "PIPE_V": 44109.0
+                },
+                "score": [
+                  44109.0,
+                  46080.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 43008,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 43821.0,
+            "group_id": 5,
+            "group_start": 33621.0,
+            "rank": 28711.933333333334
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 2048,
+                "delta_repeated_input_bytes": 4608,
+                "delta_write_bytes": 0,
+                "group_finish": 54739.0,
+                "group_start": 43821.0,
+                "pipe_ends": {
+                  "PIPE_M": 53529.0,
+                  "PIPE_MTE2": 31833.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 54739.0
+                },
+                "score": [
+                  54739.0,
+                  2048.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 55291.0,
+                "group_start": 44373.0,
+                "pipe_ends": {
+                  "PIPE_M": 54081.0,
+                  "PIPE_MTE2": 44373.0,
+                  "PIPE_MTE3": 30542.0,
+                  "PIPE_V": 55291.0
+                },
+                "score": [
+                  55291.0,
+                  34304.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 55291.0,
+                "group_start": 44373.0,
+                "pipe_ends": {
+                  "PIPE_M": 54081.0,
+                  "PIPE_MTE2": 44373.0,
+                  "PIPE_V": 55291.0
+                },
+                "score": [
+                  55291.0,
+                  34304.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 55291.0,
+                "group_start": 44373.0,
+                "pipe_ends": {
+                  "PIPE_M": 54081.0,
+                  "PIPE_MTE2": 44373.0,
+                  "PIPE_V": 55291.0
+                },
+                "score": [
+                  55291.0,
+                  34304.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 2048,
+            "delta_repeated_input_bytes": 4608,
+            "delta_write_bytes": 0,
+            "group_finish": 54739.0,
+            "group_id": 6,
+            "group_start": 43821.0,
+            "rank": 18502.333333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 32,
+                "delta_read_bytes": 22576,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 7732,
+                "group_finish": 62843.0,
+                "group_start": 53529.0,
+                "pipe_ends": {
+                  "PIPE_M": 56829.0,
+                  "PIPE_MTE2": 32225.0,
+                  "PIPE_MTE3": 62844.0,
+                  "PIPE_V": 62843.0
+                },
+                "score": [
+                  62844.0,
+                  30308.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 4132,
+                "delta_read_bytes": 24626,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9782,
+                "group_finish": 56549.0,
+                "group_start": 29983.0,
+                "pipe_ends": {
+                  "PIPE_M": 33807.0,
+                  "PIPE_MTE2": 55317.0,
+                  "PIPE_MTE3": 56550.0,
+                  "PIPE_V": 56549.0
+                },
+                "score": [
+                  56550.0,
+                  34408.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 4164,
+                "delta_read_bytes": 24642,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9798,
+                "group_finish": 56549.0,
+                "group_start": 35.0,
+                "pipe_ends": {
+                  "PIPE_M": 3580.0,
+                  "PIPE_MTE2": 55325.0,
+                  "PIPE_MTE3": 56550.0,
+                  "PIPE_V": 56549.0
+                },
+                "score": [
+                  56550.0,
+                  34440.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4164,
+                "delta_read_bytes": 24642,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9798,
+                "group_finish": 56549.0,
+                "group_start": 35.0,
+                "pipe_ends": {
+                  "PIPE_M": 3580.0,
+                  "PIPE_MTE2": 55325.0,
+                  "PIPE_MTE3": 56550.0,
+                  "PIPE_V": 56549.0
+                },
+                "score": [
+                  56550.0,
+                  34440.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 4132,
+            "delta_read_bytes": 24626,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 9782,
+            "group_finish": 56549.0,
+            "group_id": 7,
+            "group_start": 29983.0,
+            "rank": 8104
+          }
+        ],
+        "original_graph_copy_bytes": 186984
+      },
+      "plan_hash": "02ff4941044b75794787147a84f5822e099047534802588cc3ebad2969e7c197",
+      "plan_path": "results_round2/r01_partition_schedule/7b5c8f3a9961/schedules/case_019_n4_partp3_schedp2_7b5c8f3a9961.json",
+      "requested_group_count": 8,
+      "run_id": "7b5c8f3a9961",
+      "schedule_problem": 2,
+      "solver_code_hash": "25a77afafc6deb51f8e2aea4d36369ca2dfe22cbab664c9383f68e99e510c184",
+      "spill_added_copy_bytes": 0,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 14676,
+        "1": 25600,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "active_core_count": 2,
+      "actual_group_count": 8,
+      "added_copy_bytes": 65060,
+      "cache_hit_rate": 0.0,
+      "candidate_id": "case_019_n4_partp3_schedp3_7b5c8f3a9961",
+      "case": "case_019",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 0.09868358308449388,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "199ccf5f40c65b63ef88efcf05a0ccbf6b9368963d7a62cabd240d7b98847429",
+      "m_cycles_by_core": {
+        "0": 29484,
+        "1": 18952,
+        "2": 0,
+        "3": 0
+      },
+      "ncores": 4,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 56214,
+      "partition_added_copy_bytes": 65060,
+      "partition_problem": 3,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 40484,
+        "estimated_new_copy_bytes": 252044,
+        "estimated_partition_added_copy_bytes": 65060,
+        "estimated_partition_added_copy_bytes_recomputed": 65060,
+        "estimated_read_copy_bytes": 224070,
+        "estimated_repeated_input_bytes": 4608,
+        "estimated_write_copy_bytes": 27974,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 32512,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2,
+                "group_finish": 8631.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 8607.0,
+                  "PIPE_MTE2": 546.0,
+                  "PIPE_MTE3": 2800.0,
+                  "PIPE_V": 8631.0
+                },
+                "score": [
+                  8631.0,
+                  32514.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 32512,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 2,
+            "group_finish": 8631.0,
+            "group_id": 0,
+            "group_start": 424.0,
+            "rank": 66950.4
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 5376,
+                "delta_repeated_input_bytes": 24576,
+                "delta_write_bytes": 8,
+                "group_finish": 17798.0,
+                "group_start": 8607.0,
+                "pipe_ends": {
+                  "PIPE_M": 17343.0,
+                  "PIPE_MTE2": 637.0,
+                  "PIPE_MTE3": 17701.0,
+                  "PIPE_V": 17798.0
+                },
+                "score": [
+                  17798.0,
+                  5384.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 9615.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 9160.0,
+                  "PIPE_MTE2": 9157.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 9615.0
+                },
+                "score": [
+                  9615.0,
+                  37640.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 9615.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 9160.0,
+                  "PIPE_MTE2": 9157.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 9615.0
+                },
+                "score": [
+                  9615.0,
+                  37640.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 7680,
+                "delta_read_bytes": 33792,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3848,
+                "group_finish": 9615.0,
+                "group_start": 424.0,
+                "pipe_ends": {
+                  "PIPE_M": 9160.0,
+                  "PIPE_MTE2": 9157.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 9615.0
+                },
+                "score": [
+                  9615.0,
+                  37640.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 7680,
+            "delta_read_bytes": 33792,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 3848,
+            "group_finish": 9615.0,
+            "group_id": 1,
+            "group_start": 424.0,
+            "rank": 60382.399999999994
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 128,
+                "delta_read_bytes": 22600,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 64,
+                "group_finish": 20580.0,
+                "group_start": 8607.0,
+                "pipe_ends": {
+                  "PIPE_M": 19252.0,
+                  "PIPE_MTE2": 10119.0,
+                  "PIPE_MTE3": 8644.0,
+                  "PIPE_V": 20580.0
+                },
+                "score": [
+                  20580.0,
+                  22664.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 22536,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 20199.0,
+                "group_start": 9227.0,
+                "pipe_ends": {
+                  "PIPE_M": 18871.0,
+                  "PIPE_MTE2": 9546.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 20199.0
+                },
+                "score": [
+                  20199.0,
+                  22536.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 128,
+                "delta_read_bytes": 22600,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 64,
+                "group_finish": 20580.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 19252.0,
+                  "PIPE_MTE2": 10119.0,
+                  "PIPE_V": 20580.0
+                },
+                "score": [
+                  20580.0,
+                  22664.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 128,
+                "delta_read_bytes": 22600,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 64,
+                "group_finish": 20580.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 19252.0,
+                  "PIPE_MTE2": 10119.0,
+                  "PIPE_V": 20580.0
+                },
+                "score": [
+                  20580.0,
+                  22664.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 22536,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 20199.0,
+            "group_id": 2,
+            "group_start": 9227.0,
+            "rank": 51564.26666666666
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 28678,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8192,
+                "group_finish": 31281.0,
+                "group_start": 20973.0,
+                "pipe_ends": {
+                  "PIPE_M": 31281.0,
+                  "PIPE_MTE2": 20973.0,
+                  "PIPE_MTE3": 8644.0,
+                  "PIPE_V": 30757.0
+                },
+                "score": [
+                  31281.0,
+                  36870.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 20486,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 30507.0,
+                "group_start": 20199.0,
+                "pipe_ends": {
+                  "PIPE_M": 30507.0,
+                  "PIPE_MTE2": 9899.0,
+                  "PIPE_MTE3": 9518.0,
+                  "PIPE_V": 29983.0
+                },
+                "score": [
+                  30507.0,
+                  20486.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 28678,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8192,
+                "group_finish": 31281.0,
+                "group_start": 20973.0,
+                "pipe_ends": {
+                  "PIPE_M": 31281.0,
+                  "PIPE_MTE2": 20973.0,
+                  "PIPE_V": 30757.0
+                },
+                "score": [
+                  31281.0,
+                  36870.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 16384,
+                "delta_read_bytes": 28678,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 8192,
+                "group_finish": 31281.0,
+                "group_start": 20973.0,
+                "pipe_ends": {
+                  "PIPE_M": 31281.0,
+                  "PIPE_MTE2": 20973.0,
+                  "PIPE_V": 30757.0
+                },
+                "score": [
+                  31281.0,
+                  36870.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 20486,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 30507.0,
+            "group_id": 3,
+            "group_start": 20199.0,
+            "rank": 43474.2
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 45062,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 33621.0,
+                "group_start": 8607.0,
+                "pipe_ends": {
+                  "PIPE_M": 33621.0,
+                  "PIPE_MTE2": 31077.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 33321.0
+                },
+                "score": [
+                  33621.0,
+                  59404.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 30726,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 6,
+                "group_finish": 42243.0,
+                "group_start": 30507.0,
+                "pipe_ends": {
+                  "PIPE_M": 42243.0,
+                  "PIPE_MTE2": 10423.0,
+                  "PIPE_MTE3": 39503.0,
+                  "PIPE_V": 41943.0
+                },
+                "score": [
+                  42243.0,
+                  30732.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 45062,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 33621.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 33621.0,
+                  "PIPE_MTE2": 31077.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 33321.0
+                },
+                "score": [
+                  33621.0,
+                  59404.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 28672,
+                "delta_read_bytes": 45062,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 14342,
+                "group_finish": 33621.0,
+                "group_start": 70.0,
+                "pipe_ends": {
+                  "PIPE_M": 33621.0,
+                  "PIPE_MTE2": 31077.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 33321.0
+                },
+                "score": [
+                  33621.0,
+                  59404.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 28672,
+            "delta_read_bytes": 45062,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 14342,
+            "group_finish": 33621.0,
+            "group_id": 4,
+            "group_start": 8607.0,
+            "rank": 36061.13333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 43008,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 43821.0,
+                "group_start": 33621.0,
+                "pipe_ends": {
+                  "PIPE_M": 43785.0,
+                  "PIPE_MTE2": 31798.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 43821.0
+                },
+                "score": [
+                  43821.0,
+                  43008.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 44544,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1536,
+                "group_finish": 44109.0,
+                "group_start": 30507.0,
+                "pipe_ends": {
+                  "PIPE_M": 44073.0,
+                  "PIPE_MTE2": 34173.0,
+                  "PIPE_MTE3": 30542.0,
+                  "PIPE_V": 44109.0
+                },
+                "score": [
+                  44109.0,
+                  46080.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 44544,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1536,
+                "group_finish": 44109.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 44073.0,
+                  "PIPE_MTE2": 34173.0,
+                  "PIPE_V": 44109.0
+                },
+                "score": [
+                  44109.0,
+                  46080.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 3072,
+                "delta_read_bytes": 44544,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1536,
+                "group_finish": 44109.0,
+                "group_start": 103.0,
+                "pipe_ends": {
+                  "PIPE_M": 44073.0,
+                  "PIPE_MTE2": 34173.0,
+                  "PIPE_V": 44109.0
+                },
+                "score": [
+                  44109.0,
+                  46080.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 43008,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 43821.0,
+            "group_id": 5,
+            "group_start": 33621.0,
+            "rank": 28711.933333333334
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 2048,
+                "delta_repeated_input_bytes": 4608,
+                "delta_write_bytes": 0,
+                "group_finish": 54739.0,
+                "group_start": 43821.0,
+                "pipe_ends": {
+                  "PIPE_M": 53529.0,
+                  "PIPE_MTE2": 31833.0,
+                  "PIPE_MTE3": 31135.0,
+                  "PIPE_V": 54739.0
+                },
+                "score": [
+                  54739.0,
+                  2048.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 55291.0,
+                "group_start": 44373.0,
+                "pipe_ends": {
+                  "PIPE_M": 54081.0,
+                  "PIPE_MTE2": 44373.0,
+                  "PIPE_MTE3": 30542.0,
+                  "PIPE_V": 55291.0
+                },
+                "score": [
+                  55291.0,
+                  34304.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 55291.0,
+                "group_start": 44373.0,
+                "pipe_ends": {
+                  "PIPE_M": 54081.0,
+                  "PIPE_MTE2": 44373.0,
+                  "PIPE_V": 55291.0
+                },
+                "score": [
+                  55291.0,
+                  34304.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 27648,
+                "delta_read_bytes": 20480,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 13824,
+                "group_finish": 55291.0,
+                "group_start": 44373.0,
+                "pipe_ends": {
+                  "PIPE_M": 54081.0,
+                  "PIPE_MTE2": 44373.0,
+                  "PIPE_V": 55291.0
+                },
+                "score": [
+                  55291.0,
+                  34304.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 2048,
+            "delta_repeated_input_bytes": 4608,
+            "delta_write_bytes": 0,
+            "group_finish": 54739.0,
+            "group_id": 6,
+            "group_start": 43821.0,
+            "rank": 18502.333333333336
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 32,
+                "delta_read_bytes": 22576,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 7732,
+                "group_finish": 62843.0,
+                "group_start": 53529.0,
+                "pipe_ends": {
+                  "PIPE_M": 56829.0,
+                  "PIPE_MTE2": 32225.0,
+                  "PIPE_MTE3": 62844.0,
+                  "PIPE_V": 62843.0
+                },
+                "score": [
+                  62844.0,
+                  30308.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 4132,
+                "delta_read_bytes": 24626,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9782,
+                "group_finish": 56549.0,
+                "group_start": 29983.0,
+                "pipe_ends": {
+                  "PIPE_M": 33807.0,
+                  "PIPE_MTE2": 55317.0,
+                  "PIPE_MTE3": 56550.0,
+                  "PIPE_V": 56549.0
+                },
+                "score": [
+                  56550.0,
+                  34408.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 4164,
+                "delta_read_bytes": 24642,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9798,
+                "group_finish": 56549.0,
+                "group_start": 35.0,
+                "pipe_ends": {
+                  "PIPE_M": 3580.0,
+                  "PIPE_MTE2": 55325.0,
+                  "PIPE_MTE3": 56550.0,
+                  "PIPE_V": 56549.0
+                },
+                "score": [
+                  56550.0,
+                  34440.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4164,
+                "delta_read_bytes": 24642,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 9798,
+                "group_finish": 56549.0,
+                "group_start": 35.0,
+                "pipe_ends": {
+                  "PIPE_M": 3580.0,
+                  "PIPE_MTE2": 55325.0,
+                  "PIPE_MTE3": 56550.0,
+                  "PIPE_V": 56549.0
+                },
+                "score": [
+                  56550.0,
+                  34440.0,
+                  3
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 4132,
+            "delta_read_bytes": 24626,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 9782,
+            "group_finish": 56549.0,
+            "group_id": 7,
+            "group_start": 29983.0,
+            "rank": 8104
+          }
+        ],
+        "original_graph_copy_bytes": 186984
+      },
+      "plan_hash": "02ff4941044b75794787147a84f5822e099047534802588cc3ebad2969e7c197",
+      "plan_path": "results_round2/r01_partition_schedule/7b5c8f3a9961/schedules/case_019_n4_partp3_schedp3_7b5c8f3a9961.json",
+      "requested_group_count": 8,
+      "run_id": "7b5c8f3a9961",
+      "schedule_problem": 3,
+      "solver_code_hash": "25a77afafc6deb51f8e2aea4d36369ca2dfe22cbab664c9383f68e99e510c184",
+      "spill_added_copy_bytes": 0,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 14676,
+        "1": 25600,
+        "2": 0,
+        "3": 0
+      }
+    }
+  ],
+  "experiment_id": "r01_partition_schedule",
+  "run_id": "7b5c8f3a9961"
+}

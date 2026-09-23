@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import heapq
 from dataclasses import dataclass
 
 from .graph_analysis import GraphAnalysis
@@ -12,20 +13,94 @@ class Partition:
     op_to_subgraph: dict[int, int]
 
 
-def _cut_bytes_by_position(analysis: GraphAnalysis) -> list[int]:
+def _topological_order_for_partition(
+    analysis: GraphAnalysis, strategy: str
+) -> list[int]:
+    if strategy == "id":
+        return list(analysis.topological_order)
+    if strategy not in {"critical_path", "branch_locality", "release_bytes"}:
+        raise ValueError(f"unknown topology strategy: {strategy}")
+
+    release_bytes = {op_id: 0 for op_id in analysis.eligible_ops}
+    for tensor_id, tensor in analysis.graph.tensors.items():
+        consumer_ops = (
+            analysis.graph.tensor_consumers.get(tensor_id, set())
+            & analysis.eligible_ops
+        )
+        if not consumer_ops:
+            continue
+        last_consumer = max(
+            analysis.topological_index[op_id] for op_id in consumer_ops
+        )
+        for op_id in consumer_ops:
+            if analysis.topological_index[op_id] == last_consumer:
+                release_bytes[op_id] += tensor["size"]
+
+    indegree = {
+        op_id: len(analysis.predecessors[op_id])
+        for op_id in analysis.eligible_ops
+    }
+    ready: list[tuple[int, int, int, int]] = []
+
+    def priority(op_id: int) -> tuple[int, int, int, int]:
+        if strategy == "critical_path":
+            return (
+                -analysis.backward_path[op_id],
+                -analysis.forward_path[op_id],
+                0,
+                op_id,
+            )
+        if strategy == "branch_locality":
+            continuation = sum(
+                len(analysis.predecessors[child]) == 1
+                for child in analysis.successors[op_id]
+            )
+            return (
+                -continuation,
+                -analysis.backward_path[op_id],
+                -analysis.forward_path[op_id],
+                op_id,
+            )
+        return (
+            -release_bytes[op_id],
+            -analysis.backward_path[op_id],
+            -analysis.forward_path[op_id],
+            op_id,
+        )
+
+    for op_id, degree in indegree.items():
+        if degree == 0:
+            heapq.heappush(ready, priority(op_id))
+    order = []
+    while ready:
+        _, _, _, op_id = heapq.heappop(ready)
+        order.append(op_id)
+        for child in analysis.successors[op_id]:
+            indegree[child] -= 1
+            if indegree[child] == 0:
+                heapq.heappush(ready, priority(child))
+    if len(order) != len(analysis.eligible_ops):
+        raise ValueError("eligible operation graph contains a cycle")
+    return order
+
+
+def _cut_bytes_by_position(
+    analysis: GraphAnalysis, order: list[int]
+) -> list[int]:
     graph = analysis.graph
-    count = len(analysis.topological_order)
+    count = len(order)
+    position = {op_id: index for index, op_id in enumerate(order)}
     delta = [0] * (count + 1)
     for tensor_id, tensor in graph.tensors.items():
         if tensor["pos"] == "DDR":
             continue
         producer_positions = [
-            analysis.topological_index[op_id]
+            position[op_id]
             for op_id in graph.tensor_producers.get(tensor_id, set())
             if op_id in analysis.eligible_ops
         ]
         consumer_positions = [
-            analysis.topological_index[op_id]
+            position[op_id]
             for op_id in graph.tensor_consumers.get(tensor_id, set())
             if op_id in analysis.eligible_ops
         ]
@@ -40,7 +115,7 @@ def _cut_bytes_by_position(analysis: GraphAnalysis) -> list[int]:
     input_users: dict[int, list[int]] = {}
     for op_id, features in op_features.items():
         for tensor_id in features["external_ddr_inputs"]:
-            input_users.setdefault(tensor_id, []).append(features["topological_index"])
+            input_users.setdefault(tensor_id, []).append(position[op_id])
     for tensor_id, positions in input_users.items():
         if len(positions) > 1:
             first, last = min(positions), max(positions)
@@ -55,8 +130,13 @@ def _cut_bytes_by_position(analysis: GraphAnalysis) -> list[int]:
     return cuts
 
 
-def partition_contiguous(analysis: GraphAnalysis, group_count: int, problem: int) -> Partition:
-    order = analysis.topological_order
+def partition_contiguous(
+    analysis: GraphAnalysis,
+    group_count: int,
+    problem: int,
+    topology_strategy: str = "id",
+) -> Partition:
+    order = _topological_order_for_partition(analysis, topology_strategy)
     if not order:
         return Partition([], {})
     group_count = max(1, min(group_count, len(order)))
@@ -77,7 +157,7 @@ def partition_contiguous(analysis: GraphAnalysis, group_count: int, problem: int
         prefix = [0]
         for weight in weights:
             prefix.append(prefix[-1] + weight)
-        cuts = _cut_bytes_by_position(analysis)
+        cuts = _cut_bytes_by_position(analysis, order)
         max_cut = max(cuts, default=0)
         cut_weight = {1: 0.30, 2: 0.12, 3: 0.05}[problem]
         ends = []

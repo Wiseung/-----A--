@@ -44,6 +44,61 @@ def _series(rows: list[dict[str, Any]], problem: int, label: str) -> dict[int, t
     return output
 
 
+def _paired_problem3_series(
+    rows: list[dict[str, Any]],
+) -> tuple[
+    dict[int, tuple[float | None, int]],
+    dict[int, tuple[float | None, int]],
+    dict[int, tuple[float | None, int]],
+]:
+    identity_fields = (
+        "experiment_id", "run_id", "case", "ncores", "graph_hash",
+        "config_hash", "official_code_hash", "solver_code_hash", "seed",
+        "time_limit_sec", "baseline_timeout_sec", "evaluator_timeout_sec",
+        "max_evals", "improve_enabled", "retry_baseline",
+    )
+    paired: dict[tuple[Any, ...], dict[int, dict[str, Any]]] = {}
+    for row in rows:
+        if row.get("problem") not in (2, 3):
+            continue
+        key = tuple(row.get(field) for field in identity_fields)
+        paired.setdefault(key, {})[row["problem"]] = row
+
+    no_l2_values = {ncores: [] for ncores in range(1, 6)}
+    l2_values = {ncores: [] for ncores in range(1, 6)}
+    cache_values = {ncores: [] for ncores in range(1, 6)}
+    for pair in paired.values():
+        no_l2 = pair.get(2)
+        l2 = pair.get(3)
+        if (no_l2 is None or l2 is None
+                or no_l2.get("status") != "evaluated"
+                or l2.get("status") != "evaluated"):
+            continue
+        ncores = no_l2["ncores"]
+        no_l2_makespan = no_l2.get("makespan")
+        l2_makespan = l2.get("makespan")
+        baseline = no_l2.get("single_core_baseline")
+        if baseline is None:
+            baseline = l2.get("single_core_baseline")
+        if no_l2_makespan not in (None, 0) and baseline not in (None, 0):
+            no_l2_values[ncores].append(baseline / no_l2_makespan)
+        if l2_makespan not in (None, 0) and baseline not in (None, 0):
+            l2_values[ncores].append(baseline / l2_makespan)
+        if no_l2_makespan not in (None, 0) and l2_makespan not in (None, 0):
+            cache_values[ncores].append(no_l2_makespan / l2_makespan)
+
+    def summarize(values: dict[int, list[float]]) -> dict[int, tuple[float | None, int]]:
+        return {
+            ncores: (
+                sum(items) / len(items) if items else None,
+                len(items),
+            )
+            for ncores, items in values.items()
+        }
+
+    return summarize(no_l2_values), summarize(l2_values), summarize(cache_values)
+
+
 def line_svg(title: str, y_label: str, lines: list[tuple[str, dict[int, tuple[float | None, int]], str]], output: Path) -> None:
     values = [value for _, data, _ in lines for value, _ in data.values() if value is not None]
     ymin = min([0.0, *values]) if y_label == "Cache speedup" else 0.0
@@ -129,9 +184,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate SVG figures from official evaluator summary rows.")
     parser.add_argument("--results-dir", type=Path, default=ROOT / "results")
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--experiment-id")
+    parser.add_argument("--run-id")
     args = parser.parse_args()
     summary_path = args.results_dir / "summary.json"
     rows = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.is_file() else []
+    if args.experiment_id is not None:
+        rows = [row for row in rows if row.get("experiment_id") == args.experiment_id]
+    if args.run_id is not None:
+        rows = [row for row in rows if row.get("run_id") == args.run_id]
+    run_identities = {
+        (row.get("experiment_id"), row.get("run_id")) for row in rows
+    }
+    if len(run_identities) > 1 and (args.experiment_id is None or args.run_id is None):
+        parser.error("select one experiment and run when summary.json contains multiple runs")
     output_dir = args.output_dir or args.results_dir / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -143,28 +209,20 @@ def main() -> int:
             [(f"Problem {problem}", data, COLORS[f"p{problem}"])],
             output_dir / f"problem_{problem}_speedup.svg",
         )
+    paired_no_l2, paired_l2, paired_cache = _paired_problem3_series(rows)
     line_svg(
         "Problem 3: no-L2 vs read-only L2",
         "Speedup vs single-core baseline",
         [
-            ("no L2", _series(rows, 2, "no_l2"), COLORS["p2"]),
-            ("read-only L2", _series(rows, 3, "l2"), COLORS["l2"]),
+            ("no L2", paired_no_l2, COLORS["p2"]),
+            ("read-only L2", paired_l2, COLORS["l2"]),
         ],
         output_dir / "problem_3_l2_comparison.svg",
     )
-    cache_values = {n: (None, 0) for n in range(1, 6)}
-    for ncores in range(1, 6):
-        ratios = [
-            row["cache_speedup"] for row in rows
-            if row.get("case", "").startswith("case_")
-            and row.get("problem") == 3 and row.get("ncores") == ncores
-            and row.get("cache_speedup") is not None
-        ]
-        cache_values[ncores] = ((sum(ratios) / len(ratios)) if ratios else None, len(ratios))
     line_svg(
         "Problem 3: L2 / no-L2 makespan ratio",
         "Cache speedup",
-        [("read-only L2", cache_values, COLORS["cache"])],
+        [("read-only L2", paired_cache, COLORS["cache"])],
         output_dir / "problem_3_cache_speedup.svg",
     )
     scatter_svg(rows, output_dir / "makespan_vs_added_copy.svg")
