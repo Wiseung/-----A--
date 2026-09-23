@@ -32,11 +32,13 @@ class Evaluator:
         config_path: Path,
         results_dir: Path,
         timeout_sec: float,
+        retain_traces: bool = True,
     ) -> None:
         self.official_root = official_root.resolve()
         self.config_path = config_path.resolve()
         self.results_dir = results_dir.resolve()
         self.timeout_sec = timeout_sec
+        self.retain_traces = retain_traces
         self.calls = 0
         self.temp_root = self.results_dir / "temp"
         for name in ("raw", "schedules", "traces", "logs", "temp"):
@@ -107,7 +109,7 @@ class Evaluator:
 
         suffix = self._safe_tag(tag)
         shutil.copy2(result_path, self.results_dir / "raw" / f"{suffix}.json")
-        if trace_path.is_file():
+        if trace_path.is_file() and self.retain_traces:
             shutil.copy2(trace_path, self.results_dir / "traces" / f"{suffix}.json")
         if log_path.is_file():
             shutil.copy2(log_path, self.results_dir / "logs" / f"{suffix}.txt")

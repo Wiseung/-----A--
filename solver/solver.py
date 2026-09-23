@@ -28,7 +28,8 @@ SUMMARY_FIELDS = [
     "experiment_id", "run_id", "case", "problem", "ncores", "method",
     "graph_hash", "config_hash", "official_code_hash", "solver_code_hash",
     "time_limit_sec", "baseline_timeout_sec", "evaluator_timeout_sec",
-    "max_evals", "improve_enabled", "retry_baseline", "candidate_id", "makespan",
+    "max_evals", "improve_enabled", "retry_baseline", "candidate_id",
+    "best_candidate_source", "makespan",
     "single_core_baseline", "speedup", "added_copy_bytes",
     "original_copy_bytes", "scheduled_copy_bytes", "cache_hit_rate",
     "subgraph_count", "solver_runtime_sec", "evaluator_runtime_sec",
@@ -302,6 +303,7 @@ def solve_one(
     best_result: dict[str, Any] | None = None
     best_tag: str | None = None
     best_candidate_id: str | None = None
+    best_candidate_source: str | None = None
     tested: set[str] = set()
     candidate_sequence = 0
     successful_evals = 0
@@ -316,6 +318,7 @@ def solve_one(
         parent_candidate: str | None = None,
     ) -> bool:
         nonlocal best_plan, legal_draft, best_result, best_tag, best_candidate_id
+        nonlocal best_candidate_source
         nonlocal successful_evals, attempted_evals, multicore_eval_runtime
         nonlocal candidate_sequence
         signature = plan_signature(plan)
@@ -330,6 +333,8 @@ def solve_one(
         plan_hash = hashlib.sha256(signature.encode("utf-8")).hexdigest()
         if stage.startswith("problem2_warm_start"):
             candidate_method = "co_location_critical_list"
+        elif stage == "problem2_validated_warm_start":
+            candidate_method = "validated_problem2_plan"
         elif stage == "legacy_history_warm_start":
             candidate_method = "legacy_plan"
         elif stage == "validated_history_warm_start":
@@ -477,6 +482,7 @@ def solve_one(
             best_result = evaluated.result
             best_tag = tag
             best_candidate_id = candidate_id
+            best_candidate_source = stage
             validated_path = (
                 results_dir / "schedules" /
                 f"{graph.path.stem}_p{problem}_n{ncores}_{run_id}_best_validated.json"
@@ -538,21 +544,47 @@ def solve_one(
 
     if problem == 3:
         problem_2_counts = schedule_b.candidate_counts(analysis, ncores)
-        try:
-            if problem_2_counts:
-                placement_diagnostics = {}
-                plan = schedule_b.generate_schedule(
-                    analysis, ncores, config, problem_2_counts[0],
-                    diagnostics=placement_diagnostics,
+        validated_problem2 = None
+        validated_problem2_path = None
+        for directory in dict.fromkeys((results_dir, history_dir)):
+            for path in _saved_plan_paths(
+                directory, graph.path.stem, 2, ncores
+            )[1:]:
+                plan = _load_saved_plan(
+                    path,
+                    fingerprints,
+                    {"problem": 2, "ncores": ncores},
+                    allow_unverified=False,
                 )
-                candidate_specs.append((
-                    plan,
-                    f"problem2_warm_start_g{problem_2_counts[0]}",
-                    placement_diagnostics,
-                    None,
-                ))
-        except (ValueError, RuntimeError) as error:
-            errors.append(f"problem2 warm start: {error}")
+                if plan is not None:
+                    validated_problem2 = plan
+                    validated_problem2_path = path
+                    break
+            if validated_problem2 is not None:
+                break
+        if validated_problem2 is not None:
+            candidate_specs.append((
+                validated_problem2,
+                "problem2_validated_warm_start",
+                None,
+                str(validated_problem2_path),
+            ))
+        else:
+            try:
+                if problem_2_counts:
+                    placement_diagnostics = {}
+                    plan = schedule_b.generate_schedule(
+                        analysis, ncores, config, problem_2_counts[0],
+                        diagnostics=placement_diagnostics,
+                    )
+                    candidate_specs.append((
+                        plan,
+                        f"problem2_warm_start_g{problem_2_counts[0]}",
+                        placement_diagnostics,
+                        None,
+                    ))
+            except (ValueError, RuntimeError) as error:
+                errors.append(f"problem2 warm start: {error}")
     else:
         problem_2_counts = []
         add_saved_candidate(ncores)
@@ -706,6 +738,7 @@ def solve_one(
             "case": graph.path.stem, "problem": problem, "ncores": ncores,
             "method": method, "makespan": None,
             "candidate_id": best_candidate_id,
+            "best_candidate_source": best_candidate_source,
             "single_core_baseline": baseline_makespan, "speedup": None,
             "added_copy_bytes": None, "original_copy_bytes": None,
             "scheduled_copy_bytes": None, "cache_hit_rate": None,
@@ -767,6 +800,7 @@ def solve_one(
         "ncores": ncores,
         "method": method,
         "candidate_id": best_candidate_id,
+        "best_candidate_source": best_candidate_source,
         "makespan": makespan,
         "single_core_baseline": baseline_makespan,
         "speedup": speedup,
