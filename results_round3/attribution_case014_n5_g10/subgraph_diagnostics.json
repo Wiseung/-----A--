@@ -1,0 +1,4640 @@
+{
+  "candidates": [
+    {
+      "active_core_count": 5,
+      "actual_group_count": 10,
+      "added_copy_bytes": 63790912,
+      "cache_hit_rate": 0.2551308019027601,
+      "candidate_id": "case_014_n5_partp2_schedp2_r03-attribution-case014-n5-g10",
+      "case": "case_014",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 11.692650042008609,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "e27abb053ac57786e510ba80e60a6ec60a8b0df11b2a818010a1df17c29d94dd",
+      "m_cycles_by_core": {
+        "0": 4243656,
+        "1": 1746000,
+        "2": 1732068,
+        "3": 5011020,
+        "4": 4493004
+      },
+      "ncores": 5,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 6715169,
+      "partition_added_copy_bytes": 8203168,
+      "partition_problem": 2,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 3562912,
+        "estimated_new_copy_bytes": 18135908,
+        "estimated_partition_added_copy_bytes": 8203168,
+        "estimated_partition_added_copy_bytes_recomputed": 8203168,
+        "estimated_read_copy_bytes": 16333352,
+        "estimated_repeated_input_bytes": 2898432,
+        "estimated_write_copy_bytes": 1802556,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771229.0,
+            "group_id": 1,
+            "group_start": 24797.0,
+            "rank": 6778520.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3517229.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3516797.0,
+                  "PIPE_MTE2": 40890.0,
+                  "PIPE_V": 3517229.0
+                },
+                "score": [
+                  3517229.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771229.0,
+            "group_id": 3,
+            "group_start": 24797.0,
+            "rank": 6778520.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 2457432,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 18432,
+                "group_finish": 3516257.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3515825.0,
+                  "PIPE_MTE2": 73804.0,
+                  "PIPE_MTE3": 1962057.0,
+                  "PIPE_V": 3516257.0
+                },
+                "score": [
+                  3516257.0,
+                  2475864.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 2526552,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 18432,
+                "group_finish": 3516257.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3515825.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 1962057.0,
+                  "PIPE_V": 3516257.0
+                },
+                "score": [
+                  3516257.0,
+                  2544984.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1780424.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1779992.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780424.0,
+                  4019544.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1780424.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1779992.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780424.0,
+                  4019544.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1780424.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1779992.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780424.0,
+                  4019544.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 4001112,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 18432,
+            "group_finish": 1780424.0,
+            "group_id": 0,
+            "group_start": 34964.0,
+            "rank": 6762335.533333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3499769.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 39735.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3499769.0,
+                  414720.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3499769.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 40890.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3499769.0,
+                  483840.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3508964.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 3508532.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3508964.0
+                },
+                "score": [
+                  3508964.0,
+                  483840.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1753769.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1753337.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1753769.0
+                },
+                "score": [
+                  1780424.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1753769.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1753337.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1753769.0
+                },
+                "score": [
+                  1780424.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1753769.0,
+            "group_id": 2,
+            "group_start": 24797.0,
+            "rank": 6760855.533333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771673.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1771673.0,
+                  "PIPE_MTE2": 32959.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771673.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1771673.0,
+                  "PIPE_MTE2": 32959.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1780868.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 1780868.0,
+                  "PIPE_MTE2": 67028.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780868.0,
+                  9216.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1754213.0,
+                "group_start": 1753337.0,
+                "pipe_ends": {
+                  "PIPE_M": 1754213.0,
+                  "PIPE_MTE2": 32959.0,
+                  "PIPE_V": 1753769.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1030.0,
+                "group_start": 154.0,
+                "pipe_ends": {
+                  "PIPE_M": 1030.0,
+                  "PIPE_MTE2": 154.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 9216,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771673.0,
+            "group_id": 5,
+            "group_start": 1770797.0,
+            "rank": 6260343.933333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1276416,
+                "delta_repeated_input_bytes": 9216,
+                "delta_write_bytes": 0,
+                "group_finish": 3631505.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 3631421.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3631505.0
+                },
+                "score": [
+                  3631505.0,
+                  1276416.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 3630629.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3630545.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_V": 3630629.0
+                },
+                "score": [
+                  3630629.0,
+                  1294848.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 3639824.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 3639740.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3639824.0
+                },
+                "score": [
+                  3639824.0,
+                  1294848.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 3613169.0,
+                "group_start": 1753337.0,
+                "pipe_ends": {
+                  "PIPE_M": 3613085.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_V": 3613169.0
+                },
+                "score": [
+                  3613169.0,
+                  1294848.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 1930919.0,
+                "group_start": 10549.0,
+                "pipe_ends": {
+                  "PIPE_M": 1870297.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_V": 1930919.0
+                },
+                "score": [
+                  1930919.0,
+                  1294848.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 9216,
+            "delta_read_bytes": 1290240,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 4608,
+            "group_finish": 1930919.0,
+            "group_id": 6,
+            "group_start": 10549.0,
+            "rank": 6258814.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 3538944,
+                "delta_read_bytes": 2598912,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1770014,
+                "group_finish": 5124857.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 5054153.0,
+                  "PIPE_MTE2": 1801627.0,
+                  "PIPE_MTE3": 5124248.0,
+                  "PIPE_V": 5124857.0
+                },
+                "score": [
+                  5124857.0,
+                  4368926.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 3538944,
+                "delta_read_bytes": 2529792,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 1770014,
+                "group_finish": 5123981.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 5053277.0,
+                  "PIPE_MTE2": 1801627.0,
+                  "PIPE_MTE3": 5123372.0,
+                  "PIPE_V": 5123981.0
+                },
+                "score": [
+                  5123981.0,
+                  4299806.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 3674112,
+                "delta_read_bytes": 2666496,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1837598,
+                "group_finish": 5133176.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 5062472.0,
+                  "PIPE_MTE2": 1803150.0,
+                  "PIPE_MTE3": 5132567.0,
+                  "PIPE_V": 5133176.0
+                },
+                "score": [
+                  5133176.0,
+                  4504094.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 3551232,
+                "delta_read_bytes": 2605056,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1776158,
+                "group_finish": 5106521.0,
+                "group_start": 1753337.0,
+                "pipe_ends": {
+                  "PIPE_M": 5035817.0,
+                  "PIPE_MTE2": 1801730.0,
+                  "PIPE_MTE3": 5105912.0,
+                  "PIPE_V": 5106521.0
+                },
+                "score": [
+                  5106521.0,
+                  4381214.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 4767744,
+                "delta_read_bytes": 4687872,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2384414,
+                "group_finish": 5223481.0,
+                "group_start": 1870297.0,
+                "pipe_ends": {
+                  "PIPE_M": 5152777.0,
+                  "PIPE_MTE2": 1850871.0,
+                  "PIPE_MTE3": 5222872.0,
+                  "PIPE_V": 5223481.0
+                },
+                "score": [
+                  5223481.0,
+                  7072286.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 3551232,
+            "delta_read_bytes": 2605056,
+            "delta_repeated_input_bytes": 1474560,
+            "delta_write_bytes": 1776158,
+            "group_finish": 5106521.0,
+            "group_id": 4,
+            "group_start": 1753337.0,
+            "rank": 5011540.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2658816,
+                "delta_repeated_input_bytes": 4608,
+                "delta_write_bytes": 1088006,
+                "group_finish": 4460873.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 4404929.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 4460874.0,
+                  "PIPE_V": 4460873.0
+                },
+                "score": [
+                  5106521.0,
+                  3746822.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2663424,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1088006,
+                "group_finish": 4459997.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 4404053.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 4459998.0,
+                  "PIPE_V": 4459997.0
+                },
+                "score": [
+                  5106521.0,
+                  3751430.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2663424,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1088006,
+                "group_finish": 4469192.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 4413248.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 4469193.0,
+                  "PIPE_V": 4469192.0
+                },
+                "score": [
+                  5106521.0,
+                  3751430.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2663424,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1088006,
+                "group_finish": 7725017.0,
+                "group_start": 5035817.0,
+                "pipe_ends": {
+                  "PIPE_M": 7669073.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 7725018.0,
+                  "PIPE_V": 7725017.0
+                },
+                "score": [
+                  7725018.0,
+                  3751430.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 912384,
+                "delta_repeated_input_bytes": 663552,
+                "delta_write_bytes": 518,
+                "group_finish": 4559497.0,
+                "group_start": 1870297.0,
+                "pipe_ends": {
+                  "PIPE_M": 4503553.0,
+                  "PIPE_MTE2": 1787573.0,
+                  "PIPE_MTE3": 4559498.0,
+                  "PIPE_V": 4559497.0
+                },
+                "score": [
+                  5106521.0,
+                  912902.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 912384,
+            "delta_repeated_input_bytes": 663552,
+            "delta_write_bytes": 518,
+            "group_finish": 4559497.0,
+            "group_id": 7,
+            "group_start": 1870297.0,
+            "rank": 4362316.733333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 2540021.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 2539913.0,
+                  "PIPE_MTE2": 50196.0,
+                  "PIPE_MTE3": 1782050.0,
+                  "PIPE_V": 2540021.0
+                },
+                "score": [
+                  5106521.0,
+                  1030656.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 2539145.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 2539037.0,
+                  "PIPE_MTE2": 50042.0,
+                  "PIPE_MTE3": 1771332.0,
+                  "PIPE_V": 2539145.0
+                },
+                "score": [
+                  5106521.0,
+                  1030656.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 2548340.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 2548232.0,
+                  "PIPE_MTE2": 84111.0,
+                  "PIPE_MTE3": 1780527.0,
+                  "PIPE_V": 2548340.0
+                },
+                "score": [
+                  5106521.0,
+                  1030656.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 5804165.0,
+                "group_start": 5035817.0,
+                "pipe_ends": {
+                  "PIPE_M": 5804057.0,
+                  "PIPE_MTE2": 1818967.0,
+                  "PIPE_MTE3": 5105912.0,
+                  "PIPE_V": 5804165.0
+                },
+                "score": [
+                  5804165.0,
+                  1030656.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 5271901.0,
+                "group_start": 4503553.0,
+                "pipe_ends": {
+                  "PIPE_M": 5271793.0,
+                  "PIPE_MTE2": 1804810.0,
+                  "PIPE_MTE3": 4559498.0,
+                  "PIPE_V": 5271901.0
+                },
+                "score": [
+                  5271901.0,
+                  1030656.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1030656,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 2540021.0,
+            "group_id": 8,
+            "group_start": 1771673.0,
+            "rank": 2509568.0
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 2464,
+                "delta_read_bytes": 609488,
+                "delta_repeated_input_bytes": 760320,
+                "delta_write_bytes": 2840,
+                "group_finish": 5130559.0,
+                "group_start": 2539913.0,
+                "pipe_ends": {
+                  "PIPE_M": 4268453.0,
+                  "PIPE_MTE2": 5107334.0,
+                  "PIPE_MTE3": 5130560.0,
+                  "PIPE_V": 5130559.0
+                },
+                "score": [
+                  5130560.0,
+                  612328.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 739744,
+                "delta_read_bytes": 1738448,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 371480,
+                "group_finish": 5154497.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 5113514.0,
+                  "PIPE_MTE3": 5154498.0,
+                  "PIPE_V": 5154497.0
+                },
+                "score": [
+                  5154498.0,
+                  2109928.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 739744,
+                "delta_read_bytes": 1738448,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 371480,
+                "group_finish": 5154497.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 3508532.0,
+                  "PIPE_MTE2": 5113514.0,
+                  "PIPE_MTE3": 5154498.0,
+                  "PIPE_V": 5154497.0
+                },
+                "score": [
+                  5154498.0,
+                  2109928.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 738524,
+                "delta_read_bytes": 1737838,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 370870,
+                "group_finish": 6811525.0,
+                "group_start": 5035817.0,
+                "pipe_ends": {
+                  "PIPE_M": 6764357.0,
+                  "PIPE_MTE2": 4566490.0,
+                  "PIPE_MTE3": 6811526.0,
+                  "PIPE_V": 6811525.0
+                },
+                "score": [
+                  6811526.0,
+                  2108708.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 738500,
+                "delta_read_bytes": 1737826,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 370858,
+                "group_finish": 6279261.0,
+                "group_start": 4503553.0,
+                "pipe_ends": {
+                  "PIPE_M": 6232093.0,
+                  "PIPE_MTE2": 5113203.0,
+                  "PIPE_MTE3": 6279262.0,
+                  "PIPE_V": 6279261.0
+                },
+                "score": [
+                  6279262.0,
+                  2108684.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 2464,
+            "delta_read_bytes": 609488,
+            "delta_repeated_input_bytes": 760320,
+            "delta_write_bytes": 2840,
+            "group_finish": 5130559.0,
+            "group_id": 9,
+            "group_start": 2539913.0,
+            "rank": 1728540
+          }
+        ],
+        "original_graph_copy_bytes": 9932740
+      },
+      "plan_hash": "89f61e1684d1d8d0f2a94cf54dc37a94d4c67cf83816665a2353bdf35584b426",
+      "plan_path": "results_round3/attribution_case014_n5_g10/schedules/case_014_n5_partp2_schedp2_r03-attribution-case014-n5-g10.json",
+      "requested_group_count": 10,
+      "run_id": "r03-attribution-case014-n5-g10",
+      "schedule_problem": 2,
+      "solver_code_hash": "0d90dd088263029ff3331d78b12bd8b24fe978308872960852c26c2396cc507c",
+      "spill_added_copy_bytes": 55587744,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 408860,
+        "1": 151200,
+        "2": 148248,
+        "3": 504216,
+        "4": 438900
+      }
+    },
+    {
+      "active_core_count": 5,
+      "actual_group_count": 10,
+      "added_copy_bytes": 63790912,
+      "cache_hit_rate": 0.2551308019027601,
+      "candidate_id": "case_014_n5_partp2_schedp3_r03-attribution-case014-n5-g10",
+      "case": "case_014",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 11.460446916986257,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "e27abb053ac57786e510ba80e60a6ec60a8b0df11b2a818010a1df17c29d94dd",
+      "m_cycles_by_core": {
+        "0": 4243656,
+        "1": 1746000,
+        "2": 1732068,
+        "3": 5011020,
+        "4": 4493004
+      },
+      "ncores": 5,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 6715169,
+      "partition_added_copy_bytes": 8203168,
+      "partition_problem": 2,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 3562912,
+        "estimated_new_copy_bytes": 18135908,
+        "estimated_partition_added_copy_bytes": 8203168,
+        "estimated_partition_added_copy_bytes_recomputed": 8203168,
+        "estimated_read_copy_bytes": 16333352,
+        "estimated_repeated_input_bytes": 2898432,
+        "estimated_write_copy_bytes": 1802556,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771229.0,
+            "group_id": 1,
+            "group_start": 24797.0,
+            "rank": 6778520.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3517229.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3516797.0,
+                  "PIPE_MTE2": 40890.0,
+                  "PIPE_V": 3517229.0
+                },
+                "score": [
+                  3517229.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1771229.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771229.0,
+            "group_id": 3,
+            "group_start": 24797.0,
+            "rank": 6778520.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 2457432,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 18432,
+                "group_finish": 3516257.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3515825.0,
+                  "PIPE_MTE2": 73804.0,
+                  "PIPE_MTE3": 1962057.0,
+                  "PIPE_V": 3516257.0
+                },
+                "score": [
+                  3516257.0,
+                  2475864.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 2526552,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 18432,
+                "group_finish": 3516257.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3515825.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 1962057.0,
+                  "PIPE_V": 3516257.0
+                },
+                "score": [
+                  3516257.0,
+                  2544984.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1780424.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1779992.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780424.0,
+                  4019544.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1780424.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1779992.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780424.0,
+                  4019544.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1780424.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1779992.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780424.0,
+                  4019544.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 4001112,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 18432,
+            "group_finish": 1780424.0,
+            "group_id": 0,
+            "group_start": 34964.0,
+            "rank": 6762335.533333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3499769.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 39735.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3499769.0,
+                  414720.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3499769.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 40020.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3499769.0,
+                  483840.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3508964.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 3508532.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3508964.0
+                },
+                "score": [
+                  3508964.0,
+                  483840.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1753769.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1753337.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1753769.0
+                },
+                "score": [
+                  1780424.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1753769.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1753337.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1753769.0
+                },
+                "score": [
+                  1780424.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1753769.0,
+            "group_id": 2,
+            "group_start": 24797.0,
+            "rank": 6760855.533333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771673.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1771673.0,
+                  "PIPE_MTE2": 32959.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771673.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1771673.0,
+                  "PIPE_MTE2": 32959.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1780868.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 1780868.0,
+                  "PIPE_MTE2": 67028.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1780868.0,
+                  9216.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1754213.0,
+                "group_start": 1753337.0,
+                "pipe_ends": {
+                  "PIPE_M": 1754213.0,
+                  "PIPE_MTE2": 32959.0,
+                  "PIPE_V": 1753769.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 9216,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1030.0,
+                "group_start": 154.0,
+                "pipe_ends": {
+                  "PIPE_M": 1030.0,
+                  "PIPE_MTE2": 154.0
+                },
+                "score": [
+                  1780424.0,
+                  9216.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 9216,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771673.0,
+            "group_id": 5,
+            "group_start": 1770797.0,
+            "rank": 6260343.933333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1276416,
+                "delta_repeated_input_bytes": 9216,
+                "delta_write_bytes": 0,
+                "group_finish": 3631505.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 3631421.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3631505.0
+                },
+                "score": [
+                  3631505.0,
+                  1276416.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 3630629.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3630545.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_V": 3630629.0
+                },
+                "score": [
+                  3630629.0,
+                  1294848.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 3639824.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 3639740.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3639824.0
+                },
+                "score": [
+                  3639824.0,
+                  1294848.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 3613169.0,
+                "group_start": 1753337.0,
+                "pipe_ends": {
+                  "PIPE_M": 3613085.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_V": 3613169.0
+                },
+                "score": [
+                  3613169.0,
+                  1294848.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 9216,
+                "delta_read_bytes": 1290240,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 4608,
+                "group_finish": 1930919.0,
+                "group_start": 10549.0,
+                "pipe_ends": {
+                  "PIPE_M": 1870297.0,
+                  "PIPE_MTE2": 1772327.0,
+                  "PIPE_V": 1930919.0
+                },
+                "score": [
+                  1930919.0,
+                  1294848.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 9216,
+            "delta_read_bytes": 1290240,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 4608,
+            "group_finish": 1930919.0,
+            "group_id": 6,
+            "group_start": 10549.0,
+            "rank": 6258814.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 3538944,
+                "delta_read_bytes": 2598912,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1770014,
+                "group_finish": 5124857.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 5054153.0,
+                  "PIPE_MTE2": 1801627.0,
+                  "PIPE_MTE3": 5124248.0,
+                  "PIPE_V": 5124857.0
+                },
+                "score": [
+                  5124857.0,
+                  4368926.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 3538944,
+                "delta_read_bytes": 2529792,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 1770014,
+                "group_finish": 5123981.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 5053277.0,
+                  "PIPE_MTE2": 1801627.0,
+                  "PIPE_MTE3": 5123372.0,
+                  "PIPE_V": 5123981.0
+                },
+                "score": [
+                  5123981.0,
+                  4299806.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 3674112,
+                "delta_read_bytes": 2666496,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1837598,
+                "group_finish": 5133176.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 5062472.0,
+                  "PIPE_MTE2": 1803150.0,
+                  "PIPE_MTE3": 5132567.0,
+                  "PIPE_V": 5133176.0
+                },
+                "score": [
+                  5133176.0,
+                  4504094.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 3551232,
+                "delta_read_bytes": 2605056,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1776158,
+                "group_finish": 5106521.0,
+                "group_start": 1753337.0,
+                "pipe_ends": {
+                  "PIPE_M": 5035817.0,
+                  "PIPE_MTE2": 1801730.0,
+                  "PIPE_MTE3": 5105912.0,
+                  "PIPE_V": 5106521.0
+                },
+                "score": [
+                  5106521.0,
+                  4381214.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 4767744,
+                "delta_read_bytes": 4687872,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2384414,
+                "group_finish": 5223481.0,
+                "group_start": 1870297.0,
+                "pipe_ends": {
+                  "PIPE_M": 5152777.0,
+                  "PIPE_MTE2": 1850871.0,
+                  "PIPE_MTE3": 5222872.0,
+                  "PIPE_V": 5223481.0
+                },
+                "score": [
+                  5223481.0,
+                  7072286.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 3551232,
+            "delta_read_bytes": 2605056,
+            "delta_repeated_input_bytes": 1474560,
+            "delta_write_bytes": 1776158,
+            "group_finish": 5106521.0,
+            "group_id": 4,
+            "group_start": 1753337.0,
+            "rank": 5011540.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2658816,
+                "delta_repeated_input_bytes": 4608,
+                "delta_write_bytes": 1088006,
+                "group_finish": 4460873.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 4404929.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 4460874.0,
+                  "PIPE_V": 4460873.0
+                },
+                "score": [
+                  5106521.0,
+                  3746822.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2663424,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1088006,
+                "group_finish": 4459997.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 4404053.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 4459998.0,
+                  "PIPE_V": 4459997.0
+                },
+                "score": [
+                  5106521.0,
+                  3751430.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2663424,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1088006,
+                "group_finish": 4469192.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 4413248.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 4469193.0,
+                  "PIPE_V": 4469192.0
+                },
+                "score": [
+                  5106521.0,
+                  3751430.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 2174976,
+                "delta_read_bytes": 2663424,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 1088006,
+                "group_finish": 7725017.0,
+                "group_start": 5035817.0,
+                "pipe_ends": {
+                  "PIPE_M": 7669073.0,
+                  "PIPE_MTE2": 1931573.0,
+                  "PIPE_MTE3": 7725018.0,
+                  "PIPE_V": 7725017.0
+                },
+                "score": [
+                  7725018.0,
+                  3751430.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 912384,
+                "delta_repeated_input_bytes": 663552,
+                "delta_write_bytes": 518,
+                "group_finish": 4559497.0,
+                "group_start": 1870297.0,
+                "pipe_ends": {
+                  "PIPE_M": 4503553.0,
+                  "PIPE_MTE2": 1787573.0,
+                  "PIPE_MTE3": 4559498.0,
+                  "PIPE_V": 4559497.0
+                },
+                "score": [
+                  5106521.0,
+                  912902.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 912384,
+            "delta_repeated_input_bytes": 663552,
+            "delta_write_bytes": 518,
+            "group_finish": 4559497.0,
+            "group_id": 7,
+            "group_start": 1870297.0,
+            "rank": 4362316.733333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 2540021.0,
+                "group_start": 1771673.0,
+                "pipe_ends": {
+                  "PIPE_M": 2539913.0,
+                  "PIPE_MTE2": 50196.0,
+                  "PIPE_MTE3": 1782050.0,
+                  "PIPE_V": 2540021.0
+                },
+                "score": [
+                  5106521.0,
+                  1030656.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 2539145.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 2539037.0,
+                  "PIPE_MTE2": 50042.0,
+                  "PIPE_MTE3": 1771332.0,
+                  "PIPE_V": 2539145.0
+                },
+                "score": [
+                  5106521.0,
+                  1030656.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 2548340.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 2548232.0,
+                  "PIPE_MTE2": 84111.0,
+                  "PIPE_MTE3": 1780527.0,
+                  "PIPE_V": 2548340.0
+                },
+                "score": [
+                  5106521.0,
+                  1030656.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 5804165.0,
+                "group_start": 5035817.0,
+                "pipe_ends": {
+                  "PIPE_M": 5804057.0,
+                  "PIPE_MTE2": 1818967.0,
+                  "PIPE_MTE3": 5105912.0,
+                  "PIPE_V": 5804165.0
+                },
+                "score": [
+                  5804165.0,
+                  1030656.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1030656,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 5271901.0,
+                "group_start": 4503553.0,
+                "pipe_ends": {
+                  "PIPE_M": 5271793.0,
+                  "PIPE_MTE2": 1804810.0,
+                  "PIPE_MTE3": 4559498.0,
+                  "PIPE_V": 5271901.0
+                },
+                "score": [
+                  5271901.0,
+                  1030656.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1030656,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 2540021.0,
+            "group_id": 8,
+            "group_start": 1771673.0,
+            "rank": 2509568.0
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 2464,
+                "delta_read_bytes": 609488,
+                "delta_repeated_input_bytes": 760320,
+                "delta_write_bytes": 2840,
+                "group_finish": 5130559.0,
+                "group_start": 2539913.0,
+                "pipe_ends": {
+                  "PIPE_M": 4268453.0,
+                  "PIPE_MTE2": 5107334.0,
+                  "PIPE_MTE3": 5130560.0,
+                  "PIPE_V": 5130559.0
+                },
+                "score": [
+                  5130560.0,
+                  612328.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 739744,
+                "delta_read_bytes": 1738448,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 371480,
+                "group_finish": 5154497.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 5113514.0,
+                  "PIPE_MTE3": 5154498.0,
+                  "PIPE_V": 5154497.0
+                },
+                "score": [
+                  5154498.0,
+                  2109928.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 739744,
+                "delta_read_bytes": 1738448,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 371480,
+                "group_finish": 5154497.0,
+                "group_start": 1779992.0,
+                "pipe_ends": {
+                  "PIPE_M": 3508532.0,
+                  "PIPE_MTE2": 5113514.0,
+                  "PIPE_MTE3": 5154498.0,
+                  "PIPE_V": 5154497.0
+                },
+                "score": [
+                  5154498.0,
+                  2109928.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 738524,
+                "delta_read_bytes": 1737838,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 370870,
+                "group_finish": 6811525.0,
+                "group_start": 5035817.0,
+                "pipe_ends": {
+                  "PIPE_M": 6764357.0,
+                  "PIPE_MTE2": 4566490.0,
+                  "PIPE_MTE3": 6811526.0,
+                  "PIPE_V": 6811525.0
+                },
+                "score": [
+                  6811526.0,
+                  2108708.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 738500,
+                "delta_read_bytes": 1737826,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 370858,
+                "group_finish": 6279261.0,
+                "group_start": 4503553.0,
+                "pipe_ends": {
+                  "PIPE_M": 6232093.0,
+                  "PIPE_MTE2": 5113203.0,
+                  "PIPE_MTE3": 6279262.0,
+                  "PIPE_V": 6279261.0
+                },
+                "score": [
+                  6279262.0,
+                  2108684.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 2464,
+            "delta_read_bytes": 609488,
+            "delta_repeated_input_bytes": 760320,
+            "delta_write_bytes": 2840,
+            "group_finish": 5130559.0,
+            "group_id": 9,
+            "group_start": 2539913.0,
+            "rank": 1728540
+          }
+        ],
+        "original_graph_copy_bytes": 9932740
+      },
+      "plan_hash": "89f61e1684d1d8d0f2a94cf54dc37a94d4c67cf83816665a2353bdf35584b426",
+      "plan_path": "results_round3/attribution_case014_n5_g10/schedules/case_014_n5_partp2_schedp3_r03-attribution-case014-n5-g10.json",
+      "requested_group_count": 10,
+      "run_id": "r03-attribution-case014-n5-g10",
+      "schedule_problem": 3,
+      "solver_code_hash": "0d90dd088263029ff3331d78b12bd8b24fe978308872960852c26c2396cc507c",
+      "spill_added_copy_bytes": 55587744,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 408860,
+        "1": 151200,
+        "2": 148248,
+        "3": 504216,
+        "4": 438900
+      }
+    },
+    {
+      "active_core_count": 5,
+      "actual_group_count": 10,
+      "added_copy_bytes": 68526400,
+      "cache_hit_rate": 0.21816131250002055,
+      "candidate_id": "case_014_n5_partp3_schedp2_r03-attribution-case014-n5-g10",
+      "case": "case_014",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 11.010931499768049,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "e27abb053ac57786e510ba80e60a6ec60a8b0df11b2a818010a1df17c29d94dd",
+      "m_cycles_by_core": {
+        "0": 3428736,
+        "1": 3565620,
+        "2": 3470880,
+        "3": 3292956,
+        "4": 3467556
+      },
+      "ncores": 5,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 5698636,
+      "partition_added_copy_bytes": 16686496,
+      "partition_problem": 3,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 9900448,
+        "estimated_new_copy_bytes": 26619236,
+        "estimated_partition_added_copy_bytes": 16686496,
+        "estimated_partition_added_copy_bytes_recomputed": 16686496,
+        "estimated_read_copy_bytes": 21647912,
+        "estimated_repeated_input_bytes": 3018240,
+        "estimated_write_copy_bytes": 4971324,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 4001112,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 18432,
+            "group_finish": 1786976.0,
+            "group_id": 0,
+            "group_start": 34964.0,
+            "rank": 6745365.133333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3655568.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3655484.0,
+                  "PIPE_MTE2": 88357.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3655568.0
+                },
+                "score": [
+                  3655568.0,
+                  1285632.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1285632,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1879064.0,
+            "group_id": 6,
+            "group_start": 10472.0,
+            "rank": 5305630.333333334
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3522332.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3522332.0,
+                  "PIPE_MTE2": 88357.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3521540.0
+                },
+                "score": [
+                  3522332.0,
+                  1285632.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 622080,
+                "delta_repeated_input_bytes": 663552,
+                "delta_write_bytes": 0,
+                "group_finish": 3614336.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3614336.0,
+                  "PIPE_MTE2": 31878.0,
+                  "PIPE_V": 3613544.0
+                },
+                "score": [
+                  3614336.0,
+                  622080.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1745828.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1745828.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1745036.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1745828.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1745828.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1745036.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1745828.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1745828.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1745036.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1285632,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1745828.0,
+            "group_id": 7,
+            "group_start": 10472.0,
+            "rank": 5170020.733333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3533408.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3532976.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3533408.0
+                },
+                "score": [
+                  3533408.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3625412.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3624980.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3625412.0
+                },
+                "score": [
+                  3625412.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3492260.0,
+                "group_start": 1745828.0,
+                "pipe_ends": {
+                  "PIPE_M": 3491828.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3492260.0
+                },
+                "score": [
+                  3492260.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1879064.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1879064.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771229.0,
+            "group_id": 3,
+            "group_start": 24797.0,
+            "rank": 5011568.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3526424.0,
+                "group_start": 1782320.0,
+                "pipe_ends": {
+                  "PIPE_M": 3525992.0,
+                  "PIPE_MTE2": 73804.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3526424.0
+                },
+                "score": [
+                  3526424.0,
+                  414720.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 1995264,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 36864,
+                "group_finish": 3618428.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3617996.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 3618428.0
+                },
+                "score": [
+                  3618428.0,
+                  2032128.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 1995264,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 36864,
+                "group_finish": 3485276.0,
+                "group_start": 1745828.0,
+                "pipe_ends": {
+                  "PIPE_M": 3484844.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 3485276.0
+                },
+                "score": [
+                  3485276.0,
+                  2032128.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 520704,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 36864,
+                "group_finish": 3510245.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3509813.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 3510245.0
+                },
+                "score": [
+                  3510245.0,
+                  557568.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 1995264,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 36864,
+                "group_finish": 1938666.0,
+                "group_start": 25259.0,
+                "pipe_ends": {
+                  "PIPE_M": 1764275.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 1938666.0
+                },
+                "score": [
+                  1938666.0,
+                  2032128.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 73728,
+            "delta_read_bytes": 1995264,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 36864,
+            "group_finish": 1938666.0,
+            "group_id": 1,
+            "group_start": 25259.0,
+            "rank": 5004584.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3522500.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3522500.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 1787079.0,
+                  "PIPE_V": 3515948.0
+                },
+                "score": [
+                  3522500.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3614504.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3614504.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3607952.0
+                },
+                "score": [
+                  3614504.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3481352.0,
+                "group_start": 1745828.0,
+                "pipe_ends": {
+                  "PIPE_M": 3481352.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3474800.0
+                },
+                "score": [
+                  3481352.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3506321.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3506321.0,
+                  "PIPE_MTE2": 39735.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3506321.0,
+                  414720.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3523283.0,
+                "group_start": 1787759.0,
+                "pipe_ends": {
+                  "PIPE_M": 3523283.0,
+                  "PIPE_MTE2": 1795767.0,
+                  "PIPE_V": 3516731.0
+                },
+                "score": [
+                  3523283.0,
+                  483840.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 3481352.0,
+            "group_id": 4,
+            "group_start": 1745828.0,
+            "rank": 5002116.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3515948.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3515516.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 1787079.0,
+                  "PIPE_V": 3515948.0
+                },
+                "score": [
+                  3515948.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3607952.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3607520.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3607952.0
+                },
+                "score": [
+                  3607952.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 5210324.0,
+                "group_start": 3481352.0,
+                "pipe_ends": {
+                  "PIPE_M": 5209892.0,
+                  "PIPE_MTE2": 62373.0,
+                  "PIPE_V": 5210324.0
+                },
+                "score": [
+                  5210324.0,
+                  483840.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3499769.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 40890.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3499769.0,
+                  483840.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3493247.0,
+                "group_start": 1764275.0,
+                "pipe_ends": {
+                  "PIPE_M": 3492815.0,
+                  "PIPE_MTE2": 1794612.0,
+                  "PIPE_V": 3493247.0
+                },
+                "score": [
+                  3493247.0,
+                  414720.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 414720,
+            "delta_repeated_input_bytes": 1543680,
+            "delta_write_bytes": 0,
+            "group_finish": 3493247.0,
+            "group_id": 2,
+            "group_start": 1764275.0,
+            "rank": 4993903.533333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 4220928,
+                "delta_read_bytes": 4162560,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2110982,
+                "group_finish": 3476768.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3476660.0,
+                  "PIPE_MTE2": 1896735.0,
+                  "PIPE_MTE3": 2732937.0,
+                  "PIPE_V": 3476768.0
+                },
+                "score": [
+                  3493247.0,
+                  6273542.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 2036736,
+                "delta_read_bytes": 2448384,
+                "delta_repeated_input_bytes": 622080,
+                "delta_write_bytes": 1018886,
+                "group_finish": 3568772.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3568664.0,
+                  "PIPE_MTE2": 1746482.0,
+                  "PIPE_MTE3": 2824941.0,
+                  "PIPE_V": 3568772.0
+                },
+                "score": [
+                  3568772.0,
+                  3467270.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 2184192,
+                "delta_read_bytes": 2480640,
+                "delta_repeated_input_bytes": 663552,
+                "delta_write_bytes": 1092614,
+                "group_finish": 5171144.0,
+                "group_start": 3481352.0,
+                "pipe_ends": {
+                  "PIPE_M": 5171036.0,
+                  "PIPE_MTE2": 1879718.0,
+                  "PIPE_MTE3": 4427313.0,
+                  "PIPE_V": 5171144.0
+                },
+                "score": [
+                  5171144.0,
+                  3573254.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4220928,
+                "delta_read_bytes": 4162560,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2110982,
+                "group_finish": 3460589.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3460481.0,
+                  "PIPE_MTE2": 1896735.0,
+                  "PIPE_MTE3": 2716758.0,
+                  "PIPE_V": 3460589.0
+                },
+                "score": [
+                  3493247.0,
+                  6273542.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 4220928,
+                "delta_read_bytes": 4162560,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2110982,
+                "group_finish": 5182607.0,
+                "group_start": 3492815.0,
+                "pipe_ends": {
+                  "PIPE_M": 5182499.0,
+                  "PIPE_MTE2": 1896735.0,
+                  "PIPE_MTE3": 4438776.0,
+                  "PIPE_V": 5182607.0
+                },
+                "score": [
+                  5182607.0,
+                  6273542.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 4220928,
+            "delta_read_bytes": 4162560,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 2110982,
+            "group_finish": 3476768.0,
+            "group_id": 8,
+            "group_start": 1786976.0,
+            "rank": 3400219.1333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 4964352,
+                "delta_read_bytes": 2896896,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 2482718,
+                "group_finish": 5094320.0,
+                "group_start": 3476660.0,
+                "pipe_ends": {
+                  "PIPE_M": 5023616.0,
+                  "PIPE_MTE2": 3515068.0,
+                  "PIPE_MTE3": 5093711.0,
+                  "PIPE_V": 5094320.0
+                },
+                "score": [
+                  5094320.0,
+                  5379614.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 6057984,
+                "delta_read_bytes": 4918272,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3029534,
+                "group_finish": 3719692.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3425936.0,
+                  "PIPE_MTE2": 3515068.0,
+                  "PIPE_MTE3": 3719083.0,
+                  "PIPE_V": 3719692.0
+                },
+                "score": [
+                  3719692.0,
+                  7947806.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 4767744,
+                "delta_read_bytes": 2729472,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 2384414,
+                "group_finish": 5099012.0,
+                "group_start": 3476696.0,
+                "pipe_ends": {
+                  "PIPE_M": 5028308.0,
+                  "PIPE_MTE2": 3504253.0,
+                  "PIPE_MTE3": 5098403.0,
+                  "PIPE_V": 5099012.0
+                },
+                "score": [
+                  5099012.0,
+                  5113886.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4829184,
+                "delta_read_bytes": 2829312,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 2415134,
+                "group_finish": 3709392.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3317753.0,
+                  "PIPE_MTE2": 3504768.0,
+                  "PIPE_MTE3": 3708783.0,
+                  "PIPE_V": 3709392.0
+                },
+                "score": [
+                  3709392.0,
+                  5244446.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 3612672,
+                "delta_read_bytes": 2221056,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1806878,
+                "group_finish": 5110475.0,
+                "group_start": 3492815.0,
+                "pipe_ends": {
+                  "PIPE_M": 5039771.0,
+                  "PIPE_MTE2": 3482058.0,
+                  "PIPE_MTE3": 5109866.0,
+                  "PIPE_V": 5110475.0
+                },
+                "score": [
+                  5110475.0,
+                  4027934.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 4829184,
+            "delta_read_bytes": 2829312,
+            "delta_repeated_input_bytes": 1474560,
+            "delta_write_bytes": 2415134,
+            "group_finish": 3709392.0,
+            "group_id": 5,
+            "group_start": 1770797.0,
+            "rank": 3244588.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 1220,
+                "delta_read_bytes": 541282,
+                "delta_repeated_input_bytes": 827904,
+                "delta_write_bytes": 2218,
+                "group_finish": 5220940.0,
+                "group_start": 3476660.0,
+                "pipe_ends": {
+                  "PIPE_M": 5173772.0,
+                  "PIPE_MTE2": 3709894.0,
+                  "PIPE_MTE3": 5220941.0,
+                  "PIPE_V": 5220940.0
+                },
+                "score": [
+                  5220941.0,
+                  543500.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 776608,
+                "delta_read_bytes": 1756880,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389912,
+                "group_finish": 3906962.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3576092.0,
+                  "PIPE_MTE2": 3716694.0,
+                  "PIPE_MTE3": 3906963.0,
+                  "PIPE_V": 3906962.0
+                },
+                "score": [
+                  3906963.0,
+                  2146792.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 776608,
+                "delta_read_bytes": 1756880,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389912,
+                "group_finish": 5225632.0,
+                "group_start": 3481352.0,
+                "pipe_ends": {
+                  "PIPE_M": 5178464.0,
+                  "PIPE_MTE2": 3716694.0,
+                  "PIPE_MTE3": 5225633.0,
+                  "PIPE_V": 5225632.0
+                },
+                "score": [
+                  5225633.0,
+                  2146792.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 775388,
+                "delta_read_bytes": 1756270,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389302,
+                "group_finish": 5262371.0,
+                "group_start": 3518091.0,
+                "pipe_ends": {
+                  "PIPE_M": 5215203.0,
+                  "PIPE_MTE2": 3534470.0,
+                  "PIPE_MTE3": 5262372.0,
+                  "PIPE_V": 5262371.0
+                },
+                "score": [
+                  5262372.0,
+                  2145572.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 776608,
+                "delta_read_bytes": 1756880,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389912,
+                "group_finish": 5237095.0,
+                "group_start": 3492815.0,
+                "pipe_ends": {
+                  "PIPE_M": 5189927.0,
+                  "PIPE_MTE2": 3716694.0,
+                  "PIPE_MTE3": 5237096.0,
+                  "PIPE_V": 5237095.0
+                },
+                "score": [
+                  5237096.0,
+                  2146792.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 776608,
+            "delta_read_bytes": 1756880,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 389912,
+            "group_finish": 3906962.0,
+            "group_id": 9,
+            "group_start": 1878980.0,
+            "rank": 1697112
+          }
+        ],
+        "original_graph_copy_bytes": 9932740
+      },
+      "plan_hash": "a8bbefbadaf7e1f85a351732466663e9bf1057d4ffab72c2b7d5450d3a175393",
+      "plan_path": "results_round3/attribution_case014_n5_g10/schedules/case_014_n5_partp3_schedp2_r03-attribution-case014-n5-g10.json",
+      "requested_group_count": 10,
+      "run_id": "r03-attribution-case014-n5-g10",
+      "schedule_problem": 2,
+      "solver_code_hash": "0d90dd088263029ff3331d78b12bd8b24fe978308872960852c26c2396cc507c",
+      "spill_added_copy_bytes": 51839904,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 347436,
+        "1": 349532,
+        "2": 297528,
+        "3": 356040,
+        "4": 300888
+      }
+    },
+    {
+      "active_core_count": 5,
+      "actual_group_count": 10,
+      "added_copy_bytes": 68526400,
+      "cache_hit_rate": 0.21816131250002055,
+      "candidate_id": "case_014_n5_partp3_schedp3_r03-attribution-case014-n5-g10",
+      "case": "case_014",
+      "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluation_problem": 3,
+      "evaluation_wall_time_sec": 10.786347374785691,
+      "experiment_id": "r01_partition_schedule",
+      "graph_hash": "e27abb053ac57786e510ba80e60a6ec60a8b0df11b2a818010a1df17c29d94dd",
+      "m_cycles_by_core": {
+        "0": 3428736,
+        "1": 3565620,
+        "2": 3470880,
+        "3": 3292956,
+        "4": 3467556
+      },
+      "ncores": 5,
+      "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+      "official_makespan": 5698636,
+      "partition_added_copy_bytes": 16686496,
+      "partition_problem": 3,
+      "placement_diagnostics": {
+        "estimated_cross_copy_bytes": 9900448,
+        "estimated_new_copy_bytes": 26619236,
+        "estimated_partition_added_copy_bytes": 16686496,
+        "estimated_partition_added_copy_bytes_recomputed": 16686496,
+        "estimated_read_copy_bytes": 21647912,
+        "estimated_repeated_input_bytes": 3018240,
+        "estimated_write_copy_bytes": 4971324,
+        "groups": [
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 4001112,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 18432,
+                "group_finish": 1786976.0,
+                "group_start": 34964.0,
+                "pipe_ends": {
+                  "PIPE_M": 1786976.0,
+                  "PIPE_MTE2": 66874.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 1780424.0
+                },
+                "score": [
+                  1786976.0,
+                  4019544.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 4001112,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 18432,
+            "group_finish": 1786976.0,
+            "group_id": 0,
+            "group_start": 34964.0,
+            "rank": 6745365.133333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3655568.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3655484.0,
+                  "PIPE_MTE2": 88357.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3655568.0
+                },
+                "score": [
+                  3655568.0,
+                  1285632.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1879064.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1878980.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1879064.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1285632,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1879064.0,
+            "group_id": 6,
+            "group_start": 10472.0,
+            "rank": 5305630.333333334
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3522332.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3522332.0,
+                  "PIPE_MTE2": 88357.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3521540.0
+                },
+                "score": [
+                  3522332.0,
+                  1285632.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 622080,
+                "delta_repeated_input_bytes": 663552,
+                "delta_write_bytes": 0,
+                "group_finish": 3614336.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3614336.0,
+                  "PIPE_MTE2": 31878.0,
+                  "PIPE_V": 3613544.0
+                },
+                "score": [
+                  3614336.0,
+                  622080.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1745828.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1745828.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1745036.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1745828.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1745828.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1745036.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1285632,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1745828.0,
+                "group_start": 10472.0,
+                "pipe_ends": {
+                  "PIPE_M": 1745828.0,
+                  "PIPE_MTE2": 21483.0,
+                  "PIPE_V": 1745036.0
+                },
+                "score": [
+                  1879064.0,
+                  1285632.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1285632,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1745828.0,
+            "group_id": 7,
+            "group_start": 10472.0,
+            "rank": 5170020.733333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3533408.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3532976.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3533408.0
+                },
+                "score": [
+                  3533408.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3625412.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3624980.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3625412.0
+                },
+                "score": [
+                  3625412.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3492260.0,
+                "group_start": 1745828.0,
+                "pipe_ends": {
+                  "PIPE_M": 3491828.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3492260.0
+                },
+                "score": [
+                  3492260.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1879064.0,
+                  1958400.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 1771229.0,
+                "group_start": 24797.0,
+                "pipe_ends": {
+                  "PIPE_M": 1770797.0,
+                  "PIPE_MTE2": 32805.0,
+                  "PIPE_V": 1771229.0
+                },
+                "score": [
+                  1879064.0,
+                  1958400.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 1771229.0,
+            "group_id": 3,
+            "group_start": 24797.0,
+            "rank": 5011568.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3526424.0,
+                "group_start": 1782320.0,
+                "pipe_ends": {
+                  "PIPE_M": 3525992.0,
+                  "PIPE_MTE2": 73804.0,
+                  "PIPE_MTE3": 226224.0,
+                  "PIPE_V": 3526424.0
+                },
+                "score": [
+                  3526424.0,
+                  414720.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 1995264,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 36864,
+                "group_finish": 3618428.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3617996.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 3618428.0
+                },
+                "score": [
+                  3618428.0,
+                  2032128.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 1995264,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 36864,
+                "group_finish": 3485276.0,
+                "group_start": 1745828.0,
+                "pipe_ends": {
+                  "PIPE_M": 3484844.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 3485276.0
+                },
+                "score": [
+                  3485276.0,
+                  2032128.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 520704,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 36864,
+                "group_finish": 3510245.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3509813.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 3510245.0
+                },
+                "score": [
+                  3510245.0,
+                  557568.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 73728,
+                "delta_read_bytes": 1995264,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 36864,
+                "group_finish": 1938666.0,
+                "group_start": 25259.0,
+                "pipe_ends": {
+                  "PIPE_M": 1764275.0,
+                  "PIPE_MTE2": 1787682.0,
+                  "PIPE_V": 1938666.0
+                },
+                "score": [
+                  1938666.0,
+                  2032128.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 73728,
+            "delta_read_bytes": 1995264,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 36864,
+            "group_finish": 1938666.0,
+            "group_id": 1,
+            "group_start": 25259.0,
+            "rank": 5004584.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3522500.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3522500.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 1787079.0,
+                  "PIPE_V": 3515948.0
+                },
+                "score": [
+                  3522500.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3614504.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3614504.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3607952.0
+                },
+                "score": [
+                  3614504.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3481352.0,
+                "group_start": 1745828.0,
+                "pipe_ends": {
+                  "PIPE_M": 3481352.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3474800.0
+                },
+                "score": [
+                  3481352.0,
+                  1958400.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3506321.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3506321.0,
+                  "PIPE_MTE2": 39735.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3506321.0,
+                  414720.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3523283.0,
+                "group_start": 1787759.0,
+                "pipe_ends": {
+                  "PIPE_M": 3523283.0,
+                  "PIPE_MTE2": 1795767.0,
+                  "PIPE_V": 3516731.0
+                },
+                "score": [
+                  3523283.0,
+                  483840.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 2,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 1958400,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 0,
+            "group_finish": 3481352.0,
+            "group_id": 4,
+            "group_start": 1745828.0,
+            "rank": 5002116.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3515948.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3515516.0,
+                  "PIPE_MTE2": 74959.0,
+                  "PIPE_MTE3": 1787079.0,
+                  "PIPE_V": 3515948.0
+                },
+                "score": [
+                  3515948.0,
+                  483840.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 1958400,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 0,
+                "group_finish": 3607952.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3607520.0,
+                  "PIPE_MTE2": 54288.0,
+                  "PIPE_V": 3607952.0
+                },
+                "score": [
+                  3607952.0,
+                  1958400.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 5210324.0,
+                "group_start": 3481352.0,
+                "pipe_ends": {
+                  "PIPE_M": 5209892.0,
+                  "PIPE_MTE2": 62373.0,
+                  "PIPE_V": 5210324.0
+                },
+                "score": [
+                  5210324.0,
+                  483840.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 483840,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 0,
+                "group_finish": 3499769.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3499337.0,
+                  "PIPE_MTE2": 40020.0,
+                  "PIPE_V": 3499769.0
+                },
+                "score": [
+                  3499769.0,
+                  483840.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 0,
+                "delta_read_bytes": 414720,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 0,
+                "group_finish": 3493247.0,
+                "group_start": 1764275.0,
+                "pipe_ends": {
+                  "PIPE_M": 3492815.0,
+                  "PIPE_MTE2": 1794612.0,
+                  "PIPE_V": 3493247.0
+                },
+                "score": [
+                  3493247.0,
+                  414720.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 4,
+            "delta_cross_copy_bytes": 0,
+            "delta_read_bytes": 414720,
+            "delta_repeated_input_bytes": 1543680,
+            "delta_write_bytes": 0,
+            "group_finish": 3493247.0,
+            "group_id": 2,
+            "group_start": 1764275.0,
+            "rank": 4993903.533333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 4220928,
+                "delta_read_bytes": 4162560,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2110982,
+                "group_finish": 3476768.0,
+                "group_start": 1786976.0,
+                "pipe_ends": {
+                  "PIPE_M": 3476660.0,
+                  "PIPE_MTE2": 1896735.0,
+                  "PIPE_MTE3": 2732937.0,
+                  "PIPE_V": 3476768.0
+                },
+                "score": [
+                  3493247.0,
+                  6273542.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 2036736,
+                "delta_read_bytes": 2448384,
+                "delta_repeated_input_bytes": 622080,
+                "delta_write_bytes": 1018886,
+                "group_finish": 3568772.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3568664.0,
+                  "PIPE_MTE2": 1746482.0,
+                  "PIPE_MTE3": 2824941.0,
+                  "PIPE_V": 3568772.0
+                },
+                "score": [
+                  3568772.0,
+                  3467270.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 2184192,
+                "delta_read_bytes": 2480640,
+                "delta_repeated_input_bytes": 663552,
+                "delta_write_bytes": 1092614,
+                "group_finish": 5171144.0,
+                "group_start": 3481352.0,
+                "pipe_ends": {
+                  "PIPE_M": 5171036.0,
+                  "PIPE_MTE2": 1879718.0,
+                  "PIPE_MTE3": 4427313.0,
+                  "PIPE_V": 5171144.0
+                },
+                "score": [
+                  5171144.0,
+                  3573254.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4220928,
+                "delta_read_bytes": 4162560,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2110982,
+                "group_finish": 3460589.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3460481.0,
+                  "PIPE_MTE2": 1896735.0,
+                  "PIPE_MTE3": 2716758.0,
+                  "PIPE_V": 3460589.0
+                },
+                "score": [
+                  3493247.0,
+                  6273542.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 4220928,
+                "delta_read_bytes": 4162560,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 2110982,
+                "group_finish": 5182607.0,
+                "group_start": 3492815.0,
+                "pipe_ends": {
+                  "PIPE_M": 5182499.0,
+                  "PIPE_MTE2": 1896735.0,
+                  "PIPE_MTE3": 4438776.0,
+                  "PIPE_V": 5182607.0
+                },
+                "score": [
+                  5182607.0,
+                  6273542.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 0,
+            "delta_cross_copy_bytes": 4220928,
+            "delta_read_bytes": 4162560,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 2110982,
+            "group_finish": 3476768.0,
+            "group_id": 8,
+            "group_start": 1786976.0,
+            "rank": 3400219.1333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 4964352,
+                "delta_read_bytes": 2896896,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 2482718,
+                "group_finish": 5094320.0,
+                "group_start": 3476660.0,
+                "pipe_ends": {
+                  "PIPE_M": 5023616.0,
+                  "PIPE_MTE2": 3515068.0,
+                  "PIPE_MTE3": 5093711.0,
+                  "PIPE_V": 5094320.0
+                },
+                "score": [
+                  5094320.0,
+                  5379614.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 6057984,
+                "delta_read_bytes": 4918272,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 3029534,
+                "group_finish": 3719692.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3425936.0,
+                  "PIPE_MTE2": 3515068.0,
+                  "PIPE_MTE3": 3719083.0,
+                  "PIPE_V": 3719692.0
+                },
+                "score": [
+                  3719692.0,
+                  7947806.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 4767744,
+                "delta_read_bytes": 2729472,
+                "delta_repeated_input_bytes": 1543680,
+                "delta_write_bytes": 2384414,
+                "group_finish": 5099012.0,
+                "group_start": 3476696.0,
+                "pipe_ends": {
+                  "PIPE_M": 5028308.0,
+                  "PIPE_MTE2": 3504253.0,
+                  "PIPE_MTE3": 5098403.0,
+                  "PIPE_V": 5099012.0
+                },
+                "score": [
+                  5099012.0,
+                  5113886.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 4829184,
+                "delta_read_bytes": 2829312,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 2415134,
+                "group_finish": 3709392.0,
+                "group_start": 1770797.0,
+                "pipe_ends": {
+                  "PIPE_M": 3317753.0,
+                  "PIPE_MTE2": 3504768.0,
+                  "PIPE_MTE3": 3708783.0,
+                  "PIPE_V": 3709392.0
+                },
+                "score": [
+                  3709392.0,
+                  5244446.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 3612672,
+                "delta_read_bytes": 2221056,
+                "delta_repeated_input_bytes": 1474560,
+                "delta_write_bytes": 1806878,
+                "group_finish": 5110475.0,
+                "group_start": 3492815.0,
+                "pipe_ends": {
+                  "PIPE_M": 5039771.0,
+                  "PIPE_MTE2": 3482058.0,
+                  "PIPE_MTE3": 5109866.0,
+                  "PIPE_V": 5110475.0
+                },
+                "score": [
+                  5110475.0,
+                  4027934.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 3,
+            "delta_cross_copy_bytes": 4829184,
+            "delta_read_bytes": 2829312,
+            "delta_repeated_input_bytes": 1474560,
+            "delta_write_bytes": 2415134,
+            "group_finish": 3709392.0,
+            "group_id": 5,
+            "group_start": 1770797.0,
+            "rank": 3244588.333333333
+          },
+          {
+            "candidate_placements": [
+              {
+                "core_id": 0,
+                "delta_cross_copy_bytes": 1220,
+                "delta_read_bytes": 541282,
+                "delta_repeated_input_bytes": 827904,
+                "delta_write_bytes": 2218,
+                "group_finish": 5220940.0,
+                "group_start": 3476660.0,
+                "pipe_ends": {
+                  "PIPE_M": 5173772.0,
+                  "PIPE_MTE2": 3709894.0,
+                  "PIPE_MTE3": 5220941.0,
+                  "PIPE_V": 5220940.0
+                },
+                "score": [
+                  5220941.0,
+                  543500.0,
+                  0
+                ]
+              },
+              {
+                "core_id": 1,
+                "delta_cross_copy_bytes": 776608,
+                "delta_read_bytes": 1756880,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389912,
+                "group_finish": 3906962.0,
+                "group_start": 1878980.0,
+                "pipe_ends": {
+                  "PIPE_M": 3576092.0,
+                  "PIPE_MTE2": 3716694.0,
+                  "PIPE_MTE3": 3906963.0,
+                  "PIPE_V": 3906962.0
+                },
+                "score": [
+                  3906963.0,
+                  2146792.0,
+                  1
+                ]
+              },
+              {
+                "core_id": 2,
+                "delta_cross_copy_bytes": 776608,
+                "delta_read_bytes": 1756880,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389912,
+                "group_finish": 5225632.0,
+                "group_start": 3481352.0,
+                "pipe_ends": {
+                  "PIPE_M": 5178464.0,
+                  "PIPE_MTE2": 3716694.0,
+                  "PIPE_MTE3": 5225633.0,
+                  "PIPE_V": 5225632.0
+                },
+                "score": [
+                  5225633.0,
+                  2146792.0,
+                  2
+                ]
+              },
+              {
+                "core_id": 3,
+                "delta_cross_copy_bytes": 775388,
+                "delta_read_bytes": 1756270,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389302,
+                "group_finish": 5262371.0,
+                "group_start": 3518091.0,
+                "pipe_ends": {
+                  "PIPE_M": 5215203.0,
+                  "PIPE_MTE2": 3534470.0,
+                  "PIPE_MTE3": 5262372.0,
+                  "PIPE_V": 5262371.0
+                },
+                "score": [
+                  5262372.0,
+                  2145572.0,
+                  3
+                ]
+              },
+              {
+                "core_id": 4,
+                "delta_cross_copy_bytes": 776608,
+                "delta_read_bytes": 1756880,
+                "delta_repeated_input_bytes": 0,
+                "delta_write_bytes": 389912,
+                "group_finish": 5237095.0,
+                "group_start": 3492815.0,
+                "pipe_ends": {
+                  "PIPE_M": 5189927.0,
+                  "PIPE_MTE2": 3716694.0,
+                  "PIPE_MTE3": 5237096.0,
+                  "PIPE_V": 5237095.0
+                },
+                "score": [
+                  5237096.0,
+                  2146792.0,
+                  4
+                ]
+              }
+            ],
+            "chosen_core": 1,
+            "delta_cross_copy_bytes": 776608,
+            "delta_read_bytes": 1756880,
+            "delta_repeated_input_bytes": 0,
+            "delta_write_bytes": 389912,
+            "group_finish": 3906962.0,
+            "group_id": 9,
+            "group_start": 1878980.0,
+            "rank": 1697112
+          }
+        ],
+        "original_graph_copy_bytes": 9932740
+      },
+      "plan_hash": "a8bbefbadaf7e1f85a351732466663e9bf1057d4ffab72c2b7d5450d3a175393",
+      "plan_path": "results_round3/attribution_case014_n5_g10/schedules/case_014_n5_partp3_schedp3_r03-attribution-case014-n5-g10.json",
+      "requested_group_count": 10,
+      "run_id": "r03-attribution-case014-n5-g10",
+      "schedule_problem": 3,
+      "solver_code_hash": "0d90dd088263029ff3331d78b12bd8b24fe978308872960852c26c2396cc507c",
+      "spill_added_copy_bytes": 51839904,
+      "status": "evaluated",
+      "v_cycles_by_core": {
+        "0": 347436,
+        "1": 349532,
+        "2": 297528,
+        "3": 356040,
+        "4": 300888
+      }
+    }
+  ],
+  "experiment_id": "r01_partition_schedule",
+  "run_id": "r03-attribution-case014-n5-g10"
+}
