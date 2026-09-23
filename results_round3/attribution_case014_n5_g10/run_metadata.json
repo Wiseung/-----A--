@@ -1,0 +1,17 @@
+{
+  "case": "case_014",
+  "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "evaluation_problem": 3,
+  "evaluator_timeout_sec": 600.0,
+  "experiment_id": "r01_partition_schedule",
+  "ncores": 5,
+  "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+  "official_raw_archive": "official_raw.tar.gz",
+  "official_raw_archive_sha256": "1678c523cb575b790405766ab4e604195bbab666f146dc81ecbf2bd8e623b533",
+  "official_trace_output_generated": true,
+  "requested_group_count": 10,
+  "retain_traces": true,
+  "run_id": "r03-attribution-case014-n5-g10",
+  "solver_code_hash": "0d90dd088263029ff3331d78b12bd8b24fe978308872960852c26c2396cc507c",
+  "traces_in_git_archive": false
+}

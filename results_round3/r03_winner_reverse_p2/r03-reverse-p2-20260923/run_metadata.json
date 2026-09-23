@@ -1,0 +1,19 @@
+{
+  "candidate_count": 4,
+  "config_hash": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "evaluation_problem": 2,
+  "evaluator_timeout_sec": 600.0,
+  "experiment_id": "r03_winner_reverse_p2",
+  "official_code_hash": "4d7111a8a3e9158e2fa51d67ea28f63fea2b06fa8d5bdeb30e2c241e87e73b70",
+  "official_raw_archive": "official_raw.tar.gz",
+  "official_raw_archive_sha256": "c6c2d2b8303571a71f4e673745f031623ac7a62de51767dfc394f189750e4992",
+  "official_trace_output_generated": true,
+  "retain_traces": false,
+  "run_id": "r03-reverse-p2-20260923",
+  "source_bundle": "r02_source_bundle.tar.gz",
+  "source_bundle_sha256": "f6ba231b26f168eb43b7f98948b5327e035a75180696e3778e5040726bab01a6",
+  "solver_code_hash": "0d90dd088263029ff3331d78b12bd8b24fe978308872960852c26c2396cc507c",
+  "source_dir": "results_round2/r02_problem3_warm_start/r02-full-20260923",
+  "source_experiment_id": "r02_problem3_warm_start",
+  "source_run_id": "r02-full-20260923"
+}
