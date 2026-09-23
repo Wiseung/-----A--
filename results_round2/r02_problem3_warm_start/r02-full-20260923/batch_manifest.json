@@ -1,0 +1,23 @@
+{
+  "arms": [
+    "p3_original",
+    "p2_baseline",
+    "p2_to_p3_warm",
+    "p2_to_p3_mixed"
+  ],
+  "cases": [
+    "case_019",
+    "case_034",
+    "case_014"
+  ],
+  "data_dir": "2026_official/data",
+  "ncores": [
+    2,
+    4,
+    5
+  ],
+  "problems": [
+    2,
+    3
+  ]
+}

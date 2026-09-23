@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import tempfile
 import time
@@ -10,7 +11,8 @@ from solver.evaluate_adapter import EvaluationError, EvaluationResult
 from solver.graph_analysis import analyze_graph
 from solver.graph_io import load_config, parse_graph
 from solver.schedule_b import generate_schedule as schedule_2
-from solver.solver import _store_summary, solve_one
+from solver.run_identity import build_fingerprints
+from solver.solver import _store_summary, plan_signature, solve_one
 from tests.helpers import make_chain_graph
 
 
@@ -135,7 +137,7 @@ class SolverReliabilityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             results_dir = Path(temporary)
             evaluator = StubEvaluator(timeout_sec=1.0)
-            self._solve(results_dir, evaluator, problem=3)
+            row = self._solve(results_dir, evaluator, problem=3)
 
             expected_plan = schedule_2(
                 analyze_graph(self.graph), 2, self.config, 2
@@ -147,6 +149,57 @@ class SolverReliabilityTests(unittest.TestCase):
                 (results_dir / "candidate_trials.jsonl").read_text(encoding="utf-8").splitlines()[0]
             )
             self.assertTrue(trial["candidate_family"].startswith("problem2_warm_start_g"))
+            self.assertEqual(
+                row["best_candidate_source"], trial["candidate_family"]
+            )
+            validated_dir = results_dir / "validated"
+            schedules_dir = validated_dir / "schedules"
+            schedules_dir.mkdir(parents=True)
+            saved_plan = schedule_2(
+                analyze_graph(self.graph), 2, self.config, 1
+            )
+            plan_path = schedules_dir / (
+                "case_test_p2_n2_test-run_best_validated.json"
+            )
+            plan_path.write_text(
+                json.dumps(saved_plan, ensure_ascii=False), encoding="utf-8"
+            )
+            fingerprints = build_fingerprints(
+                self.graph.path,
+                self.config["path"],
+                self.root / "2026_official",
+                self.root / "solver",
+            )
+            metadata = {
+                "problem": 2,
+                "ncores": 2,
+                "plan_hash": hashlib.sha256(
+                    plan_signature(saved_plan).encode("utf-8")
+                ).hexdigest(),
+                **fingerprints,
+            }
+            plan_path.with_suffix(".metadata.json").write_text(
+                json.dumps(metadata, ensure_ascii=False), encoding="utf-8"
+            )
+            saved_evaluator = StubEvaluator(timeout_sec=1.0)
+            saved_evaluator.config_path = self.config["path"]
+
+            saved_row = self._solve(validated_dir, saved_evaluator, problem=3)
+
+            self.assertEqual(saved_evaluator.plans[0], saved_plan)
+            self.assertEqual(
+                saved_row["best_candidate_source"],
+                "problem2_validated_warm_start",
+            )
+            saved_trial = json.loads(
+                (validated_dir / "candidate_trials.jsonl")
+                .read_text(encoding="utf-8").splitlines()[0]
+            )
+            self.assertEqual(
+                saved_trial["candidate_family"],
+                "problem2_validated_warm_start",
+            )
+            self.assertEqual(saved_trial["source_plan"], plan_path.as_posix())
 
     def test_lower_core_plan_is_extended_with_empty_core(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
