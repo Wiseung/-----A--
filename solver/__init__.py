@@ -1,0 +1,1 @@
+"""2026 multi-core graph partitioning and scheduling solver."""

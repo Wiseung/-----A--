@@ -1,0 +1,21 @@
+{
+  "tensors": [
+    {"id": 1, "pos": "DDR", "size": 16},
+    {"id": 2, "pos": "UB", "size": 16},
+    {"id": 3, "pos": "UB", "size": 16},
+    {"id": 4, "pos": "DDR", "size": 16}
+  ],
+  "ops": [
+    {"id": 10, "op": "COPY_IN", "pipe": "PIPE_MTE2", "cycles": 1},
+    {"id": 11, "op": "ADD", "pipe": "PIPE_V", "cycles": 4},
+    {"id": 12, "op": "COPY_OUT", "pipe": "PIPE_MTE3", "cycles": 1}
+  ],
+  "edges": [
+    {"source": 1, "target": 10},
+    {"source": 10, "target": 2},
+    {"source": 2, "target": 11},
+    {"source": 11, "target": 3},
+    {"source": 3, "target": 12},
+    {"source": 12, "target": 4}
+  ]
+}

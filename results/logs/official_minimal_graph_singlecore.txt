@@ -1,0 +1,6 @@
+input_graph: official_minimal_graph.json
+scene: A
+makespan: 6
+num_cores: 1
+data movement: scheduled_copy_bytes=32, physical_ddr_bytes=32
+core 0: ops=3, end=6

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600">
+<rect width="100%" height="100%" fill="white"/>
+<text x="480.0" y="34.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" fill="#202A33">Problem 2: arithmetic mean speedup</text>
+<line x1="88" y1="518.0" x2="926" y2="518.0" stroke="#D8DEE4"/>
+<text x="76.0" y="523.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#202A33">0.00</text>
+<line x1="88" y1="428.8" x2="926" y2="428.8" stroke="#D8DEE4"/>
+<text x="76.0" y="433.8" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#202A33">0.65</text>
+<line x1="88" y1="339.6" x2="926" y2="339.6" stroke="#D8DEE4"/>
+<text x="76.0" y="344.6" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#202A33">1.31</text>
+<line x1="88" y1="250.4" x2="926" y2="250.4" stroke="#D8DEE4"/>
+<text x="76.0" y="255.4" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#202A33">1.96</text>
+<line x1="88" y1="161.2" x2="926" y2="161.2" stroke="#D8DEE4"/>
+<text x="76.0" y="166.2" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#202A33">2.62</text>
+<line x1="88" y1="72.0" x2="926" y2="72.0" stroke="#D8DEE4"/>
+<text x="76.0" y="77.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#202A33">3.27</text>
+<line x1="88" y1="72" x2="88" y2="518" stroke="#35424C"/>
+<line x1="88" y1="518" x2="926" y2="518" stroke="#35424C"/>
+<line x1="88.0" y1="72" x2="88.0" y2="518" stroke="#EEF1F4"/>
+<text x="88.0" y="542.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#202A33">1</text>
+<line x1="297.5" y1="72" x2="297.5" y2="518" stroke="#EEF1F4"/>
+<text x="297.5" y="542.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#202A33">2</text>
+<line x1="507.0" y1="72" x2="507.0" y2="518" stroke="#EEF1F4"/>
+<text x="507.0" y="542.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#202A33">3</text>
+<line x1="716.5" y1="72" x2="716.5" y2="518" stroke="#EEF1F4"/>
+<text x="716.5" y="542.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#202A33">4</text>
+<line x1="926.0" y1="72" x2="926.0" y2="518" stroke="#EEF1F4"/>
+<text x="926.0" y="542.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#202A33">5</text>
+<text x="480.0" y="574.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#202A33">NPU cores</text>
+<text x="24" y="300.0" transform="rotate(-90 24 300.0)" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#202A33">Speedup</text>
+<line x1="108" y1="86" x2="134" y2="86" stroke="#D97706" stroke-width="3"/>
+<text x="142.0" y="91.0" text-anchor="start" font-family="Arial,sans-serif" font-size="12" fill="#202A33">Problem 2</text>
+<circle cx="88.0" cy="381.7" r="5" fill="#D97706"/>
+<text x="88.0" y="371.7" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#202A33">1.00 (k=3)</text>
+<line x1="88.0" y1="381.7" x2="297.5" y2="294.0" stroke="#D97706" stroke-width="3"/>
+<circle cx="297.5" cy="294.0" r="5" fill="#D97706"/>
+<text x="297.5" y="284.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#202A33">1.64 (k=4)</text>
+<line x1="297.5" y1="294.0" x2="507.0" y2="228.9" stroke="#D97706" stroke-width="3"/>
+<circle cx="507.0" cy="228.9" r="5" fill="#D97706"/>
+<text x="507.0" y="218.9" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#202A33">2.12 (k=3)</text>
+<line x1="507.0" y1="228.9" x2="716.5" y2="169.2" stroke="#D97706" stroke-width="3"/>
+<circle cx="716.5" cy="169.2" r="5" fill="#D97706"/>
+<text x="716.5" y="159.2" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#202A33">2.56 (k=3)</text>
+<line x1="716.5" y1="169.2" x2="926.0" y2="119.8" stroke="#D97706" stroke-width="3"/>
+<circle cx="926.0" cy="119.8" r="5" fill="#D97706"/>
+<text x="926.0" y="109.8" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#202A33">2.92 (k=3)</text>
+<text x="926.0" y="593.0" text-anchor="end" font-family="Arial,sans-serif" font-size="10" fill="#202A33">k = evaluated cases; missing combinations are omitted</text>
+</svg>
