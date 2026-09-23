@@ -1,0 +1,50 @@
+{
+  "manifest_source": "batch_manifest.json",
+  "runs": [
+    {
+      "experiment_id": "r02_topology_case019_final",
+      "run_id": "457738c42ffb",
+      "manifest_source": "batch_manifest.json",
+      "cases": [
+        "case_019"
+      ],
+      "planned_problems": [
+        2,
+        3
+      ],
+      "planned_ncores": [
+        4
+      ],
+      "planned_combinations": 2,
+      "main_multicore_planned_combinations": 2,
+      "success_combinations": 2,
+      "failure_combinations": 0,
+      "not_run_combinations": 0,
+      "single_core_reference_missing_cases": 0,
+      "outcomes": [
+        {
+          "case": "case_019",
+          "problem": 2,
+          "ncores": 4,
+          "status": "success",
+          "row_status": "evaluated",
+          "makespan": 26947,
+          "error": "",
+          "failure_stage": null,
+          "return_code": null
+        },
+        {
+          "case": "case_019",
+          "problem": 3,
+          "ncores": 4,
+          "status": "success",
+          "row_status": "evaluated",
+          "makespan": 26947,
+          "error": "",
+          "failure_stage": null,
+          "return_code": null
+        }
+      ]
+    }
+  ]
+}
