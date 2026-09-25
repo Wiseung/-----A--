@@ -3,11 +3,17 @@ from __future__ import annotations
 import unittest
 
 from solver.cache_aware import generate_schedule as schedule_3
+from solver.chain_partition import build_chains, partition_chain_contiguous
 from solver.graph_analysis import analyze_graph
 from solver.graph_io import load_config, parse_graph
 from solver.legality import validate_plan
 from solver.improve import generate_neighbor_candidates
-from solver.partition import Partition, partition_contiguous
+from solver.partition import (
+    Partition,
+    partition_cagg_lite,
+    partition_cagg_lite_coverage,
+    partition_contiguous,
+)
 from solver.schedule_a import generate_schedule as schedule_1
 from solver.schedule_b import generate_schedule as schedule_2
 from solver.schedule_common import _cache_contains_at, schedule_partition
@@ -31,6 +37,71 @@ class SmallGraphTests(unittest.TestCase):
                     partition = partition_contiguous(analysis, count, problem)
                     plan = generator(analysis, cores, self.config, len(partition.groups))
                     validate_plan(graph, plan, cores)
+
+    def test_cagg_lite_is_deterministic_and_schedulable(self) -> None:
+        generators = ((1, schedule_1), (2, schedule_2), (3, schedule_3))
+
+        for raw in (make_chain_graph(5), make_shared_input_graph(4)):
+            graph = parse_graph(raw)
+            analysis = analyze_graph(graph)
+            for problem, generator in generators:
+                partition = partition_cagg_lite(analysis, 4, problem)
+                repeated = partition_cagg_lite(analysis, 4, problem)
+
+                self.assertEqual(partition, repeated)
+                self.assertEqual(len(partition.groups), 4)
+                self.assertEqual(
+                    set(partition.op_to_subgraph), analysis.eligible_ops
+                )
+                self.assertTrue(all(partition.groups))
+                plan = generator(
+                    analysis,
+                    2,
+                    self.config,
+                    len(partition.groups),
+                    partition_strategy="cagg_lite",
+                )
+                validate_plan(graph, plan, 2)
+
+    def test_coverage_cagg_lite_is_schedulable(self) -> None:
+        graph = parse_graph(make_shared_input_graph(4))
+        analysis = analyze_graph(graph)
+        partition = partition_cagg_lite_coverage(analysis, 4, 2)
+
+        self.assertEqual(len(partition.groups), 4)
+        self.assertEqual(set(partition.op_to_subgraph), analysis.eligible_ops)
+        plan = schedule_2(
+            analysis,
+            2,
+            self.config,
+            len(partition.groups),
+            partition_strategy="cagg_lite_coverage",
+        )
+        validate_plan(graph, plan, 2)
+
+    def test_chain_partition_keeps_each_chain_intact(self) -> None:
+        for raw in (make_chain_graph(5), make_shared_input_graph(4)):
+            graph = parse_graph(raw)
+            analysis = analyze_graph(graph)
+            chains, chain_of_op, _ = build_chains(analysis)
+            partition = partition_chain_contiguous(analysis, 2, 2)
+
+            self.assertEqual(set(partition.op_to_subgraph), analysis.eligible_ops)
+            for chain in chains:
+                group_ids = {
+                    partition.op_to_subgraph[op_id]
+                    for op_id in chain.members
+                }
+                self.assertEqual(len(group_ids), 1)
+            self.assertEqual(set(chain_of_op), analysis.eligible_ops)
+            plan = schedule_2(
+                analysis,
+                2,
+                self.config,
+                len(partition.groups),
+                partition_strategy="chain_contiguous",
+            )
+            validate_plan(graph, plan, 2)
 
     def test_two_independent_ops_can_use_two_cores(self) -> None:
         graph = parse_graph(make_shared_input_graph(2))

@@ -5,8 +5,13 @@ from pathlib import Path
 
 from solver.graph_analysis import analyze_graph
 from solver.graph_io import load_config, parse_graph
+from solver.legality import validate_plan
 from solver.partition import Partition, _topological_order_for_partition, partition_contiguous
-from solver.schedule_common import _estimated_partition_copy_bytes, schedule_partition
+from solver.schedule_common import (
+    _estimated_partition_copy_bytes,
+    _reuse_distance_summary,
+    schedule_partition,
+)
 from tests.helpers import (
     make_chain_graph,
     make_fifo_reuse_graph,
@@ -104,6 +109,46 @@ class OfficialSemanticTests(unittest.TestCase):
             event["event"] == "insert" and tensor_a in event["evicted_tensor_ids"]
             for event in result["cache_events"]
         ))
+
+    def test_reuse_distance_counts_other_tensor_misses_once(self) -> None:
+        distance, by_tensor = _reuse_distance_summary([
+            (1.0, 0, 2, 8, False),
+            (2.0, 1, 3, 16, False),
+            (3.0, 2, 3, 16, True),
+            (4.0, 3, 2, 8, True),
+        ])
+
+        self.assertEqual(distance, 16)
+        self.assertEqual(by_tensor, {"2": 16, "3": 0})
+
+    def test_reuse_distance_ordering_records_cache_diagnostics(self) -> None:
+        raw, source_plan = make_fifo_reuse_graph()
+        graph = parse_graph(raw)
+        analysis = analyze_graph(graph)
+        groups = [[] for _ in range(9)]
+        op_to_subgraph = {
+            int(op_id): group_id
+            for op_id, group_id in source_plan["node_to_subgraph"].items()
+        }
+        for op_id, group_id in op_to_subgraph.items():
+            groups[group_id].append(op_id)
+        partition = Partition(groups, op_to_subgraph)
+        diagnostics = {}
+
+        plan = schedule_partition(
+            analysis,
+            partition,
+            5,
+            3,
+            self.config,
+            diagnostics,
+            cache_ordering="reuse_distance",
+        )
+        validate_plan(graph, plan, 5)
+
+        self.assertEqual(diagnostics["cache_ordering"], "reuse_distance")
+        self.assertGreater(diagnostics["cache_accesses"], 0)
+        self.assertGreaterEqual(diagnostics["reuse_distance_bytes"], 0)
 
     def test_tensor_larger_than_cache_is_not_inserted(self) -> None:
         size = 1_048_577
@@ -271,12 +316,87 @@ class OfficialSemanticTests(unittest.TestCase):
         schedule_partition(analysis, partition, 1, 2, self.config, diagnostics)
 
         chosen = diagnostics["groups"][0]
+        self.assertEqual(chosen["members"], [20])
+        self.assertEqual(chosen["m_cycles"], 0)
+        self.assertEqual(chosen["v_cycles"], 1)
+        self.assertEqual(chosen["work_by_pipe"]["PIPE_V"], 1)
         self.assertEqual(chosen["group_start"], 2)
         self.assertEqual(chosen["group_finish"], 3)
         self.assertEqual(
             chosen["candidate_placements"][0]["pipe_ends"]["PIPE_MTE2"],
             2,
         )
+
+    def test_scheduler_reports_live_range_proxy(self) -> None:
+        graph = parse_graph(make_shared_input_graph(2, size=128))
+        analysis = analyze_graph(graph)
+        partition = Partition(
+            groups=[[20], [21]],
+            op_to_subgraph={20: 0, 21: 1},
+        )
+        diagnostics = {}
+
+        schedule_partition(analysis, partition, 2, 2, self.config, diagnostics)
+
+        for field in (
+            "core_l1_peak_est",
+            "core_ub_peak_est",
+            "l1_overflow_bytes_est",
+            "ub_overflow_bytes_est",
+            "l1_residence_bytes_est",
+            "ub_residence_bytes_est",
+        ):
+            self.assertTrue(diagnostics[field])
+            self.assertTrue(all(value >= 0 for value in diagnostics[field].values()))
+        self.assertGreaterEqual(diagnostics["boundary_tensor_count"], 0)
+        self.assertGreaterEqual(diagnostics["boundary_bytes_total"], 0)
+        self.assertGreaterEqual(diagnostics["long_lived_tensor_bytes"], 0)
+
+    def test_soft_placement_scoring_records_core_penalties(self) -> None:
+        graph = parse_graph(make_shared_input_graph(2))
+        analysis = analyze_graph(graph)
+        partition = Partition(
+            groups=[[20], [21]],
+            op_to_subgraph={20: 0, 21: 1},
+        )
+        baseline_diagnostics = {}
+        soft_diagnostics = {}
+
+        schedule_partition(
+            analysis, partition, 2, 2, self.config, baseline_diagnostics,
+        )
+        schedule_partition(
+            analysis,
+            partition,
+            2,
+            2,
+            self.config,
+            soft_diagnostics,
+            placement_scoring="soft",
+        )
+
+        self.assertEqual(soft_diagnostics["placement_scoring"], "soft")
+        candidates = soft_diagnostics["groups"][1]["candidate_placements"]
+        self.assertEqual(sorted(
+            candidate["active_core_penalty"] for candidate in candidates
+        ), [0.0, 1.0])
+        self.assertTrue(all(
+            "critical_path_cross_core_penalty" in candidate
+            and "m_v_imbalance_penalty" in candidate
+            for candidate in candidates
+        ))
+        soft_ranking = {
+            candidate["core_id"]: candidate["ranking_score"]
+            for candidate in candidates
+        }
+        baseline_ranking = {
+            candidate["core_id"]: candidate["ranking_score"]
+            for candidate in baseline_diagnostics["groups"][1]["candidate_placements"]
+        }
+        self.assertEqual(baseline_ranking[0][2], 0.0)
+        self.assertEqual(baseline_ranking[1][2], 0.0)
+        self.assertEqual(soft_ranking[0][2], 1.0)
+        self.assertEqual(soft_ranking[1][2], 0.0)
 
     def test_scheduler_communication_delta_depends_on_candidate_core(self) -> None:
         graph = parse_graph(make_chain_graph(2, size=16))

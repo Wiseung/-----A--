@@ -28,7 +28,8 @@ SUMMARY_FIELDS = [
     "experiment_id", "run_id", "case", "problem", "ncores", "method",
     "graph_hash", "config_hash", "official_code_hash", "solver_code_hash",
     "time_limit_sec", "baseline_timeout_sec", "evaluator_timeout_sec",
-    "max_evals", "improve_enabled", "retry_baseline", "candidate_id",
+    "max_evals", "improve_enabled", "retry_baseline", "placement_scoring",
+    "cache_ordering", "candidate_id",
     "best_candidate_source", "makespan",
     "single_core_baseline", "speedup", "added_copy_bytes",
     "original_copy_bytes", "scheduled_copy_bytes", "cache_hit_rate",
@@ -130,7 +131,7 @@ def _store_summary(results_dir: Path, row: dict[str, Any]) -> None:
         "graph_hash", "config_hash", "official_code_hash", "solver_code_hash",
         "method", "seed", "time_limit_sec", "baseline_timeout_sec",
         "evaluator_timeout_sec", "max_evals", "improve_enabled",
-        "retry_baseline",
+        "retry_baseline", "placement_scoring", "cache_ordering",
     )
     key = tuple(row.get(field) for field in identity_fields)
     previous = [
@@ -178,28 +179,93 @@ def _portable_path(path: Path) -> str:
         return path.as_posix()
 
 
-def _plan_schedule_metrics(graph: Graph, plan: dict[str, Any]) -> dict[str, Any]:
+def _relative_load_imbalance(loads: list[int]) -> float:
+    total = sum(loads)
+    if not loads or total == 0:
+        return 0.0
+    mean = total / len(loads)
+    return max(loads) / mean - 1.0
+
+
+def _plan_schedule_metrics(
+    graph: Graph,
+    plan: dict[str, Any],
+    analysis: GraphAnalysis | None = None,
+) -> dict[str, Any]:
+    analysis = analysis or analyze_graph(graph)
     owners = {
         group_id: core_id
         for core_id, schedule in enumerate(plan["core_schedules"])
         for group_id in schedule
     }
+    groups_by_core = {
+        str(core_id): list(schedule)
+        for core_id, schedule in enumerate(plan["core_schedules"])
+    }
     pipe_cycles: dict[int, dict[str, int]] = {}
     for core_id in range(len(plan["core_schedules"])):
         pipe_cycles[core_id] = {"PIPE_M": 0, "PIPE_V": 0}
-    for op_key, group_id in plan["node_to_subgraph"].items():
-        op = graph.ops[int(op_key)]
+    node_to_subgraph = {
+        int(op_key): group_id
+        for op_key, group_id in plan["node_to_subgraph"].items()
+    }
+    for op_id, group_id in node_to_subgraph.items():
+        op = graph.ops[op_id]
         if op["pipe"] in {"PIPE_M", "PIPE_V"}:
             core_id = owners[group_id]
             pipe_cycles[core_id][op["pipe"]] += max(1, op["cycles"])
+    m_cycles = [pipe_cycles[core_id]["PIPE_M"]
+                for core_id in range(len(plan["core_schedules"]))]
+    v_cycles = [pipe_cycles[core_id]["PIPE_V"]
+                for core_id in range(len(plan["core_schedules"]))]
+    critical_path_length = max(analysis.forward_path.values(), default=0)
+    critical_ops = {
+        op_id for op_id in analysis.eligible_ops
+        if (
+            analysis.forward_path[op_id]
+            + analysis.backward_path[op_id]
+            - max(1, graph.ops[op_id]["cycles"])
+            == critical_path_length
+        )
+    }
+    critical_groups: set[int] = set()
+    for op_id in critical_ops:
+        critical_groups.add(node_to_subgraph[op_id])
+    critical_group_count_by_core = {
+        str(core_id): sum(
+            group_id in critical_groups
+            for group_id in schedule
+        )
+        for core_id, schedule in enumerate(plan["core_schedules"])
+    }
+    owners_by_group = owners
+    critical_path_cross_core_edges = 0
+    for source in analysis.eligible_ops:
+        if source not in node_to_subgraph:
+            continue
+        if source not in critical_ops:
+            continue
+        source_core = owners_by_group[node_to_subgraph[source]]
+        for target in analysis.successors[source]:
+            if target in critical_ops and source_core != owners_by_group[
+                node_to_subgraph[target]
+            ]:
+                critical_path_cross_core_edges += 1
+    core_compute = [max(m, v) for m, v in zip(m_cycles, v_cycles)]
     return {
         "active_core_count": sum(bool(schedule) for schedule in plan["core_schedules"]),
+        "groups_by_core": groups_by_core,
         "m_cycles_by_core": {
             str(core_id): values["PIPE_M"] for core_id, values in pipe_cycles.items()
         },
         "v_cycles_by_core": {
             str(core_id): values["PIPE_V"] for core_id, values in pipe_cycles.items()
         },
+        "max_core_compute": max(core_compute, default=0),
+        "m_load_imbalance": _relative_load_imbalance(m_cycles),
+        "v_load_imbalance": _relative_load_imbalance(v_cycles),
+        "critical_group_count_by_core": critical_group_count_by_core,
+        "critical_path_cross_core_edges": critical_path_cross_core_edges,
     }
 
 
@@ -232,6 +298,8 @@ def solve_one(
     experiment_id: str = "round2",
     run_id: str | None = None,
     history_dir: Path | None = None,
+    placement_scoring: str = "baseline",
+    cache_ordering: str = "fifo",
 ) -> dict[str, Any]:
     run_id = run_id or new_run_id()
     if not valid_run_label(experiment_id) or not valid_run_label(run_id):
@@ -286,6 +354,11 @@ def solve_one(
     baseline_makespan = baseline.get("makespan") if baseline else None
     analysis = analyze_graph(graph)
     generate, get_counts, method = _generator(problem)
+    def generate_with_scoring(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        kwargs["placement_scoring"] = placement_scoring
+        kwargs["cache_ordering"] = cache_ordering
+        return generate(*args, **kwargs)
+
     group_counts = get_counts(analysis, ncores)
     run_fields = {
         "experiment_id": experiment_id,
@@ -297,6 +370,8 @@ def solve_one(
         "max_evals": max_evals,
         "improve_enabled": improve,
         "retry_baseline": retry_baseline,
+        "placement_scoring": placement_scoring,
+        "cache_ordering": cache_ordering,
     }
     best_plan: dict[str, Any] | None = None
     legal_draft: dict[str, Any] | None = None
@@ -356,6 +431,7 @@ def solve_one(
             "evaluator_timeout_sec": per_candidate_timeout,
             "max_evals": max_evals,
             "improve_enabled": improve,
+            "placement_scoring": placement_scoring,
             "candidate_family": stage,
             "method": method,
             "candidate_method": candidate_method,
@@ -390,7 +466,7 @@ def solve_one(
             })
             errors.append(f"{candidate_id}: invalid plan: {error}")
             return False
-        plan_metrics = _plan_schedule_metrics(graph, plan)
+        plan_metrics = _plan_schedule_metrics(graph, plan, analysis)
         _save_plan(results_dir / "schedules" / f"{candidate_id}.json", plan)
         if legal_draft is None:
             legal_draft = plan
@@ -576,6 +652,8 @@ def solve_one(
                     plan = schedule_b.generate_schedule(
                         analysis, ncores, config, problem_2_counts[0],
                         diagnostics=placement_diagnostics,
+                        placement_scoring=placement_scoring,
+                        cache_ordering=cache_ordering,
                     )
                     candidate_specs.append((
                         plan,
@@ -595,7 +673,7 @@ def solve_one(
         try:
             placement_diagnostics = {}
             candidate_specs.append((
-                generate(
+                generate_with_scoring(
                     analysis, ncores, config, first_native_count,
                     diagnostics=placement_diagnostics,
                 ),
@@ -609,7 +687,7 @@ def solve_one(
             try:
                 placement_diagnostics = {}
                 candidate_specs.append((
-                    generate(
+                    generate_with_scoring(
                         analysis,
                         ncores,
                         config,
@@ -637,7 +715,7 @@ def solve_one(
         try:
             placement_diagnostics = {}
             candidate_specs.append((
-                generate(
+                generate_with_scoring(
                     analysis, ncores, config, group_count,
                     diagnostics=placement_diagnostics,
                 ),
@@ -656,6 +734,8 @@ def solve_one(
                     schedule_b.generate_schedule(
                         analysis, ncores, config, group_count,
                         diagnostics=placement_diagnostics,
+                        placement_scoring=placement_scoring,
+                        cache_ordering=cache_ordering,
                     ),
                     f"problem2_warm_start_g{group_count}",
                     placement_diagnostics,
@@ -668,7 +748,7 @@ def solve_one(
         try:
             placement_diagnostics = {}
             candidate_specs.append((
-                generate(
+                generate_with_scoring(
                     analysis, ncores, config, 1,
                     diagnostics=placement_diagnostics,
                 ),
@@ -839,6 +919,14 @@ def main() -> int:
     parser.add_argument("--max-evals", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--no-improve", action="store_true")
+    parser.add_argument(
+        "--placement-scoring", choices=("baseline", "soft"),
+        default="baseline",
+    )
+    parser.add_argument(
+        "--cache-ordering", choices=("fifo", "reuse_distance"),
+        default="fifo",
+    )
     parser.add_argument("--experiment-id", default="round2")
     parser.add_argument("--run-id")
     parser.add_argument("--official-root", type=Path, default=Path(__file__).resolve().parents[1] / "2026_official")
@@ -883,6 +971,8 @@ def main() -> int:
             "max_evals": args.max_evals,
             "improve_enabled": not args.no_improve,
             "retry_baseline": args.retry_baseline,
+            "placement_scoring": args.placement_scoring,
+            "cache_ordering": args.cache_ordering,
             "history_dir": str(args.history_dir.resolve()),
         },
     )
@@ -929,6 +1019,8 @@ def main() -> int:
             args.seed, not args.no_improve, args.baseline_timeout,
             args.retry_baseline, args.experiment_id, run_id,
             args.history_dir.resolve(),
+            placement_scoring=args.placement_scoring,
+            cache_ordering=args.cache_ordering,
         )
         print(
             f"{row['case']} p{row['problem']} n{row['ncores']}: "
