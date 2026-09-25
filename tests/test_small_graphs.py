@@ -17,7 +17,11 @@ from solver.partition import (
 from solver.schedule_a import generate_schedule as schedule_1
 from solver.schedule_b import generate_schedule as schedule_2
 from solver.schedule_common import _cache_contains_at, schedule_partition
-from tests.helpers import make_chain_graph, make_shared_input_graph
+from tests.helpers import (
+    make_chain_graph,
+    make_fifo_reuse_graph,
+    make_shared_input_graph,
+)
 
 
 class SmallGraphTests(unittest.TestCase):
@@ -185,6 +189,91 @@ class SmallGraphTests(unittest.TestCase):
             [group for group in candidate["core_schedules"][1] if group != 0],
             [1, 3],
         )
+
+    def test_residence_reinsert_keeps_fixed_core_ownership(self) -> None:
+        graph = parse_graph(make_shared_input_graph(4))
+        analysis = analyze_graph(graph)
+        plan = {
+            "node_to_subgraph": {str(20 + index): index for index in range(4)},
+            "core_schedules": [[0, 1, 2, 3], []],
+        }
+
+        candidate, family = next(generate_neighbor_candidates(
+            analysis,
+            plan,
+            problem=2,
+            limit=1,
+            residence_ordering=True,
+            capacity=self.config["capacity"],
+        ))
+
+        self.assertEqual(family, "residence_reinsert")
+        self.assertEqual(candidate["node_to_subgraph"], plan["node_to_subgraph"])
+        self.assertEqual(
+            [set(schedule) for schedule in candidate["core_schedules"]],
+            [set(schedule) for schedule in plan["core_schedules"]],
+        )
+        self.assertNotEqual(candidate["core_schedules"], plan["core_schedules"])
+
+    def test_shared_input_skew_keeps_fixed_core_ownership(self) -> None:
+        graph = parse_graph({
+            "tensors": [
+                {"id": 1, "pos": "DDR", "size": 64},
+                {"id": 2, "pos": "DDR", "size": 64},
+                {"id": 101, "pos": "UB", "size": 64},
+                {"id": 102, "pos": "UB", "size": 64},
+                {"id": 201, "pos": "UB", "size": 0},
+                {"id": 202, "pos": "UB", "size": 0},
+                {"id": 203, "pos": "UB", "size": 0},
+                {"id": 3, "pos": "DDR", "size": 0},
+                {"id": 4, "pos": "DDR", "size": 0},
+                {"id": 5, "pos": "DDR", "size": 0},
+            ],
+            "ops": [
+                {"id": 10, "op": "COPY_IN", "pipe": "PIPE_MTE2", "cycles": 1},
+                {"id": 11, "op": "COPY_IN", "pipe": "PIPE_MTE2", "cycles": 1},
+                {"id": 20, "op": "ADD", "pipe": "PIPE_V", "cycles": 1},
+                {"id": 21, "op": "ADD", "pipe": "PIPE_V", "cycles": 1},
+                {"id": 22, "op": "ADD", "pipe": "PIPE_V", "cycles": 1},
+                {"id": 90, "op": "COPY_OUT", "pipe": "PIPE_MTE3", "cycles": 1},
+                {"id": 91, "op": "COPY_OUT", "pipe": "PIPE_MTE3", "cycles": 1},
+                {"id": 92, "op": "COPY_OUT", "pipe": "PIPE_MTE3", "cycles": 1},
+            ],
+            "edges": [
+                {"source": 1, "target": 10}, {"source": 10, "target": 101},
+                {"source": 2, "target": 11}, {"source": 11, "target": 102},
+                {"source": 101, "target": 20}, {"source": 20, "target": 201},
+                {"source": 201, "target": 90}, {"source": 90, "target": 3},
+                {"source": 101, "target": 21}, {"source": 21, "target": 202},
+                {"source": 202, "target": 91}, {"source": 91, "target": 4},
+                {"source": 102, "target": 22}, {"source": 22, "target": 203},
+                {"source": 203, "target": 92}, {"source": 92, "target": 5},
+            ],
+        })
+        analysis = analyze_graph(graph)
+        source_plan = {
+            "node_to_subgraph": {"20": 0, "21": 1, "22": 2},
+        }
+        plan = {
+            "node_to_subgraph": dict(source_plan["node_to_subgraph"]),
+            "core_schedules": [[0], [1, 2]],
+        }
+
+        candidate, family = next(generate_neighbor_candidates(
+            analysis,
+            plan,
+            problem=3,
+            limit=1,
+            shared_input_skew=True,
+        ))
+
+        self.assertEqual(family, "shared_input_skew")
+        self.assertEqual(candidate["node_to_subgraph"], plan["node_to_subgraph"])
+        self.assertEqual(
+            [set(schedule) for schedule in candidate["core_schedules"]],
+            [set(schedule) for schedule in plan["core_schedules"]],
+        )
+        self.assertNotEqual(candidate["core_schedules"], plan["core_schedules"])
 
     def test_small_neighbor_budget_covers_merge_and_split(self) -> None:
         graph = parse_graph(make_chain_graph(4))

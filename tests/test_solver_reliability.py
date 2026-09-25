@@ -6,7 +6,9 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
+from solver import solver as solver_module
 from solver.evaluate_adapter import EvaluationError, EvaluationResult
 from solver.graph_analysis import analyze_graph
 from solver.graph_io import load_config, parse_graph
@@ -14,6 +16,9 @@ from solver.schedule_b import generate_schedule as schedule_2
 from solver.run_identity import build_fingerprints
 from solver.solver import (
     _plan_schedule_metrics,
+    _proxy_objective,
+    _proxy_score,
+    _select_proxy_candidates,
     _store_summary,
     plan_signature,
     solve_one,
@@ -74,6 +79,8 @@ class SolverReliabilityTests(unittest.TestCase):
         max_evals: int = 1,
         improve: bool = False,
         placement_scoring: str = "baseline",
+        candidate_selection: str = "ordered",
+        proxy_max_candidates: int = 4,
     ) -> dict:
         return solve_one(
             self.graph,
@@ -92,6 +99,8 @@ class SolverReliabilityTests(unittest.TestCase):
             run_id="test-run",
             history_dir=results_dir,
             placement_scoring=placement_scoring,
+            candidate_selection=candidate_selection,
+            proxy_max_candidates=proxy_max_candidates,
         )
 
     def test_timing_separates_baseline_search_and_candidate(self) -> None:
@@ -152,6 +161,119 @@ class SolverReliabilityTests(unittest.TestCase):
         self.assertEqual(row["placement_scoring"], "soft")
         self.assertEqual(trial["placement_scoring"], "soft")
 
+    def test_proxy_selector_keeps_incumbent_and_high_risk_reserve(self) -> None:
+        def entry(
+            index: int,
+            finish: float,
+            boundary: int,
+            overflow: int,
+        ) -> dict:
+            diagnostics = {
+                "groups": [{"group_finish": finish}],
+                "boundary_copy_bytes_est": boundary,
+                "max_l1_overflow_bytes_est": overflow,
+                "max_ub_overflow_bytes_est": 0,
+            }
+            return {
+                "index": index,
+                "spec": ({}, f"stage-{index}", diagnostics, None),
+                "metrics": {
+                    "max_core_compute": finish,
+                    "m_load_imbalance": 0.0,
+                    "v_load_imbalance": 0.0,
+                    "active_core_count": 2,
+                },
+                "placement_diagnostics": diagnostics,
+            }
+
+        entries = [
+            entry(0, 100.0, 100, 0),
+            entry(1, 80.0, 90, 0),
+            entry(2, 70.0, 140, 0),
+            entry(3, 60.0, 250, 10),
+        ]
+
+        selected = _select_proxy_candidates(
+            entries,
+            evaluation_limit=3,
+            max_selected=2,
+            boundary_ratio_limit=2.0,
+        )
+
+        self.assertEqual(selected, {0, 2, 3})
+        self.assertEqual(
+            entries[0]["selection_metadata"]["candidate_status"],
+            "proxy_selected",
+        )
+        self.assertEqual(
+            entries[3]["selection_metadata"]["candidate_status"],
+            "proxy_selected_high_risk",
+        )
+        self.assertEqual(
+            entries[1]["selection_metadata"]["candidate_status"],
+            "screened_out",
+        )
+
+    def test_proxy_score_uses_l1_and_ub_residence_after_primary_metrics(self) -> None:
+        metrics = {
+            "max_core_compute": 100,
+            "m_load_imbalance": 0.0,
+            "v_load_imbalance": 0.0,
+            "active_core_count": 2,
+        }
+        common = {
+            "groups": [{"group_finish": 100}],
+            "boundary_copy_bytes_est": 20,
+            "max_l1_overflow_bytes_est": 0,
+            "max_ub_overflow_bytes_est": 0,
+            "estimated_repeated_input_bytes": 8,
+        }
+        short_lived = {
+            **common,
+            "l1_residence_bytes_est": {"0": 10, "1": 12},
+            "ub_residence_bytes_est": {"0": 30, "1": 20},
+        }
+        long_lived = {
+            **common,
+            "l1_residence_bytes_est": {"0": 40, "1": 12},
+            "ub_residence_bytes_est": {"0": 30, "1": 20},
+        }
+
+        short_score = _proxy_score(metrics, short_lived)
+        long_score = _proxy_score(metrics, long_lived)
+
+        self.assertEqual(len(short_score), 9)
+        self.assertEqual(short_score[5], 12.0)
+        self.assertEqual(short_score[6], 30.0)
+        self.assertLess(_proxy_objective(short_score), _proxy_objective(long_score))
+
+    def test_solver_proxy_selection_mode_records_selection_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            results_dir = Path(temporary)
+            evaluator = StubEvaluator(timeout_sec=1.0)
+            row = self._solve(
+                results_dir,
+                evaluator,
+                max_evals=2,
+                candidate_selection="proxy_pareto",
+                proxy_max_candidates=1,
+            )
+            trials = [
+                json.loads(line)
+                for line in (results_dir / "candidate_trials.jsonl")
+                .read_text(encoding="utf-8").splitlines()
+            ]
+
+        self.assertEqual(row["status"], "evaluated")
+        self.assertEqual(row["candidate_selection"], "proxy_pareto")
+        self.assertEqual(row["proxy_max_candidates"], 1)
+        self.assertTrue(trials)
+        self.assertTrue(all(
+            trial["candidate_selection"] == "proxy_pareto"
+            for trial in trials
+        ))
+        self.assertLessEqual(len(evaluator.plans), 2)
+
     def test_failed_evaluation_does_not_replace_validated_plan(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             results_dir = Path(temporary)
@@ -194,6 +316,12 @@ class SolverReliabilityTests(unittest.TestCase):
                 (results_dir / "candidate_trials.jsonl").read_text(encoding="utf-8").splitlines()[0]
             )
             self.assertTrue(trial["candidate_family"].startswith("problem2_warm_start_g"))
+            self.assertEqual(
+                trial["plan_hash"],
+                hashlib.sha256(
+                    plan_signature(expected_plan).encode("utf-8")
+                ).hexdigest(),
+            )
             self.assertEqual(
                 row["best_candidate_source"], trial["candidate_family"]
             )
@@ -245,6 +373,69 @@ class SolverReliabilityTests(unittest.TestCase):
                 "problem2_validated_warm_start",
             )
             self.assertEqual(saved_trial["source_plan"], plan_path.as_posix())
+
+    def test_problem_3_warm_start_lazily_skips_unused_generators(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            results_dir = Path(temporary)
+            saved_plan = schedule_2(
+                analyze_graph(self.graph), 2, self.config, 2
+            )
+            plan_path = results_dir / "schedules" / (
+                "case_test_p2_n2_test-run_best_validated.json"
+            )
+            plan_path.parent.mkdir(parents=True)
+            plan_path.write_text(
+                json.dumps(saved_plan, ensure_ascii=False), encoding="utf-8"
+            )
+            fingerprints = build_fingerprints(
+                self.graph.path,
+                self.config["path"],
+                self.root / "2026_official",
+                self.root / "solver",
+            )
+            metadata = {
+                "problem": 2,
+                "ncores": 2,
+                "plan_hash": hashlib.sha256(
+                    plan_signature(saved_plan).encode("utf-8")
+                ).hexdigest(),
+                **fingerprints,
+            }
+            plan_path.with_suffix(".metadata.json").write_text(
+                json.dumps(metadata, ensure_ascii=False), encoding="utf-8"
+            )
+            evaluator = StubEvaluator(timeout_sec=1.0)
+            evaluator.config_path = self.config["path"]
+
+            def unexpected_generation(*args: object, **kwargs: object) -> dict:
+                raise AssertionError("unused candidate was constructed")
+
+            with (
+                patch.object(
+                    solver_module.schedule_b,
+                    "generate_schedule",
+                    side_effect=unexpected_generation,
+                ),
+                patch.object(
+                    solver_module.cache_aware,
+                    "generate_schedule",
+                    side_effect=unexpected_generation,
+                ),
+            ):
+                row = self._solve(
+                    results_dir,
+                    evaluator,
+                    problem=3,
+                    max_evals=1,
+                )
+
+        self.assertEqual(row["status"], "evaluated")
+        self.assertEqual(len(evaluator.plans), 1)
+        self.assertEqual(evaluator.plans[0], saved_plan)
+        self.assertEqual(
+            row["best_candidate_source"],
+            "problem2_validated_warm_start",
+        )
 
     def test_lower_core_plan_is_extended_with_empty_core(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -180,6 +180,63 @@ def scatter_svg(rows: list[dict[str, Any]], output: Path) -> None:
     output.write_text("\n".join(chunks), encoding="utf-8")
 
 
+def _figure_manifest(
+    rows: list[dict[str, Any]],
+    results_dir: Path,
+    output_dir: Path,
+    generated_files: list[str],
+) -> dict[str, Any]:
+    identities = sorted({
+        (row.get("experiment_id"), row.get("run_id"))
+        for row in rows
+    })
+    cases = sorted({
+        row.get("case") for row in rows
+        if str(row.get("case", "")).startswith("case_")
+    })
+    case_core = sorted({
+        (row.get("case"), row.get("ncores"))
+        for row in rows
+        if str(row.get("case", "")).startswith("case_")
+    })
+    paired_no_l2, paired_l2, paired_cache = _paired_problem3_series(rows)
+    paired_counts = {
+        str(ncores): paired_cache[ncores][1]
+        for ncores in sorted(paired_cache)
+        if paired_cache[ncores][1]
+    }
+    source_summary = results_dir / "summary.json"
+    try:
+        source_summary_label = source_summary.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        source_summary_label = source_summary.as_posix()
+    try:
+        output_label = output_dir.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        output_label = output_dir.as_posix()
+    return {
+        "source_summary": source_summary_label,
+        "output_dir": output_label,
+        "row_count": len(rows),
+        "case_count": len(cases),
+        "case_core_count": len(case_core),
+        "cases": cases,
+        "run_identities": [
+            {"experiment_id": experiment_id, "run_id": run_id}
+            for experiment_id, run_id in identities
+        ],
+        "strict_problem3_pair_counts_by_core": paired_counts,
+        "metric_definitions": {
+            "speedup": "single_core_baseline / official multicore makespan",
+            "cache_speedup": "paired Problem 2 makespan / paired Problem 3 makespan",
+            "cache_pairing": "same run identity and same case/core; both rows status=evaluated",
+            "scatter": "official makespan versus official added_copy_bytes",
+        },
+        "missing_data_rule": "missing or non-evaluated combinations are omitted from plotted means and annotated by k",
+        "generated_files": generated_files,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate SVG figures from official evaluator summary rows.")
     parser.add_argument("--results-dir", type=Path, default=ROOT / "results")
@@ -226,6 +283,22 @@ def main() -> int:
         output_dir / "problem_3_cache_speedup.svg",
     )
     scatter_svg(rows, output_dir / "makespan_vs_added_copy.svg")
+    generated_files = [
+        "problem_1_speedup.svg",
+        "problem_2_speedup.svg",
+        "problem_3_l2_comparison.svg",
+        "problem_3_cache_speedup.svg",
+        "makespan_vs_added_copy.svg",
+    ]
+    (output_dir / "figure_manifest.json").write_text(
+        json.dumps(
+            _figure_manifest(rows, args.results_dir, output_dir, generated_files),
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        ) + "\n",
+        encoding="utf-8",
+    )
     print(f"wrote SVG figures to {output_dir}")
     return 0
 

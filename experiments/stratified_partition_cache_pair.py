@@ -16,6 +16,7 @@ from solver.evaluate_adapter import EvaluationError, Evaluator
 from solver.features import graph_features
 from solver.graph_analysis import analyze_graph
 from solver.graph_io import load_config, load_graph
+from solver.improve import generate_neighbor_candidates
 from solver.legality import validate_plan
 from solver.partition import partition_with_strategy
 from solver.run_identity import (
@@ -124,6 +125,7 @@ def _load_reuse_index(
     group_count: int,
     partition_strategy: str,
     placement_scoring: str,
+    cache_ordering: str,
     fingerprints_by_case: dict[str, dict[str, str | None]],
 ) -> tuple[dict[tuple[str, int, int, int], dict[str, Any]], dict[str, str] | None]:
     if results_dir is None:
@@ -138,6 +140,7 @@ def _load_reuse_index(
         or metadata.get("requested_group_count") != group_count
         or metadata.get("partition_strategy", "contiguous") != partition_strategy
         or metadata.get("placement_scoring", "baseline") != placement_scoring
+        or metadata.get("cache_ordering", "fifo") != cache_ordering
         or not set(cases).issubset(metadata.get("cases", []))
         or not set(ncores_values).issubset(metadata.get("ncores", []))
     ):
@@ -289,6 +292,10 @@ def main() -> int:
         "--placement-scoring", choices=("baseline", "soft"),
         default="baseline",
     )
+    parser.add_argument(
+        "--cache-ordering", choices=("fifo", "reuse_distance"), default="fifo"
+    )
+    parser.add_argument("--shared-input-skew", action="store_true")
     parser.add_argument("--schedule-problem", type=int, choices=(2, 3), default=2)
     parser.add_argument("--official-root", type=Path, default=ROOT / "2026_official")
     parser.add_argument("--config", type=Path)
@@ -345,6 +352,7 @@ def main() -> int:
             args.group_count,
             args.partition_strategy,
             args.placement_scoring,
+            args.cache_ordering,
             fingerprints_by_case,
         )
     except (OSError, json.JSONDecodeError, ValueError, KeyError) as error:
@@ -359,6 +367,8 @@ def main() -> int:
             "requested_group_count": args.group_count,
             "partition_strategy": args.partition_strategy,
             "placement_scoring": args.placement_scoring,
+            "cache_ordering": args.cache_ordering,
+            "shared_input_skew": args.shared_input_skew,
             "partition_problems": [2, 3],
             "schedule_problem": args.schedule_problem,
             "evaluation_problems": [2, 3],
@@ -384,6 +394,10 @@ def main() -> int:
             "schedule_problem": args.schedule_problem,
             "evaluation_problem": evaluation_problem,
             "placement_scoring": args.placement_scoring,
+            "cache_ordering": args.cache_ordering,
+            "candidate_variant": (
+                "shared_input_skew" if args.shared_input_skew else "base"
+            ),
             "status": "not_run",
         }
         for case in args.cases
@@ -399,6 +413,8 @@ def main() -> int:
         "requested_group_count": args.group_count,
         "partition_strategy": args.partition_strategy,
         "placement_scoring": args.placement_scoring,
+        "cache_ordering": args.cache_ordering,
+        "shared_input_skew": args.shared_input_skew,
         "partition_problems": [2, 3],
         "schedule_problem": args.schedule_problem,
         "evaluation_problems": [2, 3],
@@ -478,6 +494,8 @@ def main() -> int:
             "partition_strategy": args.partition_strategy,
             "placement_scoring": args.placement_scoring,
             "schedule_problem": args.schedule_problem,
+            "cache_ordering": args.cache_ordering,
+            "shared_input_skew": args.shared_input_skew,
             "evaluation_problems": [2, 3],
             "status_counts": _status_counts(comparisons),
             "comparisons": comparisons,
@@ -494,10 +512,15 @@ def main() -> int:
         fingerprints = fingerprints_by_case[case]
         for ncores in args.ncores:
             for partition_problem in (2, 3):
+                candidate_variant = (
+                    "shared_input_skew" if args.shared_input_skew else "base"
+                )
                 candidate_id = (
                     f"{case}_n{ncores}_partp{partition_problem}_"
                     f"schedp{args.schedule_problem}_{run_id}"
                 )
+                if args.shared_input_skew:
+                    candidate_id += "_shared_input_skew"
                 generation_started = time.monotonic()
                 placement_diagnostics: dict[str, Any] = {}
                 try:
@@ -515,8 +538,26 @@ def main() -> int:
                         config=config,
                         diagnostics=placement_diagnostics,
                         placement_scoring=args.placement_scoring,
+                        cache_ordering=args.cache_ordering,
                     )
                     validate_plan(graph, plan, ncores)
+                    if args.shared_input_skew:
+                        skew_candidate = next(
+                            generate_neighbor_candidates(
+                                analysis,
+                                plan,
+                                problem=3,
+                                limit=1,
+                                shared_input_skew=True,
+                            ),
+                            None,
+                        )
+                        if skew_candidate is None:
+                            raise ValueError(
+                                "no legal shared-input skew candidate was generated"
+                            )
+                        plan, _ = skew_candidate
+                        validate_plan(graph, plan, ncores)
                     plan_hash = _plan_hash(plan)
                     plan_metrics = _plan_schedule_metrics(graph, plan, analysis)
                     generation_time = time.monotonic() - generation_started
@@ -533,6 +574,8 @@ def main() -> int:
                         "requested_group_count": args.group_count,
                         "partition_strategy": args.partition_strategy,
                         "placement_scoring": args.placement_scoring,
+                        "cache_ordering": args.cache_ordering,
+                        "candidate_variant": candidate_variant,
                         "actual_group_count": len(partition.groups),
                         "plan_hash": plan_hash,
                         "plan_path": _portable_path(plan_path),
@@ -564,6 +607,8 @@ def main() -> int:
                         "requested_group_count": args.group_count,
                         "partition_strategy": args.partition_strategy,
                         "placement_scoring": args.placement_scoring,
+                        "cache_ordering": args.cache_ordering,
+                        "candidate_variant": candidate_variant,
                         "plan_hash": None,
                         "plan_path": None,
                         "plan_generation_wall_time_sec": time.monotonic() - generation_started,

@@ -10,6 +10,7 @@ from solver.partition import Partition, _topological_order_for_partition, partit
 from solver.schedule_common import (
     _estimated_partition_copy_bytes,
     _reuse_distance_summary,
+    _schedule_live_range_metrics,
     schedule_partition,
 )
 from tests.helpers import (
@@ -351,6 +352,67 @@ class OfficialSemanticTests(unittest.TestCase):
         self.assertGreaterEqual(diagnostics["boundary_tensor_count"], 0)
         self.assertGreaterEqual(diagnostics["boundary_bytes_total"], 0)
         self.assertGreaterEqual(diagnostics["long_lived_tensor_bytes"], 0)
+
+    def test_live_range_proxy_reflects_fixed_core_order(self) -> None:
+        graph = parse_graph({
+            "tensors": [
+                {"id": 1, "pos": "DDR", "size": 32},
+                {"id": 101, "pos": "UB", "size": 32},
+                {"id": 201, "pos": "UB", "size": 32},
+                {"id": 202, "pos": "UB", "size": 0},
+                {"id": 203, "pos": "UB", "size": 0},
+                {"id": 3, "pos": "DDR", "size": 32},
+                {"id": 102, "pos": "UB", "size": 32},
+                {"id": 2, "pos": "DDR", "size": 0},
+            ],
+            "ops": [
+                {"id": 10, "op": "COPY_IN", "pipe": "PIPE_MTE2", "cycles": 1},
+                {"id": 11, "op": "COPY_IN", "pipe": "PIPE_MTE2", "cycles": 1},
+                {"id": 20, "op": "ADD", "pipe": "PIPE_V", "cycles": 1},
+                {"id": 21, "op": "ADD", "pipe": "PIPE_V", "cycles": 1},
+                {"id": 22, "op": "ADD", "pipe": "PIPE_V", "cycles": 1},
+                {"id": 90, "op": "COPY_OUT", "pipe": "PIPE_MTE3", "cycles": 1},
+            ],
+            "edges": [
+                {"source": 1, "target": 10},
+                {"source": 10, "target": 101},
+                {"source": 3, "target": 11},
+                {"source": 11, "target": 102},
+                {"source": 101, "target": 20},
+                {"source": 20, "target": 201},
+                {"source": 102, "target": 21},
+                {"source": 21, "target": 202},
+                {"source": 201, "target": 22},
+                {"source": 22, "target": 203},
+                {"source": 203, "target": 90},
+                {"source": 90, "target": 2},
+            ],
+        })
+        analysis = analyze_graph(graph)
+        partition = Partition(
+            groups=[[20], [21], [22]],
+            op_to_subgraph={20: 0, 21: 1, 22: 2},
+        )
+        adjacent = {
+            "node_to_subgraph": {"20": 0, "21": 1, "22": 2},
+            "core_schedules": [[0, 1, 2]],
+        }
+        separated = {
+            "node_to_subgraph": {"20": 0, "21": 1, "22": 2},
+            "core_schedules": [[0, 2, 1]],
+        }
+
+        adjacent_metrics = _schedule_live_range_metrics(
+            analysis, partition, adjacent, 2, self.config["capacity"]
+        )
+        separated_metrics = _schedule_live_range_metrics(
+            analysis, partition, separated, 2, self.config["capacity"]
+        )
+
+        self.assertLess(
+            separated_metrics["ub_residence_bytes_est"]["0"],
+            adjacent_metrics["ub_residence_bytes_est"]["0"],
+        )
 
     def test_soft_placement_scoring_records_core_penalties(self) -> None:
         graph = parse_graph(make_shared_input_graph(2))
