@@ -158,7 +158,7 @@ def _candidate_matrix(
 def _proxy_score(
     metrics: dict[str, Any],
     placement_diagnostics: dict[str, Any],
-) -> tuple[float, float, float, float, float, int, int]:
+) -> tuple[float, float, float, float, float, float, float, int, int]:
     estimated_finish = max(
         (
             float(item.get("group_finish", 0.0))
@@ -188,12 +188,24 @@ def _proxy_score(
         int(placement_diagnostics.get("max_l1_overflow_bytes_est", 0))
         + int(placement_diagnostics.get("max_ub_overflow_bytes_est", 0))
     )
+    l1_residence = placement_diagnostics.get("l1_residence_bytes_est", {})
+    ub_residence = placement_diagnostics.get("ub_residence_bytes_est", {})
+    max_l1_residence = max(
+        (float(value) for value in l1_residence.values()),
+        default=0.0,
+    ) if isinstance(l1_residence, dict) else 0.0
+    max_ub_residence = max(
+        (float(value) for value in ub_residence.values()),
+        default=0.0,
+    ) if isinstance(ub_residence, dict) else 0.0
     return (
         estimated_finish,
         float(boundary_bytes),
         float(overflow_bytes),
         float(metrics.get("max_core_compute", 0)),
         imbalance,
+        max_l1_residence,
+        max_ub_residence,
         int(placement_diagnostics.get("estimated_repeated_input_bytes", 0)),
         -int(metrics.get("active_core_count", 0)),
     )

@@ -13,6 +13,10 @@ from experiments.phase4_stratified_matrix import (
     _rank_proxy_candidates,
 )
 from experiments.evaluate_selected_plans import _select_rows
+from experiments.fixed_plan_cache_comparison import (
+    _plan_hash,
+    _strict_pair_summary,
+)
 from experiments.promote_phase4_candidates import evaluate_promotion
 from experiments.summarize_chain_matrix import _strict_pair_statistics
 
@@ -51,6 +55,31 @@ class ResultCollectionTests(unittest.TestCase):
             "contiguous_p2", "chain_contiguous"
         })
         self.assertEqual({row["plan_hash"] for row in selected}, {"shared"})
+
+    def test_fixed_plan_cache_pair_requires_matching_hash(self) -> None:
+        plan = {
+            "node_to_subgraph": {"20": 0},
+            "core_schedules": [[0], []],
+        }
+        plan_hash = _plan_hash(plan)
+        pair = _strict_pair_summary(
+            2,
+            {"status": "evaluated", "plan_hash": plan_hash, "makespan": 100},
+            {"status": "evaluated", "plan_hash": plan_hash, "makespan": 80},
+        )
+
+        self.assertTrue(pair["strict_pair_complete"])
+        self.assertEqual(pair["p2_plan_hash"], pair["p3_plan_hash"])
+        self.assertAlmostEqual(pair["p3_over_p2_makespan"], 0.8)
+
+        mismatched = _strict_pair_summary(
+            2,
+            {"status": "evaluated", "plan_hash": "p2", "makespan": 100},
+            {"status": "evaluated", "plan_hash": "p3", "makespan": 80},
+        )
+
+        self.assertFalse(mismatched["strict_pair_complete"])
+        self.assertIsNone(mismatched["p3_over_p2_makespan"])
 
     def test_strict_plan_pairing_marks_missing_arm_and_deduplicates_cache(self) -> None:
         p2_rows = []

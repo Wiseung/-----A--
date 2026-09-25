@@ -29,7 +29,11 @@ SUMMARY_FIELDS = [
     "graph_hash", "config_hash", "official_code_hash", "solver_code_hash",
     "time_limit_sec", "baseline_timeout_sec", "evaluator_timeout_sec",
     "max_evals", "improve_enabled", "retry_baseline", "placement_scoring",
-    "cache_ordering", "candidate_id",
+    "cache_ordering", "candidate_selection", "residence_ordering",
+    "proxy_max_candidates",
+    "proxy_boundary_ratio_limit", "candidate_id",
+    "proxy_score", "proxy_rank", "pareto_kept", "proxy_selected",
+    "candidate_status", "proxy_selection_reasons", "safety_status",
     "best_candidate_source", "makespan",
     "single_core_baseline", "speedup", "added_copy_bytes",
     "original_copy_bytes", "scheduled_copy_bytes", "cache_hit_rate",
@@ -39,6 +43,10 @@ SUMMARY_FIELDS = [
     "candidate_eval_wall_sec", "solver_overhead_sec", "total_wall_sec",
     "evaluator_calls", "seed",
     "makespan_no_l2", "makespan_l2", "cache_speedup", "status", "error",
+]
+
+CandidateSpec = tuple[
+    dict[str, Any], str, dict[str, Any] | None, str | None
 ]
 
 
@@ -132,6 +140,8 @@ def _store_summary(results_dir: Path, row: dict[str, Any]) -> None:
         "method", "seed", "time_limit_sec", "baseline_timeout_sec",
         "evaluator_timeout_sec", "max_evals", "improve_enabled",
         "retry_baseline", "placement_scoring", "cache_ordering",
+        "candidate_selection", "residence_ordering", "proxy_max_candidates",
+        "proxy_boundary_ratio_limit",
     )
     key = tuple(row.get(field) for field in identity_fields)
     previous = [
@@ -282,6 +292,272 @@ def _generator(problem: int) -> tuple[Callable[..., dict[str, Any]], Callable[..
     return cache_aware.generate_schedule, cache_aware.candidate_counts, "fifo_cache_aware_list"
 
 
+def _proxy_score(
+    metrics: dict[str, Any],
+    placement_diagnostics: dict[str, Any] | None,
+) -> tuple[float, float, float, float, float, float, float, int, int]:
+    diagnostics = placement_diagnostics or {}
+    estimated_finish = max(
+        (
+            float(item.get("group_finish", 0.0))
+            for item in diagnostics.get("groups", [])
+        ),
+        default=0.0,
+    )
+    added_copy = diagnostics.get(
+        "estimated_partition_added_copy_bytes_recomputed"
+    )
+    if added_copy is None:
+        added_copy = diagnostics.get(
+            "estimated_partition_added_copy_bytes", 10**30
+        )
+    imbalance = max(
+        float(metrics.get("m_load_imbalance", 0.0)),
+        float(metrics.get("v_load_imbalance", 0.0)),
+    )
+    boundary_bytes = diagnostics.get(
+        "boundary_copy_bytes_est",
+        diagnostics.get(
+            "boundary_bytes_total",
+            diagnostics.get("boundary_tensor_bytes", added_copy),
+        ),
+    )
+    overflow_bytes = (
+        int(diagnostics.get("max_l1_overflow_bytes_est", 0))
+        + int(diagnostics.get("max_ub_overflow_bytes_est", 0))
+    )
+    l1_residence = diagnostics.get("l1_residence_bytes_est", {})
+    ub_residence = diagnostics.get("ub_residence_bytes_est", {})
+    max_l1_residence = max(
+        (float(value) for value in l1_residence.values()),
+        default=0.0,
+    ) if isinstance(l1_residence, dict) else 0.0
+    max_ub_residence = max(
+        (float(value) for value in ub_residence.values()),
+        default=0.0,
+    ) if isinstance(ub_residence, dict) else 0.0
+    return (
+        estimated_finish,
+        float(boundary_bytes),
+        float(overflow_bytes),
+        float(metrics.get("max_core_compute", 0)),
+        imbalance,
+        max_l1_residence,
+        max_ub_residence,
+        int(diagnostics.get("estimated_repeated_input_bytes", 0)),
+        -int(metrics.get("active_core_count", 0)),
+    )
+
+
+def _proxy_objective(
+    score: tuple[float, float, float, float, float, float, float, int, int],
+) -> tuple[float, float, float, float, float, float]:
+    return (
+        float(score[0]),
+        float(score[1]),
+        float(score[2]),
+        float(score[4]),
+        float(score[5]),
+        float(score[6]),
+    )
+
+
+def _select_proxy_candidates(
+    entries: list[dict[str, Any]],
+    evaluation_limit: int,
+    max_selected: int,
+    boundary_ratio_limit: float,
+) -> set[int]:
+    for entry in entries:
+        metrics = entry.get("metrics")
+        entry["proxy_score"] = (
+            _proxy_score(metrics, entry.get("placement_diagnostics"))
+            if metrics is not None else None
+        )
+
+    valid = [entry for entry in entries if entry.get("proxy_score") is not None]
+    if not valid:
+        for entry in entries:
+            entry["selection_metadata"] = {
+                "proxy_score": None,
+                "proxy_rank": None,
+                "pareto_kept": False,
+                "proxy_selected": False,
+                "candidate_status": "invalid",
+                "proxy_selection_reasons": [],
+                "safety_status": "invalid",
+            }
+        return set()
+
+    incumbent = valid[0]
+    baseline_score = incumbent["proxy_score"]
+    baseline_diagnostics = incumbent.get("placement_diagnostics") or {}
+    baseline_boundary = float(
+        baseline_diagnostics.get(
+            "boundary_copy_bytes_est",
+            baseline_diagnostics.get(
+                "boundary_bytes_total",
+                baseline_diagnostics.get(
+                    "boundary_tensor_bytes", baseline_score[1]
+                ),
+            ),
+        )
+    )
+    baseline_overflow = int(
+        baseline_diagnostics.get("max_l1_overflow_bytes_est", 0)
+    ) + int(baseline_diagnostics.get("max_ub_overflow_bytes_est", 0))
+
+    for entry in valid:
+        if entry is incumbent:
+            entry["safety_status"] = "baseline_or_uncertain"
+            entry["boundary_ratio_to_incumbent"] = None
+            entry["overflow_delta_to_incumbent"] = None
+            continue
+        diagnostics = entry.get("placement_diagnostics") or {}
+        boundary = float(
+            diagnostics.get(
+                "boundary_copy_bytes_est",
+                diagnostics.get(
+                    "boundary_bytes_total",
+                    diagnostics.get("boundary_tensor_bytes", entry["proxy_score"][1]),
+                ),
+            )
+        )
+        overflow = int(diagnostics.get("max_l1_overflow_bytes_est", 0)) + int(
+            diagnostics.get("max_ub_overflow_bytes_est", 0)
+        )
+        ratio = (
+            boundary / baseline_boundary
+            if baseline_boundary > 0
+            else (float("inf") if boundary > 0 else 1.0)
+        )
+        entry["boundary_ratio_to_incumbent"] = ratio
+        entry["overflow_delta_to_incumbent"] = overflow - baseline_overflow
+        entry["safety_status"] = (
+            "high_risk"
+            if ratio > boundary_ratio_limit and overflow >= baseline_overflow
+            else "safe_or_uncertain"
+        )
+
+    safe = [
+        entry for entry in valid
+        if entry.get("safety_status") != "high_risk"
+    ]
+
+    def dominates(left: dict[str, Any], right: dict[str, Any]) -> bool:
+        left_objective = _proxy_objective(left["proxy_score"])
+        right_objective = _proxy_objective(right["proxy_score"])
+        return (
+            all(a <= b for a, b in zip(left_objective, right_objective))
+            and any(a < b for a, b in zip(left_objective, right_objective))
+        )
+
+    pareto = [
+        entry for entry in safe
+        if not any(
+            other is not entry and dominates(other, entry)
+            for other in safe
+        )
+    ]
+    risk_candidates = [
+        entry for entry in valid
+        if entry.get("safety_status") == "high_risk"
+    ]
+    risk_candidate = min(
+        risk_candidates,
+        key=lambda entry: (tuple(entry["proxy_score"]), entry["index"]),
+        default=None,
+    )
+    evaluation_limit = max(1, evaluation_limit)
+    max_selected = max(1, max_selected)
+    risk_slot = risk_candidate is not None and evaluation_limit > 1
+    safe_limit = min(max_selected, evaluation_limit - int(risk_slot))
+    selected: list[dict[str, Any]] = [incumbent]
+    reasons: dict[int, list[str]] = {incumbent["index"]: ["incumbent"]}
+    criterion_order = (
+        (0, "estimated_finish"),
+        (1, "boundary_copy"),
+        (2, "overflow"),
+        (3, "m_v_balance"),
+    )
+    selection_pool = pareto or safe
+    for criterion, reason in criterion_order:
+        if len(selected) >= safe_limit:
+            break
+        candidate = min(
+            selection_pool,
+            key=lambda entry: (
+                _proxy_objective(entry["proxy_score"])[criterion],
+                entry["index"],
+            ),
+            default=None,
+        )
+        if candidate is not None and candidate not in selected:
+            selected.append(candidate)
+            reasons.setdefault(candidate["index"], []).append(reason)
+    for candidate in sorted(
+        pareto,
+        key=lambda entry: (tuple(entry["proxy_score"]), entry["index"]),
+    ):
+        if len(selected) >= safe_limit:
+            break
+        if candidate not in selected:
+            selected.append(candidate)
+            reasons.setdefault(candidate["index"], []).append("pareto")
+    if risk_candidate is not None and len(selected) < evaluation_limit:
+        selected.append(risk_candidate)
+        reasons.setdefault(risk_candidate["index"], []).append(
+            "high_risk_reserve"
+        )
+
+    selected_indices = {entry["index"] for entry in selected}
+    ranked = sorted(
+        valid,
+        key=lambda entry: (tuple(entry["proxy_score"]), entry["index"]),
+    )
+    ranks = {entry["index"]: rank for rank, entry in enumerate(ranked, start=1)}
+    for entry in entries:
+        index = entry["index"]
+        score = entry.get("proxy_score")
+        if score is None:
+            entry["selection_metadata"] = {
+                "proxy_score": None,
+                "proxy_rank": None,
+                "pareto_kept": False,
+                "proxy_selected": False,
+                "candidate_status": "invalid",
+                "proxy_selection_reasons": [],
+                "safety_status": "invalid",
+            }
+            continue
+        selected_entry = index in selected_indices
+        safety_status = entry.get("safety_status", "safe_or_uncertain")
+        entry["selection_metadata"] = {
+            "proxy_score": score,
+            "proxy_rank": ranks[index],
+            "pareto_kept": entry in pareto,
+            "proxy_selected": selected_entry,
+            "candidate_status": (
+                "proxy_selected_high_risk"
+                if selected_entry and safety_status == "high_risk"
+                else "proxy_selected"
+                if selected_entry
+                else "not_run_high_risk"
+                if safety_status == "high_risk"
+                else "screened_out"
+            ),
+            "proxy_selection_reasons": reasons.get(index, []),
+            "safety_status": safety_status,
+            "boundary_ratio_to_incumbent": entry.get(
+                "boundary_ratio_to_incumbent"
+            ),
+            "overflow_delta_to_incumbent": entry.get(
+                "overflow_delta_to_incumbent"
+            ),
+        }
+    return selected_indices
+
+
 def solve_one(
     graph: Graph,
     problem: int,
@@ -300,10 +576,20 @@ def solve_one(
     history_dir: Path | None = None,
     placement_scoring: str = "baseline",
     cache_ordering: str = "fifo",
+    candidate_selection: str = "ordered",
+    residence_ordering: str = "off",
+    proxy_max_candidates: int = 4,
+    proxy_boundary_ratio_limit: float = 2.0,
 ) -> dict[str, Any]:
     run_id = run_id or new_run_id()
     if not valid_run_label(experiment_id) or not valid_run_label(run_id):
         raise ValueError("experiment_id and run_id must be path-safe labels")
+    if candidate_selection not in {"ordered", "proxy_pareto"}:
+        raise ValueError("candidate_selection must be ordered or proxy_pareto")
+    if residence_ordering not in {"off", "neighbor"}:
+        raise ValueError("residence_ordering must be off or neighbor")
+    if proxy_max_candidates < 1 or proxy_boundary_ratio_limit <= 0:
+        raise ValueError("proxy selection limits must be positive")
     history_dir = history_dir or Path(__file__).resolve().parents[1] / "results"
     fingerprints = build_fingerprints(
         graph.path,
@@ -372,6 +658,10 @@ def solve_one(
         "retry_baseline": retry_baseline,
         "placement_scoring": placement_scoring,
         "cache_ordering": cache_ordering,
+        "candidate_selection": candidate_selection,
+        "residence_ordering": residence_ordering,
+        "proxy_max_candidates": proxy_max_candidates,
+        "proxy_boundary_ratio_limit": proxy_boundary_ratio_limit,
     }
     best_plan: dict[str, Any] | None = None
     legal_draft: dict[str, Any] | None = None
@@ -379,6 +669,7 @@ def solve_one(
     best_tag: str | None = None
     best_candidate_id: str | None = None
     best_candidate_source: str | None = None
+    best_selection_metadata: dict[str, Any] | None = None
     tested: set[str] = set()
     candidate_sequence = 0
     successful_evals = 0
@@ -391,13 +682,17 @@ def solve_one(
         placement_diagnostics: dict[str, Any] | None = None,
         source_plan: str | None = None,
         parent_candidate: str | None = None,
+        selection_metadata: dict[str, Any] | None = None,
+        evaluate_candidate: bool = True,
     ) -> bool:
         nonlocal best_plan, legal_draft, best_result, best_tag, best_candidate_id
-        nonlocal best_candidate_source
+        nonlocal best_candidate_source, best_selection_metadata
         nonlocal successful_evals, attempted_evals, multicore_eval_runtime
         nonlocal candidate_sequence
         signature = plan_signature(plan)
-        if signature in tested or attempted_evals >= max_evals:
+        if signature in tested or (
+            evaluate_candidate and attempted_evals >= max_evals
+        ):
             return False
         tested.add(signature)
         candidate_sequence += 1
@@ -418,6 +713,17 @@ def solve_one(
             candidate_method = "previous_core_plan_plus_empty_core"
         else:
             candidate_method = method
+        effective_selection_metadata = selection_metadata or {
+            "proxy_selected": True,
+            "candidate_status": "ordered",
+            "proxy_selection_reasons": [],
+        }
+        selection_fields = {
+            "candidate_selection": candidate_selection,
+            "proxy_max_candidates": proxy_max_candidates,
+            "proxy_boundary_ratio_limit": proxy_boundary_ratio_limit,
+            **effective_selection_metadata,
+        }
         record = {
             "experiment_id": experiment_id,
             "run_id": run_id,
@@ -432,6 +738,7 @@ def solve_one(
             "max_evals": max_evals,
             "improve_enabled": improve,
             "placement_scoring": placement_scoring,
+            "residence_ordering": residence_ordering,
             "candidate_family": stage,
             "method": method,
             "candidate_method": candidate_method,
@@ -442,6 +749,7 @@ def solve_one(
             "source_plan": _portable_path(Path(source_plan)) if source_plan else None,
             "group_count": len(set(plan.get("node_to_subgraph", {}).values())),
             "plan_hash": plan_hash,
+            **selection_fields,
             **fingerprints,
         }
         try:
@@ -475,6 +783,30 @@ def solve_one(
                 f"{graph.path.stem}_p{problem}_n{ncores}_{run_id}_legal_draft.json",
                 legal_draft,
             )
+        if not evaluate_candidate:
+            rejection_reason = (
+                effective_selection_metadata.get("candidate_status", "screened_out")
+            )
+            _append_subgraph_diagnostic(results_dir, {
+                **record,
+                **plan_metrics,
+                "status": rejection_reason,
+                "placement_estimates": placement_diagnostics,
+                "official_makespan": None,
+                "evaluation_wall_time_sec": 0.0,
+                "accepted": False,
+                "rejection_reason": rejection_reason,
+            })
+            _append_candidate_trial(results_dir, {
+                **record,
+                "status": rejection_reason,
+                "evaluation_wall_time_sec": 0.0,
+                "official_makespan": None,
+                "added_copy_bytes": None,
+                "accepted": False,
+                "rejection_reason": rejection_reason,
+            })
+            return False
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             _append_subgraph_diagnostic(results_dir, {
@@ -559,6 +891,7 @@ def solve_one(
             best_tag = tag
             best_candidate_id = candidate_id
             best_candidate_source = stage
+            best_selection_metadata = effective_selection_metadata
             validated_path = (
                 results_dir / "schedules" /
                 f"{graph.path.stem}_p{problem}_n{ncores}_{run_id}_best_validated.json"
@@ -583,20 +916,72 @@ def solve_one(
             })
         return accepted
 
-    candidate_specs: list[
-        tuple[dict[str, Any], str, dict[str, Any] | None, str | None]
-    ] = []
+    candidate_factories: list[tuple[str, Callable[[], CandidateSpec]]] = []
 
-    def add_saved_candidate(source_ncores: int, append_empty_core: bool = False) -> None:
+    def add_plan_factory(
+        plan: dict[str, Any],
+        stage: str,
+        placement_diagnostics: dict[str, Any] | None = None,
+        source_plan: str | None = None,
+    ) -> None:
+        def factory(
+            saved_plan: dict[str, Any] = plan,
+            candidate_stage: str = stage,
+            saved_diagnostics: dict[str, Any] | None = placement_diagnostics,
+            saved_source_plan: str | None = source_plan,
+        ) -> CandidateSpec:
+            return (
+                saved_plan,
+                candidate_stage,
+                saved_diagnostics,
+                saved_source_plan,
+            )
+
+        candidate_factories.append((stage, factory))
+
+    def add_generated_factory(
+        stage: str,
+        generator_function: Callable[..., dict[str, Any]],
+        group_count: int,
+        topology_strategy: str | None = None,
+    ) -> None:
+        def factory() -> CandidateSpec:
+            placement_diagnostics: dict[str, Any] = {}
+            generator_kwargs: dict[str, Any] = {
+                "diagnostics": placement_diagnostics,
+            }
+            if topology_strategy is not None:
+                generator_kwargs["topology_strategy"] = topology_strategy
+            plan = generator_function(
+                analysis, ncores, config, group_count, **generator_kwargs
+            )
+            return plan, stage, placement_diagnostics, None
+
+        candidate_factories.append((stage, factory))
+
+    def generate_problem2_with_scoring(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        kwargs["placement_scoring"] = placement_scoring
+        kwargs["cache_ordering"] = cache_ordering
+        return schedule_b.generate_schedule(*args, **kwargs)
+
+    def load_saved_candidate(
+        source_problem: int,
+        source_ncores: int,
+        append_empty_core: bool = False,
+        validated_only: bool = False,
+    ) -> CandidateSpec | None:
         directories = list(dict.fromkeys((results_dir, history_dir)))
         for directory in directories:
-            for path in _saved_plan_paths(
-                directory, graph.path.stem, problem, source_ncores
-            ):
+            paths = _saved_plan_paths(
+                directory, graph.path.stem, source_problem, source_ncores
+            )
+            if validated_only:
+                paths = paths[1:]
+            for path in paths:
                 plan = _load_saved_plan(
                     path,
                     fingerprints,
-                    {"problem": problem, "ncores": source_ncores},
+                    {"problem": source_problem, "ncores": source_ncores},
                     allow_unverified=path.name.endswith("_best.json"),
                 )
                 if plan is None:
@@ -615,54 +1000,47 @@ def solve_one(
                     stage = "legacy_history_warm_start"
                 if append_empty_core:
                     stage = "previous_core_count_warm_start"
-                candidate_specs.append((plan, stage, None, str(path)))
-                return
+                return plan, stage, None, str(path)
+        return None
+
+    def add_saved_candidate(
+        source_ncores: int,
+        append_empty_core: bool = False,
+    ) -> None:
+        saved = load_saved_candidate(
+            problem,
+            source_ncores,
+            append_empty_core=append_empty_core,
+        )
+        if saved is not None:
+            plan, stage, placement_diagnostics, source_plan = saved
+            add_plan_factory(
+                plan,
+                stage,
+                placement_diagnostics,
+                source_plan,
+            )
 
     if problem == 3:
         problem_2_counts = schedule_b.candidate_counts(analysis, ncores)
-        validated_problem2 = None
-        validated_problem2_path = None
-        for directory in dict.fromkeys((results_dir, history_dir)):
-            for path in _saved_plan_paths(
-                directory, graph.path.stem, 2, ncores
-            )[1:]:
-                plan = _load_saved_plan(
-                    path,
-                    fingerprints,
-                    {"problem": 2, "ncores": ncores},
-                    allow_unverified=False,
-                )
-                if plan is not None:
-                    validated_problem2 = plan
-                    validated_problem2_path = path
-                    break
-            if validated_problem2 is not None:
-                break
+        validated_problem2 = load_saved_candidate(
+            2, ncores, validated_only=True
+        )
         if validated_problem2 is not None:
-            candidate_specs.append((
-                validated_problem2,
+            plan, _, placement_diagnostics, source_plan = validated_problem2
+            add_plan_factory(
+                plan,
                 "problem2_validated_warm_start",
-                None,
-                str(validated_problem2_path),
-            ))
+                placement_diagnostics,
+                source_plan,
+            )
         else:
-            try:
-                if problem_2_counts:
-                    placement_diagnostics = {}
-                    plan = schedule_b.generate_schedule(
-                        analysis, ncores, config, problem_2_counts[0],
-                        diagnostics=placement_diagnostics,
-                        placement_scoring=placement_scoring,
-                        cache_ordering=cache_ordering,
-                    )
-                    candidate_specs.append((
-                        plan,
-                        f"problem2_warm_start_g{problem_2_counts[0]}",
-                        placement_diagnostics,
-                        None,
-                    ))
-            except (ValueError, RuntimeError) as error:
-                errors.append(f"problem2 warm start: {error}")
+            if problem_2_counts:
+                add_generated_factory(
+                    f"problem2_warm_start_g{problem_2_counts[0]}",
+                    generate_problem2_with_scoring,
+                    problem_2_counts[0],
+                )
     else:
         problem_2_counts = []
         add_saved_candidate(ncores)
@@ -670,39 +1048,18 @@ def solve_one(
     first_native_count = 0
     if group_counts:
         first_native_count = group_counts[0]
-        try:
-            placement_diagnostics = {}
-            candidate_specs.append((
-                generate_with_scoring(
-                    analysis, ncores, config, first_native_count,
-                    diagnostics=placement_diagnostics,
-                ),
-                f"current_{method}_g{first_native_count}",
-                placement_diagnostics,
-                None,
-            ))
-        except (ValueError, RuntimeError) as error:
-            errors.append(f"initial groups={first_native_count}: {error}")
+        add_generated_factory(
+            f"current_{method}_g{first_native_count}",
+            generate_with_scoring,
+            first_native_count,
+        )
         for topology_strategy in ("critical_path", "release_bytes"):
-            try:
-                placement_diagnostics = {}
-                candidate_specs.append((
-                    generate_with_scoring(
-                        analysis,
-                        ncores,
-                        config,
-                        first_native_count,
-                        diagnostics=placement_diagnostics,
-                        topology_strategy=topology_strategy,
-                    ),
-                    f"topology_{topology_strategy}_g{first_native_count}",
-                    placement_diagnostics,
-                    None,
-                ))
-            except (ValueError, RuntimeError) as error:
-                errors.append(
-                    f"topology {topology_strategy}: {error}"
-                )
+            add_generated_factory(
+                f"topology_{topology_strategy}_g{first_native_count}",
+                generate_with_scoring,
+                first_native_count,
+                topology_strategy,
+            )
 
     if problem == 3:
         add_saved_candidate(ncores)
@@ -712,62 +1069,89 @@ def solve_one(
     for group_count in group_counts:
         if group_count == first_native_count:
             continue
-        try:
-            placement_diagnostics = {}
-            candidate_specs.append((
-                generate_with_scoring(
-                    analysis, ncores, config, group_count,
-                    diagnostics=placement_diagnostics,
-                ),
-                f"current_{method}_g{group_count}",
-                placement_diagnostics,
-                None,
-            ))
-        except (ValueError, RuntimeError) as error:
-            errors.append(f"initial groups={group_count}: {error}")
+        add_generated_factory(
+            f"current_{method}_g{group_count}",
+            generate_with_scoring,
+            group_count,
+        )
 
     if problem == 3:
         for group_count in problem_2_counts[1:]:
-            try:
-                placement_diagnostics = {}
-                candidate_specs.append((
-                    schedule_b.generate_schedule(
-                        analysis, ncores, config, group_count,
-                        diagnostics=placement_diagnostics,
-                        placement_scoring=placement_scoring,
-                        cache_ordering=cache_ordering,
-                    ),
-                    f"problem2_warm_start_g{group_count}",
-                    placement_diagnostics,
-                    None,
-                ))
-            except (ValueError, RuntimeError) as error:
-                errors.append(f"problem2 warm start groups={group_count}: {error}")
+            add_generated_factory(
+                f"problem2_warm_start_g{group_count}",
+                generate_problem2_with_scoring,
+                group_count,
+            )
 
     if len(analysis.eligible_ops) > 1:
-        try:
-            placement_diagnostics = {}
-            candidate_specs.append((
-                generate_with_scoring(
-                    analysis, ncores, config, 1,
-                    diagnostics=placement_diagnostics,
-                ),
-                f"single_group_fallback_{method}",
-                placement_diagnostics,
-                None,
-            ))
-        except (ValueError, RuntimeError) as error:
-            errors.append(f"single group fallback: {error}")
+        add_generated_factory(
+            f"single_group_fallback_{method}",
+            generate_with_scoring,
+            1,
+        )
 
     improvement_reserve = min(2, max_evals // 4) if improve and max_evals >= 6 else 0
     initial_eval_limit = max(1, max_evals - improvement_reserve)
-    for plan, stage, placement_diagnostics, source_plan in candidate_specs:
-        if attempted_evals >= initial_eval_limit or time.monotonic() >= deadline:
-            break
-        try:
-            try_candidate(plan, stage, placement_diagnostics, source_plan)
-        except (ValueError, RuntimeError) as error:
-            errors.append(f"{stage}: {error}")
+    if candidate_selection == "ordered":
+        for factory_stage, candidate_factory in candidate_factories:
+            if attempted_evals >= initial_eval_limit or time.monotonic() >= deadline:
+                break
+            try:
+                plan, stage, placement_diagnostics, source_plan = candidate_factory()
+            except (TimeoutError, ValueError, RuntimeError) as error:
+                errors.append(f"{factory_stage}: {error}")
+                continue
+            try:
+                try_candidate(plan, stage, placement_diagnostics, source_plan)
+            except (ValueError, RuntimeError) as error:
+                errors.append(f"{stage}: {error}")
+    else:
+        proxy_entries: list[dict[str, Any]] = []
+        for index, (factory_stage, candidate_factory) in enumerate(candidate_factories):
+            if time.monotonic() >= deadline:
+                break
+            try:
+                spec = candidate_factory()
+            except (TimeoutError, ValueError, RuntimeError) as error:
+                errors.append(f"{factory_stage}: {error}")
+                continue
+            plan, stage, placement_diagnostics, source_plan = spec
+            metrics = None
+            try:
+                validate_plan(graph, plan, ncores)
+                metrics = _plan_schedule_metrics(graph, plan, analysis)
+            except (KeyError, ValueError, RuntimeError) as error:
+                errors.append(f"{stage}: proxy metrics unavailable: {error}")
+            proxy_entries.append({
+                "index": index,
+                "spec": spec,
+                "metrics": metrics,
+                "placement_diagnostics": placement_diagnostics,
+            })
+
+        selected_indices = _select_proxy_candidates(
+            proxy_entries,
+            initial_eval_limit,
+            proxy_max_candidates,
+            proxy_boundary_ratio_limit,
+        )
+        for entry in proxy_entries:
+            plan, stage, placement_diagnostics, source_plan = entry["spec"]
+            selection_metadata = entry["selection_metadata"]
+            evaluate_candidate = entry["index"] in selected_indices
+            if evaluate_candidate and attempted_evals >= initial_eval_limit:
+                break
+            try:
+                try_candidate(
+                    plan,
+                    stage,
+                    placement_diagnostics,
+                    source_plan,
+                    selection_metadata=selection_metadata,
+                    evaluate_candidate=evaluate_candidate,
+                )
+            except (ValueError, RuntimeError) as error:
+                errors.append(f"{stage}: {error}")
 
     if improve and best_result is not None and attempted_evals < max_evals:
         improved = True
@@ -782,6 +1166,8 @@ def solve_one(
             for candidate, family in generate_neighbor_candidates(
                 analysis, current, problem,
                 limit=min(16, max_evals - attempted_evals),
+                residence_ordering=residence_ordering == "neighbor",
+                capacity=config.get("capacity", {}),
             ):
                 if attempted_evals >= max_evals or time.monotonic() >= deadline:
                     break
@@ -789,6 +1175,11 @@ def solve_one(
                     candidate,
                     f"local{rounds}_{family}",
                     parent_candidate=parent_candidate_id,
+                    selection_metadata={
+                        "proxy_selected": True,
+                        "candidate_status": "local_improvement",
+                        "proxy_selection_reasons": ["local_improvement"],
+                    },
                 ) or improved
 
     search_wall_sec = time.monotonic() - search_started
@@ -801,6 +1192,16 @@ def solve_one(
         "total_wall_sec": time.monotonic() - total_started,
     }
     evaluator.timeout_sec = per_candidate_timeout
+    summary_selection_fields = {
+        field: (
+            best_selection_metadata.get(field)
+            if best_selection_metadata is not None else None
+        )
+        for field in (
+            "proxy_score", "proxy_rank", "pareto_kept", "proxy_selected",
+            "candidate_status", "proxy_selection_reasons", "safety_status",
+        )
+    }
 
     if best_plan is None:
         if legal_draft is None:
@@ -835,6 +1236,7 @@ def solve_one(
             "cache_speedup": None,
             "status": failure_status,
             "error": " | ".join(errors),
+            **summary_selection_fields,
             **timing_fields,
         }
         _store_summary(results_dir, row)
@@ -902,6 +1304,7 @@ def solve_one(
         "status": "evaluated" if best_result else "legal_not_evaluated",
         "error": " | ".join(errors),
         "best_evaluation_tag": best_tag,
+        **summary_selection_fields,
         **timing_fields,
     }
     _store_summary(results_dir, row)
@@ -927,6 +1330,15 @@ def main() -> int:
         "--cache-ordering", choices=("fifo", "reuse_distance"),
         default="fifo",
     )
+    parser.add_argument(
+        "--candidate-selection", choices=("ordered", "proxy_pareto"),
+        default="ordered",
+    )
+    parser.add_argument(
+        "--residence-ordering", choices=("off", "neighbor"), default="off"
+    )
+    parser.add_argument("--proxy-max-candidates", type=int, default=4)
+    parser.add_argument("--proxy-boundary-ratio-limit", type=float, default=2.0)
     parser.add_argument("--experiment-id", default="round2")
     parser.add_argument("--run-id")
     parser.add_argument("--official-root", type=Path, default=Path(__file__).resolve().parents[1] / "2026_official")
@@ -937,7 +1349,9 @@ def main() -> int:
     args = parser.parse_args()
 
     if (args.time_limit <= 0 or args.baseline_timeout <= 0
-            or args.evaluator_timeout <= 0 or args.max_evals < 1):
+            or args.evaluator_timeout <= 0 or args.max_evals < 1
+            or args.proxy_max_candidates < 1
+            or args.proxy_boundary_ratio_limit <= 0):
         parser.error("time limits must be positive; max-evals must be at least 1")
     if not valid_run_label(args.experiment_id):
         parser.error("experiment-id must be a path-safe label")
@@ -973,6 +1387,10 @@ def main() -> int:
             "retry_baseline": args.retry_baseline,
             "placement_scoring": args.placement_scoring,
             "cache_ordering": args.cache_ordering,
+            "candidate_selection": args.candidate_selection,
+            "residence_ordering": args.residence_ordering,
+            "proxy_max_candidates": args.proxy_max_candidates,
+            "proxy_boundary_ratio_limit": args.proxy_boundary_ratio_limit,
             "history_dir": str(args.history_dir.resolve()),
         },
     )
@@ -1021,6 +1439,10 @@ def main() -> int:
             args.history_dir.resolve(),
             placement_scoring=args.placement_scoring,
             cache_ordering=args.cache_ordering,
+            candidate_selection=args.candidate_selection,
+            residence_ordering=args.residence_ordering,
+            proxy_max_candidates=args.proxy_max_candidates,
+            proxy_boundary_ratio_limit=args.proxy_boundary_ratio_limit,
         )
         print(
             f"{row['case']} p{row['problem']} n{row['ncores']}: "

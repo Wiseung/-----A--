@@ -37,13 +37,24 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--experiment-id", default="round2")
     parser.add_argument("--run-id")
+    parser.add_argument(
+        "--candidate-selection", choices=("ordered", "proxy_pareto"),
+        default="ordered",
+    )
+    parser.add_argument(
+        "--residence-ordering", choices=("off", "neighbor"), default="off"
+    )
+    parser.add_argument("--proxy-max-candidates", type=int, default=4)
+    parser.add_argument("--proxy-boundary-ratio-limit", type=float, default=2.0)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--no-improve", action="store_true")
     parser.add_argument("--retry-baseline", action="store_true")
     args = parser.parse_args()
 
     if (args.time_limit <= 0 or args.baseline_timeout <= 0
-            or args.evaluator_timeout <= 0 or args.max_evals < 1):
+            or args.evaluator_timeout <= 0 or args.max_evals < 1
+            or args.proxy_max_candidates < 1
+            or args.proxy_boundary_ratio_limit <= 0):
         parser.error("time limits must be positive; max-evals must be at least 1")
     if not valid_run_label(args.experiment_id):
         parser.error("experiment-id must be a path-safe label")
@@ -91,6 +102,12 @@ def main() -> int:
             "max_evals": args.max_evals,
             "improve_enabled": not args.no_improve,
             "retry_baseline": args.retry_baseline,
+            "placement_scoring": "baseline",
+            "cache_ordering": "fifo",
+            "candidate_selection": args.candidate_selection,
+            "residence_ordering": args.residence_ordering,
+            "proxy_max_candidates": args.proxy_max_candidates,
+            "proxy_boundary_ratio_limit": args.proxy_boundary_ratio_limit,
             "history_dir": str(history_dir),
         },
     )
@@ -143,7 +160,11 @@ def main() -> int:
                     and row.get("evaluator_timeout_sec") == args.evaluator_timeout
                     and row.get("max_evals") == args.max_evals
                     and row.get("improve_enabled") == (not args.no_improve)
-                    and row.get("retry_baseline") == args.retry_baseline):
+                    and row.get("retry_baseline") == args.retry_baseline
+                    and row.get("candidate_selection", "ordered") == args.candidate_selection
+                    and row.get("residence_ordering", "off") == args.residence_ordering
+                    and row.get("proxy_max_candidates", 4) == args.proxy_max_candidates
+                    and row.get("proxy_boundary_ratio_limit", 2.0) == args.proxy_boundary_ratio_limit):
                 completed.add((row["case"], row["problem"], row["ncores"]))
 
     total = len(files) * len(args.problems) * len(args.ncores)
@@ -164,6 +185,10 @@ def main() -> int:
                     "--baseline-timeout", str(args.baseline_timeout),
                     "--evaluator-timeout", str(args.evaluator_timeout),
                     "--max-evals", str(args.max_evals), "--seed", str(args.seed),
+                    "--candidate-selection", args.candidate_selection,
+                    "--residence-ordering", args.residence_ordering,
+                    "--proxy-max-candidates", str(args.proxy_max_candidates),
+                    "--proxy-boundary-ratio-limit", str(args.proxy_boundary_ratio_limit),
                     "--official-root", str(official_root),
                     "--config", str(config_path),
                     "--results-dir", str(results_dir),
