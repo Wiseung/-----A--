@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -15,7 +16,7 @@ from solver.evaluate_adapter import EvaluationError, Evaluator
 from solver.graph_analysis import analyze_graph
 from solver.graph_io import load_config, load_graph
 from solver.legality import validate_plan
-from solver.partition import partition_contiguous
+from solver.partition import partition_with_strategy
 from solver.run_identity import (
     build_fingerprints,
     ensure_run_metadata,
@@ -56,11 +57,22 @@ def main() -> int:
     parser.add_argument("--case", default="case_019")
     parser.add_argument("--ncores", type=int, default=4)
     parser.add_argument("--group-count", type=int, default=8)
+    parser.add_argument(
+        "--partition-strategy", choices=(
+            "contiguous", "cagg_lite", "cagg_lite_coverage"
+        ),
+        default="contiguous",
+    )
+    parser.add_argument(
+        "--placement-scoring", choices=("baseline", "soft"),
+        default="baseline",
+    )
     parser.add_argument("--official-root", type=Path, default=ROOT / "2026_official")
     parser.add_argument("--config", type=Path)
     parser.add_argument("--results-dir", type=Path)
     parser.add_argument("--run-id")
     parser.add_argument("--evaluator-timeout", type=float, default=600.0)
+    parser.add_argument("--retain-traces", action="store_true")
     args = parser.parse_args()
 
     if not 1 <= args.ncores <= 5 or args.group_count < 1 or args.evaluator_timeout <= 0:
@@ -97,8 +109,13 @@ def main() -> int:
             "case": args.case,
             "ncores": args.ncores,
             "requested_group_count": args.group_count,
+            "partition_strategy": args.partition_strategy,
+            "placement_scoring": args.placement_scoring,
             "evaluation_problem": 3,
             "evaluator_timeout_sec": args.evaluator_timeout,
+            "retain_traces": args.retain_traces,
+            "official_trace_output_generated": True,
+            "seed": None,
         },
     )
     try:
@@ -107,15 +124,23 @@ def main() -> int:
         parser.error(str(error))
 
     evaluator = Evaluator(
-        official_root, config["path"], results_dir, args.evaluator_timeout
+        official_root,
+        config["path"],
+        results_dir,
+        args.evaluator_timeout,
+        retain_traces=args.retain_traces,
     )
     comparisons = []
     diagnostics_by_candidate = []
     trial_lines = []
     for partition_problem in (2, 3):
         for schedule_problem in (2, 3):
-            partition = partition_contiguous(
-                analysis, args.group_count, problem=partition_problem
+            generation_started = time.monotonic()
+            partition = partition_with_strategy(
+                analysis,
+                args.group_count,
+                problem=partition_problem,
+                partition_strategy=args.partition_strategy,
             )
             placement_diagnostics: dict[str, Any] = {}
             plan = schedule_partition(
@@ -125,16 +150,18 @@ def main() -> int:
                 problem=schedule_problem,
                 config=config,
                 diagnostics=placement_diagnostics,
+                placement_scoring=args.placement_scoring,
             )
             validate_plan(graph, plan, args.ncores)
             plan_hash = _hash_plan(plan)
+            metrics = _plan_schedule_metrics(graph, plan, analysis)
+            generation_wall_time_sec = time.monotonic() - generation_started
             candidate_id = (
                 f"{args.case}_n{args.ncores}_partp{partition_problem}_"
                 f"schedp{schedule_problem}_{run_id}"
             )
             plan_path = results_dir / "schedules" / f"{candidate_id}.json"
             _write_json(plan_path, plan)
-            metrics = _plan_schedule_metrics(graph, plan)
             record: dict[str, Any] = {
                 "experiment_id": "r01_partition_schedule",
                 "run_id": run_id,
@@ -145,9 +172,12 @@ def main() -> int:
                 "schedule_problem": schedule_problem,
                 "evaluation_problem": 3,
                 "requested_group_count": args.group_count,
+                "partition_strategy": args.partition_strategy,
+                "placement_scoring": args.placement_scoring,
                 "actual_group_count": len(partition.groups),
                 "plan_hash": plan_hash,
                 "plan_path": _portable_path(plan_path),
+                "plan_generation_wall_time_sec": generation_wall_time_sec,
                 **fingerprints,
                 **metrics,
             }
@@ -191,6 +221,8 @@ def main() -> int:
         "case": args.case,
         "ncores": args.ncores,
         "requested_group_count": args.group_count,
+        "partition_strategy": args.partition_strategy,
+        "placement_scoring": args.placement_scoring,
         "comparisons": comparisons,
     })
     _write_json(results_dir / "subgraph_diagnostics.json", {

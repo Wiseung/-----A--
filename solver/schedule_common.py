@@ -15,6 +15,7 @@ from .partition import Partition
 @dataclass(slots=True)
 class PlacementEstimate:
     score: tuple[float, float, int]
+    ranking_score: tuple[float, float, float, float, float, int]
     core_id: int
     group_start: float
     group_finish: float
@@ -23,6 +24,7 @@ class PlacementEstimate:
     op_finish_times: dict[int, float]
     output_ready_times: dict[int, float]
     cache_insert_events: list[tuple[float, int, int, int]]
+    cache_access_events: list[tuple[float, int, int, int, bool]]
     external_ready_times: dict[int, float]
     tensor_input_ready: dict[int, float]
     external_input_updates: set[int]
@@ -32,6 +34,9 @@ class PlacementEstimate:
     delta_write_bytes: int
     delta_cross_copy_bytes: int
     delta_repeated_input_bytes: int
+    active_core_penalty: float
+    critical_path_cross_core_penalty: float
+    m_v_imbalance_penalty: float
 
 
 def _input_maps(
@@ -116,6 +121,29 @@ def _cache_contains_at(
     return tensor_id in cache
 
 
+def _reuse_distance_summary(
+    events: list[tuple[float, int, int, int, bool]],
+) -> tuple[int, dict[str, int]]:
+    ordered = sorted(events)
+    last_access: dict[int, int] = {}
+    totals: defaultdict[int, int] = defaultdict(int)
+    for index, (_, _, tensor_id, _, _) in enumerate(ordered):
+        previous = last_access.get(tensor_id)
+        if previous is not None:
+            seen_misses: set[int] = set()
+            distance = 0
+            for _, _, other_id, size, cache_hit in ordered[previous + 1:index]:
+                if other_id != tensor_id and not cache_hit and other_id not in seen_misses:
+                    seen_misses.add(other_id)
+                    distance += size
+            totals[tensor_id] += distance
+        last_access[tensor_id] = index
+    by_tensor = {
+        str(tensor_id): distance for tensor_id, distance in sorted(totals.items())
+    }
+    return sum(by_tensor.values()), by_tensor
+
+
 def _original_copy_bytes(analysis: GraphAnalysis) -> int:
     graph = analysis.graph
     total = 0
@@ -127,6 +155,78 @@ def _original_copy_bytes(analysis: GraphAnalysis) -> int:
             total += sum(graph.tensors[tensor_id]["size"]
                          for tensor_id in graph.op_inputs[op_id])
     return total
+
+
+_PLACEMENT_SCORING_WEIGHTS = {
+    "baseline": (0.0, 0.0, 0.0),
+    "soft": (1.0, 1.0, 1.0),
+}
+
+
+def _relative_load_imbalance(loads: list[int]) -> float:
+    total = sum(loads)
+    if not loads or total == 0:
+        return 0.0
+    return max(loads) / (total / len(loads)) - 1.0
+
+
+def _placement_penalties(
+    group_id: int,
+    core_id: int,
+    ncores: int,
+    core_schedules: list[list[int]],
+    core_m_cycles: list[int],
+    core_v_cycles: list[int],
+    features: list[SubgraphFeatures],
+    predecessors: list[set[int]],
+    assigned_core: dict[int, int],
+    critical_groups: set[int],
+) -> tuple[float, float, float]:
+    active_core_count = sum(bool(schedule) for schedule in core_schedules)
+    if not core_schedules[core_id]:
+        active_core_count += 1
+    active_core_penalty = float(max(0, ncores - active_core_count))
+
+    critical_path_cross_core_penalty = float(sum(
+        parent in critical_groups
+        and parent in assigned_core
+        and assigned_core[parent] != core_id
+        for parent in predecessors[group_id]
+        if group_id in critical_groups
+    ))
+
+    candidate_m_cycles = list(core_m_cycles)
+    candidate_v_cycles = list(core_v_cycles)
+    candidate_m_cycles[core_id] += features[group_id].m_cycles
+    candidate_v_cycles[core_id] += features[group_id].v_cycles
+    m_v_imbalance_penalty = (
+        _relative_load_imbalance(candidate_m_cycles)
+        + _relative_load_imbalance(candidate_v_cycles)
+    )
+    return (
+        active_core_penalty,
+        critical_path_cross_core_penalty,
+        m_v_imbalance_penalty,
+    )
+
+
+def _placement_ranking_score(
+    finish: float,
+    transfer_bytes: float,
+    core_id: int,
+    penalties: tuple[float, float, float],
+    weights: tuple[float, float, float],
+) -> tuple[float, float, float, float, float, int]:
+    active_core_penalty, critical_path_penalty, imbalance_penalty = penalties
+    active_weight, critical_weight, imbalance_weight = weights
+    return (
+        finish,
+        critical_weight * critical_path_penalty,
+        active_weight * active_core_penalty,
+        imbalance_weight * imbalance_penalty,
+        transfer_bytes,
+        core_id,
+    )
 
 
 def _estimated_partition_copy_bytes(
@@ -170,6 +270,167 @@ def _estimated_partition_copy_bytes(
     return task_copy_bytes - _original_copy_bytes(analysis)
 
 
+def _schedule_live_range_metrics(
+    analysis: GraphAnalysis,
+    partition: Partition,
+    plan: dict[str, Any],
+    problem: int,
+    capacity: dict[str, int],
+) -> dict[str, Any]:
+    graph = analysis.graph
+    group_members = {
+        group_id: sorted(
+            members,
+            key=analysis.topological_index.__getitem__,
+        )
+        for group_id, members in enumerate(partition.groups)
+    }
+    streams: list[tuple[int, list[int]]] = []
+    if problem == 1:
+        for core_id, schedule in enumerate(plan["core_schedules"]):
+            for group_id in schedule:
+                streams.append((core_id, group_members.get(group_id, [])))
+    else:
+        for core_id, schedule in enumerate(plan["core_schedules"]):
+            streams.append((
+                core_id,
+                [
+                    op_id
+                    for group_id in schedule
+                    for op_id in group_members.get(group_id, [])
+                ],
+            ))
+
+    core_l1_peak = [0] * len(plan["core_schedules"])
+    core_ub_peak = [0] * len(plan["core_schedules"])
+    core_l1_overflow = [0] * len(plan["core_schedules"])
+    core_ub_overflow = [0] * len(plan["core_schedules"])
+    core_l1_residence = [0] * len(plan["core_schedules"])
+    core_ub_residence = [0] * len(plan["core_schedules"])
+
+    all_tensors = graph.tensors
+    memory_tensors = {
+        tensor_id: tensor
+        for tensor_id, tensor in all_tensors.items()
+        if tensor["pos"] in {"L1", "UB"}
+    }
+    boundary_tensors: set[int] = set()
+    long_lived_tensors: set[int] = set()
+    for tensor_id, tensor in all_tensors.items():
+        producer_groups = {
+            partition.op_to_subgraph[op_id]
+            for op_id in graph.tensor_producers.get(tensor_id, set())
+            if op_id in partition.op_to_subgraph
+        }
+        consumer_groups = {
+            partition.op_to_subgraph[op_id]
+            for op_id in graph.tensor_consumers.get(tensor_id, set())
+            if op_id in partition.op_to_subgraph
+        }
+        crosses_groups = any(
+            source_group != target_group
+            for source_group in producer_groups
+            for target_group in consumer_groups
+        )
+        if tensor["pos"] == "DDR":
+            crosses_groups = len(consumer_groups) > 1 or len(producer_groups) > 1
+        if crosses_groups:
+            boundary_tensors.add(tensor_id)
+        if tensor_id in memory_tensors and len(producer_groups | consumer_groups) > 1:
+            long_lived_tensors.add(tensor_id)
+    boundary_direct_edge_bytes = sum(
+        max(0, int(size))
+        for source, target, size in graph.direct_op_edges
+        if source in partition.op_to_subgraph
+        and target in partition.op_to_subgraph
+        and partition.op_to_subgraph[source] != partition.op_to_subgraph[target]
+    )
+
+    for core_id, operations in streams:
+        if not operations:
+            continue
+        positions = {op_id: index for index, op_id in enumerate(operations)}
+        events: dict[str, dict[int, int]] = {
+            "L1": defaultdict(int),
+            "UB": defaultdict(int),
+        }
+        residence = {"L1": 0, "UB": 0}
+        local_ops = set(operations)
+        for tensor_id, tensor in memory_tensors.items():
+            incident_ops = (
+                graph.tensor_producers.get(tensor_id, set())
+                | graph.tensor_consumers.get(tensor_id, set())
+            ) & local_ops
+            if not incident_ops:
+                continue
+            start = min(positions[op_id] for op_id in incident_ops)
+            end = max(positions[op_id] for op_id in incident_ops)
+            size = max(0, int(tensor["size"]))
+            position = tensor["pos"]
+            events[position][start] += size
+            events[position][end + 1] -= size
+            residence[position] += size * max(1, end - start + 1)
+
+        peaks = {"L1": 0, "UB": 0}
+        for position in ("L1", "UB"):
+            active = 0
+            for event_position in sorted(events[position]):
+                active += events[position][event_position]
+                peaks[position] = max(peaks[position], active)
+        core_l1_peak[core_id] = max(core_l1_peak[core_id], peaks["L1"])
+        core_ub_peak[core_id] = max(core_ub_peak[core_id], peaks["UB"])
+        core_l1_overflow[core_id] = max(
+            core_l1_overflow[core_id],
+            max(0, peaks["L1"] - int(capacity.get("L1", 0))),
+        )
+        core_ub_overflow[core_id] = max(
+            core_ub_overflow[core_id],
+            max(0, peaks["UB"] - int(capacity.get("UB", 0))),
+        )
+        core_l1_residence[core_id] += residence["L1"]
+        core_ub_residence[core_id] += residence["UB"]
+
+    as_dict = lambda values: {
+        str(core_id): value for core_id, value in enumerate(values)
+    }
+    owners = {
+        group_id: core_id
+        for core_id, schedule in enumerate(plan["core_schedules"])
+        for group_id in schedule
+    }
+    boundary_copy_bytes_est = (
+        _estimated_partition_copy_bytes(analysis, partition, owners)
+        if problem != 1 else 0
+    )
+    return {
+        "core_l1_peak_est": as_dict(core_l1_peak),
+        "core_ub_peak_est": as_dict(core_ub_peak),
+        "l1_overflow_bytes_est": as_dict(core_l1_overflow),
+        "ub_overflow_bytes_est": as_dict(core_ub_overflow),
+        "l1_residence_bytes_est": as_dict(core_l1_residence),
+        "ub_residence_bytes_est": as_dict(core_ub_residence),
+        "max_core_l1_peak_est": max(core_l1_peak, default=0),
+        "max_core_ub_peak_est": max(core_ub_peak, default=0),
+        "max_l1_overflow_bytes_est": max(core_l1_overflow, default=0),
+        "max_ub_overflow_bytes_est": max(core_ub_overflow, default=0),
+        "long_lived_tensor_bytes": sum(
+            int(memory_tensors[tensor_id]["size"])
+            for tensor_id in long_lived_tensors
+        ),
+        "boundary_tensor_count": len(boundary_tensors),
+        "boundary_tensor_bytes": sum(
+            int(all_tensors[tensor_id]["size"])
+            for tensor_id in boundary_tensors
+        ),
+        "boundary_direct_edge_bytes": boundary_direct_edge_bytes,
+        "boundary_bytes_total": (
+            sum(int(all_tensors[tensor_id]["size"]) for tensor_id in boundary_tensors)
+            + boundary_direct_edge_bytes
+        ),
+        "boundary_copy_bytes_est": boundary_copy_bytes_est,
+    }
+
+
 def schedule_partition(
     analysis: GraphAnalysis,
     partition: Partition,
@@ -177,15 +438,44 @@ def schedule_partition(
     problem: int,
     config: dict[str, Any],
     diagnostics: dict[str, Any] | None = None,
+    placement_scoring: str = "baseline",
+    cache_ordering: str = "fifo",
 ) -> dict[str, Any]:
+    try:
+        scoring_weights = _PLACEMENT_SCORING_WEIGHTS[placement_scoring]
+    except KeyError as error:
+        raise ValueError(f"unknown placement scoring: {placement_scoring}") from error
+    if cache_ordering not in {"fifo", "reuse_distance"}:
+        raise ValueError(f"unknown cache ordering: {cache_ordering}")
     if diagnostics is not None:
         diagnostics.clear()
         diagnostics.update({
+            "placement_scoring": placement_scoring,
+            "cache_ordering": cache_ordering,
             "groups": [],
             "estimated_read_copy_bytes": 0,
             "estimated_write_copy_bytes": 0,
             "estimated_cross_copy_bytes": 0,
             "estimated_repeated_input_bytes": 0,
+            "cache_accesses": 0,
+            "reuse_distance_bytes": 0,
+            "reuse_distance_bytes_by_tensor": {},
+            "core_l1_peak_est": {},
+            "core_ub_peak_est": {},
+            "l1_overflow_bytes_est": {},
+            "ub_overflow_bytes_est": {},
+            "l1_residence_bytes_est": {},
+            "ub_residence_bytes_est": {},
+            "max_core_l1_peak_est": 0,
+            "max_core_ub_peak_est": 0,
+            "max_l1_overflow_bytes_est": 0,
+            "max_ub_overflow_bytes_est": 0,
+            "long_lived_tensor_bytes": 0,
+            "boundary_tensor_count": 0,
+            "boundary_tensor_bytes": 0,
+            "boundary_direct_edge_bytes": 0,
+            "boundary_bytes_total": 0,
+            "boundary_copy_bytes_est": 0,
         })
     features, bounds = build_subgraph_features(analysis, partition)
     count = len(features)
@@ -256,12 +546,11 @@ def schedule_partition(
         rank[group_id] = features[group_id].estimated_compute + max(children, default=0)
 
     remaining = [len(items) for items in predecessors]
-    ready = [(-rank[group_id], -features[group_id].estimated_compute, group_id)
-             for group_id, degree in enumerate(remaining) if degree == 0]
-    heapq.heapify(ready)
     core_schedules: list[list[int]] = [[] for _ in range(ncores)]
     core_task_end = [0.0] * ncores
     core_pipe_end: list[dict[str, float]] = [defaultdict(float) for _ in range(ncores)]
+    core_m_cycles = [0] * ncores
+    core_v_cycles = [0] * ncores
     assigned_core: dict[int, int] = {}
     estimated_finish: dict[int, float] = {}
     op_finish_by_id: dict[int, float] = {}
@@ -271,18 +560,65 @@ def schedule_partition(
     tensor_input_ready: dict[tuple[int, int], float] = {}
     final_output_cores: dict[int, set[int]] = defaultdict(set)
     cache_insert_events: list[tuple[float, int, int, int]] = []
+    cache_access_events: list[tuple[float, int, int, int, bool]] = []
     cache_capacity = config["problem_3"]["cache_capacity_bytes"]
     cache_bandwidth = config["problem_3"]["cache_bandwidth_bytes_per_cycle"]
     ddr_bandwidth = config["bandwidth"]
+    critical_path_length = max(analysis.forward_path.values(), default=0)
+    critical_ops = {
+        op_id for op_id in analysis.eligible_ops
+        if (
+            analysis.forward_path[op_id]
+            + analysis.backward_path[op_id]
+            - max(1, graph.ops[op_id]["cycles"])
+            == critical_path_length
+        )
+    }
+    critical_groups = {
+        partition.op_to_subgraph[op_id]
+        for op_id in critical_ops
+    }
+
+    def ready_key(ready_group_id: int) -> tuple[float, float, float, int]:
+        shared_bytes = sum(
+            graph.tensors[tensor_id]["size"]
+            for tensor_id in features[ready_group_id].shared_ddr_inputs
+        )
+        cache_priority = (
+            -float(shared_bytes)
+            if problem == 3 and cache_ordering == "reuse_distance"
+            else 0.0
+        )
+        return (
+            -rank[ready_group_id],
+            cache_priority,
+            -features[ready_group_id].estimated_compute,
+            ready_group_id,
+        )
+
+    ready = [ready_key(group_id) for group_id, degree in enumerate(remaining) if degree == 0]
+    heapq.heapify(ready)
 
     while ready:
-        _, _, group_id = heapq.heappop(ready)
+        _, _, _, group_id = heapq.heappop(ready)
         best: PlacementEstimate | None = None
         candidate_scores = []
         inputs = _boundary_input_sizes(group_id, internal_inputs, features)
         group_members = set(features[group_id].members)
 
         for core_id in range(ncores):
+            penalties = _placement_penalties(
+                group_id,
+                core_id,
+                ncores,
+                core_schedules,
+                core_m_cycles,
+                core_v_cycles,
+                features,
+                predecessors,
+                assigned_core,
+                critical_groups,
+            )
             if problem == 1:
                 source_ready = 0.0
                 for parent in predecessors[group_id]:
@@ -310,9 +646,17 @@ def schedule_partition(
                 )
                 finish = start + duration
                 pipe_ends = {"__task__": finish}
-                score = (finish, float(sum(inputs[key][1] for key in inputs)), core_id)
+                transfer_bytes = float(sum(inputs[key][1] for key in inputs))
+                score = (finish, transfer_bytes, core_id)
                 candidate = PlacementEstimate(
                     score=score,
+                    ranking_score=_placement_ranking_score(
+                        finish,
+                        transfer_bytes,
+                        core_id,
+                        penalties,
+                        scoring_weights,
+                    ),
                     core_id=core_id,
                     group_start=start,
                     group_finish=finish,
@@ -321,6 +665,7 @@ def schedule_partition(
                     op_finish_times={},
                     output_ready_times={},
                     cache_insert_events=[],
+                    cache_access_events=[],
                     external_ready_times={},
                     tensor_input_ready={},
                     external_input_updates=set(),
@@ -330,12 +675,16 @@ def schedule_partition(
                     delta_write_bytes=output_copy_bytes[group_id],
                     delta_cross_copy_bytes=0,
                     delta_repeated_input_bytes=0,
+                    active_core_penalty=penalties[0],
+                    critical_path_cross_core_penalty=penalties[1],
+                    m_v_imbalance_penalty=penalties[2],
                 )
             else:
                 pipe_states = [dict(state) for state in core_pipe_end]
                 op_finish_times: dict[int, float] = {}
                 op_start_times: dict[int, float] = {}
                 candidate_cache_events: list[tuple[float, int, int, int]] = []
+                candidate_cache_accesses: list[tuple[float, int, int, int, bool]] = []
                 external_ready_times: dict[int, float] = {}
                 tensor_ready_times: dict[int, float] = {}
                 external_updates: set[int] = set()
@@ -370,6 +719,11 @@ def schedule_partition(
                     end = start + max(1, math.ceil(size / bandwidth))
                     pipe_states[target_core]["PIPE_MTE2"] = end
                     deltas["read"] += size
+                    access_order = len(cache_access_events) + len(candidate_cache_accesses)
+                    if logical_id is not None:
+                        candidate_cache_accesses.append(
+                            (end, access_order, logical_id, size, cache_hit)
+                        )
                     if (problem == 3 and not cache_hit and logical_id is not None
                             and size <= cache_capacity):
                         event_order = len(cache_insert_events) + len(candidate_cache_events)
@@ -550,13 +904,17 @@ def schedule_partition(
                     [group_finish, *estimated_finish.values()]
                     + [end for state in pipe_states for end in state.values()]
                 )
-                score = (
-                    partial_makespan,
-                    float(deltas["read"] + deltas["write"]),
-                    core_id,
-                )
+                transfer_bytes = float(deltas["read"] + deltas["write"])
+                score = (partial_makespan, transfer_bytes, core_id)
                 candidate = PlacementEstimate(
                     score=score,
+                    ranking_score=_placement_ranking_score(
+                        partial_makespan,
+                        transfer_bytes,
+                        core_id,
+                        penalties,
+                        scoring_weights,
+                    ),
                     core_id=core_id,
                     group_start=group_start,
                     group_finish=group_finish,
@@ -565,6 +923,7 @@ def schedule_partition(
                     op_finish_times=op_finish_times,
                     output_ready_times=output_ready_times,
                     cache_insert_events=candidate_cache_events,
+                    cache_access_events=candidate_cache_accesses,
                     external_ready_times=external_ready_times,
                     tensor_input_ready=tensor_ready_times,
                     external_input_updates=external_updates,
@@ -574,19 +933,26 @@ def schedule_partition(
                     delta_write_bytes=deltas["write"],
                     delta_cross_copy_bytes=deltas["cross"],
                     delta_repeated_input_bytes=deltas["repeated"],
+                    active_core_penalty=penalties[0],
+                    critical_path_cross_core_penalty=penalties[1],
+                    m_v_imbalance_penalty=penalties[2],
                 )
 
-            if best is None or candidate.score < best.score:
+            if best is None or candidate.ranking_score < best.ranking_score:
                 best = candidate
             candidate_scores.append({
                 "core_id": candidate.core_id,
                 "score": candidate.score,
+                "ranking_score": candidate.ranking_score,
                 "group_start": candidate.group_start,
                 "group_finish": candidate.group_finish,
                 "delta_read_bytes": candidate.delta_read_bytes,
                 "delta_write_bytes": candidate.delta_write_bytes,
                 "delta_cross_copy_bytes": candidate.delta_cross_copy_bytes,
                 "delta_repeated_input_bytes": candidate.delta_repeated_input_bytes,
+                "active_core_penalty": candidate.active_core_penalty,
+                "critical_path_cross_core_penalty": candidate.critical_path_cross_core_penalty,
+                "m_v_imbalance_penalty": candidate.m_v_imbalance_penalty,
                 "pipe_ends": candidate.pipe_ends,
             })
 
@@ -596,6 +962,8 @@ def schedule_partition(
         assigned_core[group_id] = core_id
         estimated_finish[group_id] = best.group_finish
         core_schedules[core_id].append(group_id)
+        core_m_cycles[core_id] += features[group_id].m_cycles
+        core_v_cycles[core_id] += features[group_id].v_cycles
         if problem == 1:
             core_task_end[core_id] = estimated_finish[group_id]
         else:
@@ -612,10 +980,22 @@ def schedule_partition(
             for tensor_id, source_core in best.final_output_updates:
                 final_output_cores[tensor_id].add(source_core)
             cache_insert_events.extend(best.cache_insert_events)
+            cache_access_events.extend(best.cache_access_events)
 
         if diagnostics is not None:
+            feature = features[group_id]
             diagnostics["groups"].append({
                 "group_id": group_id,
+                "members": list(feature.members),
+                "work_by_pipe": dict(feature.work_by_pipe),
+                "m_cycles": feature.m_cycles,
+                "v_cycles": feature.v_cycles,
+                "estimated_compute": feature.estimated_compute,
+                "internal_critical_path": feature.internal_critical_path,
+                "l1_pressure_est": feature.l1_pressure_est,
+                "ub_pressure_est": feature.ub_pressure_est,
+                "residence_cost_est": feature.residence_cost_est,
+                "boundary_bytes": sum(feature.boundary_bytes.values()),
                 "rank": rank[group_id],
                 "candidate_placements": candidate_scores,
                 "chosen_core": core_id,
@@ -630,6 +1010,7 @@ def schedule_partition(
             diagnostics["estimated_write_copy_bytes"] += best.delta_write_bytes
             diagnostics["estimated_cross_copy_bytes"] += best.delta_cross_copy_bytes
             diagnostics["estimated_repeated_input_bytes"] += best.delta_repeated_input_bytes
+            diagnostics["cache_accesses"] = len(cache_access_events)
 
         for tensor_id in external_inputs[group_id]:
             external_core_users[tensor_id].add(core_id)
@@ -639,13 +1020,33 @@ def schedule_partition(
             if remaining[child] == 0:
                 heapq.heappush(
                     ready,
-                    (-rank[child], -features[child].estimated_compute, child),
+                    ready_key(child),
                 )
 
     if len(assigned_core) != count:
         raise RuntimeError("scheduler failed to assign all subgraphs")
 
+    plan = {
+        "node_to_subgraph": {
+            str(op_id): partition.op_to_subgraph[op_id]
+            for op_id in sorted(analysis.eligible_ops)
+        },
+        "core_schedules": core_schedules,
+    }
+
     if diagnostics is not None:
+        diagnostics.update(_schedule_live_range_metrics(
+            analysis,
+            partition,
+            plan,
+            problem,
+            config.get("capacity", {}),
+        ))
+        reuse_distance_bytes, reuse_distance_by_tensor = _reuse_distance_summary(
+            cache_access_events
+        )
+        diagnostics["reuse_distance_bytes"] = reuse_distance_bytes
+        diagnostics["reuse_distance_bytes_by_tensor"] = reuse_distance_by_tensor
         diagnostics["estimated_new_copy_bytes"] = (
             diagnostics["estimated_read_copy_bytes"]
             + diagnostics["estimated_write_copy_bytes"]
@@ -661,12 +1062,5 @@ def schedule_partition(
             if problem != 1 else None
         )
 
-    plan = {
-        "node_to_subgraph": {
-            str(op_id): partition.op_to_subgraph[op_id]
-            for op_id in sorted(analysis.eligible_ops)
-        },
-        "core_schedules": core_schedules,
-    }
     validate_plan(analysis.graph, plan, ncores)
     return plan

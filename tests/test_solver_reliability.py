@@ -12,7 +12,12 @@ from solver.graph_analysis import analyze_graph
 from solver.graph_io import load_config, parse_graph
 from solver.schedule_b import generate_schedule as schedule_2
 from solver.run_identity import build_fingerprints
-from solver.solver import _store_summary, plan_signature, solve_one
+from solver.solver import (
+    _plan_schedule_metrics,
+    _store_summary,
+    plan_signature,
+    solve_one,
+)
 from tests.helpers import make_chain_graph
 
 
@@ -68,6 +73,7 @@ class SolverReliabilityTests(unittest.TestCase):
         ncores: int = 2,
         max_evals: int = 1,
         improve: bool = False,
+        placement_scoring: str = "baseline",
     ) -> dict:
         return solve_one(
             self.graph,
@@ -85,6 +91,7 @@ class SolverReliabilityTests(unittest.TestCase):
             experiment_id="test",
             run_id="test-run",
             history_dir=results_dir,
+            placement_scoring=placement_scoring,
         )
 
     def test_timing_separates_baseline_search_and_candidate(self) -> None:
@@ -106,6 +113,44 @@ class SolverReliabilityTests(unittest.TestCase):
         )
         self.assertLessEqual(evaluator.multicore_timeout, 0.001)
         self.assertEqual(evaluator.timeout_sec, 0.001)
+
+    def test_plan_metrics_report_core_coverage_and_loads(self) -> None:
+        graph = parse_graph(make_chain_graph(3), self.root / "metrics_test.json")
+        analysis = analyze_graph(graph)
+        plan = {
+            "node_to_subgraph": {"20": 0, "21": 1, "22": 1},
+            "core_schedules": [[0], [1], []],
+        }
+
+        metrics = _plan_schedule_metrics(graph, plan, analysis)
+
+        self.assertEqual(metrics["active_core_count"], 2)
+        self.assertEqual(metrics["groups_by_core"], {"0": [0], "1": [1], "2": []})
+        self.assertEqual(metrics["m_cycles_by_core"], {"0": 0, "1": 4, "2": 0})
+        self.assertEqual(metrics["v_cycles_by_core"], {"0": 4, "1": 4, "2": 0})
+        self.assertEqual(metrics["max_core_compute"], 4)
+        self.assertEqual(metrics["m_load_imbalance"], 2.0)
+        self.assertEqual(metrics["v_load_imbalance"], 0.5)
+        self.assertEqual(
+            metrics["critical_group_count_by_core"],
+            {"0": 1, "1": 1, "2": 0},
+        )
+
+    def test_solver_records_placement_scoring_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            results_dir = Path(temporary)
+            row = self._solve(
+                results_dir,
+                StubEvaluator(timeout_sec=1.0),
+                placement_scoring="soft",
+            )
+            trial = json.loads(
+                (results_dir / "candidate_trials.jsonl")
+                .read_text(encoding="utf-8").splitlines()[0]
+            )
+
+        self.assertEqual(row["placement_scoring"], "soft")
+        self.assertEqual(trial["placement_scoring"], "soft")
 
     def test_failed_evaluation_does_not_replace_validated_plan(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
