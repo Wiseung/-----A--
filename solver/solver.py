@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from . import cache_aware, schedule_a, schedule_b
+from .chain_partition import build_chains, _chain_dag, _chain_topological_order
 from .evaluate_adapter import EvaluationError, Evaluator
 from .graph_analysis import GraphAnalysis, analyze_graph
 from .graph_io import Graph, load_config, load_graph
@@ -640,12 +641,41 @@ def solve_one(
     baseline_makespan = baseline.get("makespan") if baseline else None
     analysis = analyze_graph(graph)
     generate, get_counts, method = _generator(problem)
+
+    deep_narrow_p1 = False
+    if problem == 1 and ncores == 5:
+        chains, chain_of_op, _ = build_chains(analysis)
+        successors, predecessors = _chain_dag(chains, chain_of_op, analysis)
+        chain_order = _chain_topological_order(chains, successors, predecessors)
+        levels: dict[int, int] = {}
+        for chain_id in chain_order:
+            levels[chain_id] = max(
+                (levels[parent] for parent in predecessors[chain_id]),
+                default=-1,
+            ) + 1
+        level_widths: dict[int, int] = {}
+        for level in levels.values():
+            level_widths[level] = level_widths.get(level, 0) + 1
+        depth = max(levels.values(), default=-1) + 1
+        width = max(level_widths.values(), default=0)
+        deep_narrow_p1 = len(chains) >= 100 and depth >= 10 * max(width, 1)
+
+    long_chain_p2_5 = False
+    if problem == 2 and ncores == 5:
+        chains, _, _ = build_chains(analysis)
+        long_chain_p2_5 = max(
+            (len(chain.members) for chain in chains),
+            default=0,
+        ) >= 48
+
     def generate_with_scoring(*args: Any, **kwargs: Any) -> dict[str, Any]:
         kwargs["placement_scoring"] = placement_scoring
         kwargs["cache_ordering"] = cache_ordering
         return generate(*args, **kwargs)
 
     group_counts = get_counts(analysis, ncores)
+    if long_chain_p2_5 and len(group_counts) >= 3:
+        group_counts = [*group_counts[:2], 33, *group_counts[2:]]
     run_fields = {
         "experiment_id": experiment_id,
         "run_id": run_id,
@@ -944,6 +974,8 @@ def solve_one(
         generator_function: Callable[..., dict[str, Any]],
         group_count: int,
         topology_strategy: str | None = None,
+        partition_strategy: str | None = None,
+        cut_weight: float | None = None,
     ) -> None:
         def factory() -> CandidateSpec:
             placement_diagnostics: dict[str, Any] = {}
@@ -952,6 +984,10 @@ def solve_one(
             }
             if topology_strategy is not None:
                 generator_kwargs["topology_strategy"] = topology_strategy
+            if partition_strategy is not None:
+                generator_kwargs["partition_strategy"] = partition_strategy
+            if cut_weight is not None:
+                generator_kwargs["cut_weight"] = cut_weight
             plan = generator_function(
                 analysis, ncores, config, group_count, **generator_kwargs
             )
@@ -1041,6 +1077,12 @@ def solve_one(
                     generate_problem2_with_scoring,
                     problem_2_counts[0],
                 )
+                add_generated_factory(
+                    f"problem2_warm_start_chain_g{problem_2_counts[0]}",
+                    generate_problem2_with_scoring,
+                    problem_2_counts[0],
+                    partition_strategy="chain_contiguous",
+                )
     else:
         problem_2_counts = []
         add_saved_candidate(ncores)
@@ -1060,6 +1102,27 @@ def solve_one(
                 first_native_count,
                 topology_strategy,
             )
+        if problem in (1, 2, 3):
+            add_generated_factory(
+                f"chain_current_{method}_g{first_native_count}",
+                generate_with_scoring,
+                first_native_count,
+                partition_strategy="chain_contiguous",
+            )
+        if problem == 3:
+            add_generated_factory(
+                f"cut_weight_0.24_current_{method}_g{first_native_count}",
+                generate_with_scoring,
+                first_native_count,
+                cut_weight=0.24,
+            )
+            add_generated_factory(
+                f"cut_weight_0.24_chain_{method}_g{first_native_count}",
+                generate_with_scoring,
+                first_native_count,
+                partition_strategy="chain_contiguous",
+                cut_weight=0.24,
+            )
 
     if problem == 3:
         add_saved_candidate(ncores)
@@ -1074,6 +1137,27 @@ def solve_one(
             generate_with_scoring,
             group_count,
         )
+        if problem in (1, 2, 3):
+            add_generated_factory(
+                f"chain_current_{method}_g{group_count}",
+                generate_with_scoring,
+                group_count,
+                partition_strategy="chain_contiguous",
+            )
+        if problem == 3:
+            add_generated_factory(
+                f"cut_weight_0.24_current_{method}_g{group_count}",
+                generate_with_scoring,
+                group_count,
+                cut_weight=0.24,
+            )
+            add_generated_factory(
+                f"cut_weight_0.24_chain_{method}_g{group_count}",
+                generate_with_scoring,
+                group_count,
+                partition_strategy="chain_contiguous",
+                cut_weight=0.24,
+            )
 
     if problem == 3:
         for group_count in problem_2_counts[1:]:
@@ -1082,12 +1166,25 @@ def solve_one(
                 generate_problem2_with_scoring,
                 group_count,
             )
+            add_generated_factory(
+                f"problem2_warm_start_chain_g{group_count}",
+                generate_problem2_with_scoring,
+                group_count,
+                partition_strategy="chain_contiguous",
+            )
 
     if len(analysis.eligible_ops) > 1:
         add_generated_factory(
             f"single_group_fallback_{method}",
             generate_with_scoring,
             1,
+        )
+    if deep_narrow_p1 and ncores in group_counts:
+        add_generated_factory(
+            f"cagg_lite_current_{method}_g{ncores}",
+            generate_with_scoring,
+            ncores,
+            partition_strategy="cagg_lite",
         )
 
     improvement_reserve = min(2, max_evals // 4) if improve and max_evals >= 6 else 0
@@ -1331,13 +1428,13 @@ def main() -> int:
         default="fifo",
     )
     parser.add_argument(
-        "--candidate-selection", choices=("ordered", "proxy_pareto"),
+        "--candidate-selection", choices=("auto", "ordered", "proxy_pareto"),
         default="ordered",
     )
     parser.add_argument(
         "--residence-ordering", choices=("off", "neighbor"), default="off"
     )
-    parser.add_argument("--proxy-max-candidates", type=int, default=4)
+    parser.add_argument("--proxy-max-candidates", type=int, default=8)
     parser.add_argument("--proxy-boundary-ratio-limit", type=float, default=2.0)
     parser.add_argument("--experiment-id", default="round2")
     parser.add_argument("--run-id")
@@ -1361,6 +1458,13 @@ def main() -> int:
 
     graph = load_graph(args.graph)
     config = load_config(args.official_root, args.config)
+    candidate_selection = args.candidate_selection
+    if candidate_selection == "auto":
+        candidate_selection = (
+            "proxy_pareto"
+            if args.problem in (1, 3) and args.max_evals <= 8
+            else "ordered"
+        )
     results_dir = (
         args.results_dir.resolve()
         if args.results_dir
@@ -1439,7 +1543,7 @@ def main() -> int:
             args.history_dir.resolve(),
             placement_scoring=args.placement_scoring,
             cache_ordering=args.cache_ordering,
-            candidate_selection=args.candidate_selection,
+            candidate_selection=candidate_selection,
             residence_ordering=args.residence_ordering,
             proxy_max_candidates=args.proxy_max_candidates,
             proxy_boundary_ratio_limit=args.proxy_boundary_ratio_limit,

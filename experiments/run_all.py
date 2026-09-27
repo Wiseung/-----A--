@@ -20,6 +20,14 @@ from solver.run_identity import (
 )
 
 
+def candidate_selection_for_problem(
+    requested: str, problem: int, max_evals: int
+) -> str:
+    if requested != "auto":
+        return requested
+    return "proxy_pareto" if problem in (1, 3) and max_evals <= 8 else "ordered"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run bounded official evaluations over the selected cases.")
     parser.add_argument("--data-dir", type=Path, default=ROOT / "2026_official" / "data")
@@ -38,13 +46,13 @@ def main() -> int:
     parser.add_argument("--experiment-id", default="round2")
     parser.add_argument("--run-id")
     parser.add_argument(
-        "--candidate-selection", choices=("ordered", "proxy_pareto"),
-        default="ordered",
+        "--candidate-selection", choices=("auto", "ordered", "proxy_pareto"),
+        default="auto",
     )
     parser.add_argument(
         "--residence-ordering", choices=("off", "neighbor"), default="off"
     )
-    parser.add_argument("--proxy-max-candidates", type=int, default=4)
+    parser.add_argument("--proxy-max-candidates", type=int, default=8)
     parser.add_argument("--proxy-boundary-ratio-limit", type=float, default=2.0)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--no-improve", action="store_true")
@@ -161,7 +169,11 @@ def main() -> int:
                     and row.get("max_evals") == args.max_evals
                     and row.get("improve_enabled") == (not args.no_improve)
                     and row.get("retry_baseline") == args.retry_baseline
-                    and row.get("candidate_selection", "ordered") == args.candidate_selection
+                    and row.get("candidate_selection", "ordered") == candidate_selection_for_problem(
+                        args.candidate_selection,
+                        int(row["problem"]),
+                        args.max_evals,
+                    )
                     and row.get("residence_ordering", "off") == args.residence_ordering
                     and row.get("proxy_max_candidates", 4) == args.proxy_max_candidates
                     and row.get("proxy_boundary_ratio_limit", 2.0) == args.proxy_boundary_ratio_limit):

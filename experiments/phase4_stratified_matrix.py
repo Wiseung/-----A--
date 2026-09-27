@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -136,22 +137,32 @@ def _candidate_matrix(
     group_counts: list[int],
     arms: list[str],
     run_id: str,
+    cut_weights: list[float] | None = None,
 ) -> list[dict[str, Any]]:
     candidates = []
+    weight_values: list[float | None] = (
+        [None] if cut_weights is None else list(cut_weights)
+    )
     for case in cases:
         for core_count in ncores:
             for arm in arms:
                 for group_count in group_counts:
-                    candidates.append({
-                        "candidate_id": (
-                            f"{case}_n{core_count}_{arm}_g{group_count}_{run_id}"
-                        ),
-                        "case": case,
-                        "ncores": core_count,
-                        "arm": arm,
-                        "group_count": group_count,
-                        **ARMS[arm],
-                    })
+                    for cut_weight in weight_values:
+                        weight_label = (
+                            f"_cw{cut_weight:g}" if cut_weight is not None else ""
+                        )
+                        candidates.append({
+                            "candidate_id": (
+                                f"{case}_n{core_count}_{arm}_g{group_count}"
+                                f"{weight_label}_{run_id}"
+                            ),
+                            "case": case,
+                            "ncores": core_count,
+                            "arm": arm,
+                            "group_count": group_count,
+                            "cut_weight": cut_weight,
+                            **ARMS[arm],
+                        })
     return candidates
 
 
@@ -576,6 +587,7 @@ def main() -> int:
     parser.add_argument("--cases", nargs="+", default=CASES)
     parser.add_argument("--ncores", nargs="+", type=int, default=[2, 4, 5])
     parser.add_argument("--group-counts", nargs="+", type=int, default=GROUP_COUNTS)
+    parser.add_argument("--cut-weights", nargs="+", type=float)
     parser.add_argument("--arms", nargs="+", choices=tuple(ARMS), default=list(ARMS))
     parser.add_argument(
         "--evaluation-problems", nargs="+", type=int,
@@ -591,6 +603,8 @@ def main() -> int:
         default="fifo",
     )
     parser.add_argument("--no-proxy-screen", action="store_true")
+    parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--progress-every", type=int, default=50)
     parser.add_argument("--proxy-only", action="store_true")
     parser.add_argument("--max-proxy-candidates", type=int, default=3)
     parser.add_argument("--boundary-ratio-limit", type=float, default=2.0)
@@ -615,10 +629,16 @@ def main() -> int:
         parser.error("group-counts must be non-empty and unique")
     if any(group_count < 1 for group_count in args.group_counts):
         parser.error("group-counts must be positive")
+    if args.cut_weights is not None and any(
+        not math.isfinite(value) or value < 0 for value in args.cut_weights
+    ):
+        parser.error("cut-weights must be finite and non-negative")
     if not args.evaluation_problems or len(set(args.evaluation_problems)) != len(args.evaluation_problems):
         parser.error("evaluation-problems must be non-empty and unique")
     if args.evaluator_timeout <= 0:
         parser.error("evaluator-timeout must be positive")
+    if args.progress_every < 1:
+        parser.error("progress-every must be positive")
     if args.max_proxy_candidates < 1 or args.boundary_ratio_limit <= 0:
         parser.error("proxy candidate limit and boundary ratio limit must be positive")
 
@@ -651,6 +671,7 @@ def main() -> int:
         "cases": args.cases,
         "ncores": args.ncores,
         "group_counts": args.group_counts,
+        "cut_weights": args.cut_weights if args.cut_weights is not None else [None],
         "arms": args.arms,
         "evaluation_problems": args.evaluation_problems,
         "schedule_problem": args.schedule_problem,
@@ -662,7 +683,8 @@ def main() -> int:
     }
     matrix_spec_hash = _matrix_hash(matrix_spec)
     candidates = _candidate_matrix(
-        args.cases, args.ncores, args.group_counts, args.arms, run_id
+        args.cases, args.ncores, args.group_counts, args.arms, run_id,
+        args.cut_weights,
     )
     for candidate in candidates:
         candidate["cache_ordering"] = args.cache_ordering
@@ -697,6 +719,7 @@ def main() -> int:
         "matrix_spec_hash": matrix_spec_hash,
         "planned_candidate_count": len(candidates),
         "planned_evaluation_count": len(planned),
+        "generation_completed_count": 0,
         "planned": planned,
         "status": "generating",
     }
@@ -716,7 +739,7 @@ def main() -> int:
         fingerprints,
     )
     diagnostics: list[dict[str, Any]] = []
-    for candidate in candidates:
+    for generated_count, candidate in enumerate(candidates, start=1):
         graph = graphs[candidate["case"]]
         analysis = analyses[candidate["case"]]
         started = time.monotonic()
@@ -727,6 +750,7 @@ def main() -> int:
                 candidate["group_count"],
                 candidate["partition_problem"],
                 partition_strategy=candidate["partition_strategy"],
+                cut_weight=candidate["cut_weight"],
             )
             plan = schedule_partition(
                 analysis,
@@ -812,6 +836,21 @@ def main() -> int:
                 **fingerprints[candidate["case"]],
             })
             diagnostics.append(dict(candidate))
+
+        manifest["generation_completed_count"] = generated_count
+        if (
+            not args.quiet
+            or generated_count % args.progress_every == 0
+            or generated_count == len(candidates)
+        ):
+            _write_json(results_dir / "batch_manifest.json", manifest)
+            print(
+                f"[generate {generated_count}/{len(candidates)}] "
+                f"{candidate['case']} n{candidate['ncores']} "
+                f"{candidate['arm']} g{candidate['group_count']} "
+                f"{candidate['generation_status']}",
+                flush=True,
+            )
 
     _rank_proxy_candidates(
         candidates,
@@ -983,12 +1022,17 @@ def main() -> int:
             with ledger_path.open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
             persist()
-            print(
-                f"[{done}/{total}] {candidate['case']} n{candidate['ncores']} "
-                f"{candidate['arm']} g{candidate['group_count']} p{problem} "
-                f"{record['status']}",
-                flush=True,
-            )
+            if (
+                not args.quiet
+                or done == total
+                or done % args.progress_every == 0
+            ):
+                print(
+                    f"[{done}/{total}] {candidate['case']} n{candidate['ncores']} "
+                    f"{candidate['arm']} g{candidate['group_count']} p{problem} "
+                    f"{record['status']}",
+                    flush=True,
+                )
 
     manifest["status"] = "completed"
     manifest["completed_evaluation_count"] = len(comparisons)
@@ -999,6 +1043,11 @@ def main() -> int:
         "official_evaluation_calls": evaluator.calls,
         "reserve_statistics": _reserve_statistics(candidates, comparisons),
     })
+    print(
+        f"completed rows={len(comparisons)} official_calls={evaluator.calls} "
+        f"results_dir={results_dir}",
+        flush=True,
+    )
     return 0
 
 
