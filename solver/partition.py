@@ -1,10 +1,25 @@
 from __future__ import annotations
 
 import heapq
+import math
 from dataclasses import dataclass
 
 from .graph_analysis import GraphAnalysis
 from .features import operation_features
+
+
+DEFAULT_CUT_WEIGHTS = {1: 0.30, 2: 0.12, 3: 0.05}
+
+
+def resolve_cut_weight(problem: int, cut_weight: float | None) -> float:
+    if problem not in DEFAULT_CUT_WEIGHTS:
+        raise ValueError(f"unknown problem: {problem}")
+    if cut_weight is None:
+        return DEFAULT_CUT_WEIGHTS[problem]
+    value = float(cut_weight)
+    if not math.isfinite(value) or value < 0:
+        raise ValueError("cut_weight must be a finite non-negative number")
+    return value
 
 
 @dataclass(slots=True)
@@ -135,6 +150,7 @@ def partition_contiguous(
     group_count: int,
     problem: int,
     topology_strategy: str = "id",
+    cut_weight: float | None = None,
 ) -> Partition:
     order = _topological_order_for_partition(analysis, topology_strategy)
     if not order:
@@ -159,7 +175,7 @@ def partition_contiguous(
             prefix.append(prefix[-1] + weight)
         cuts = _cut_bytes_by_position(analysis, order)
         max_cut = max(cuts, default=0)
-        cut_weight = {1: 0.30, 2: 0.12, 3: 0.05}[problem]
+        resolved_cut_weight = resolve_cut_weight(problem, cut_weight)
         ends = []
         previous = 0
         total = prefix[-1]
@@ -171,7 +187,7 @@ def partition_contiguous(
                 range(low, high + 1),
                 key=lambda position: (
                     abs(prefix[position] - target) / max(total, 1)
-                    + cut_weight * cuts[position] / max(max_cut, 1),
+                    + resolved_cut_weight * cuts[position] / max(max_cut, 1),
                     position,
                 ),
             )
@@ -665,6 +681,7 @@ def partition_with_strategy(
     problem: int,
     partition_strategy: str = "contiguous",
     topology_strategy: str = "id",
+    cut_weight: float | None = None,
 ) -> Partition:
     if partition_strategy == "contiguous":
         return partition_contiguous(
@@ -672,6 +689,7 @@ def partition_with_strategy(
             group_count,
             problem,
             topology_strategy=topology_strategy,
+            cut_weight=cut_weight,
         )
     if partition_strategy == "cagg_lite":
         return partition_cagg_lite(analysis, group_count, problem)
@@ -680,7 +698,9 @@ def partition_with_strategy(
     if partition_strategy in {"chain_contiguous", "chain_partition"}:
         from .chain_partition import partition_chain_contiguous
 
-        return partition_chain_contiguous(analysis, group_count, problem)
+        return partition_chain_contiguous(
+            analysis, group_count, problem, cut_weight=cut_weight
+        )
     raise ValueError(f"unknown partition strategy: {partition_strategy}")
 
 
@@ -689,5 +709,12 @@ def candidate_group_counts(num_ops: int, ncores: int, problem: int) -> list[int]
         return [0]
     if ncores == 1:
         return [1]
-    multipliers = {1: (1, 2, 4), 2: (2, 4), 3: (2, 4, 6)}[problem]
+    if problem == 1:
+        counts = list(range(1, min(5, num_ops) + 1))
+        counts.extend(ncores * value for value in (1, 2, 4))
+        return list(dict.fromkeys(min(num_ops, count) for count in counts))
+    if problem == 2 and ncores == 5:
+        multipliers = (2, 4, 6)
+    else:
+        multipliers = {1: (1, 2, 4), 2: (2, 4), 3: (2, 4, 6)}[problem]
     return list(dict.fromkeys(min(num_ops, ncores * value) for value in multipliers))

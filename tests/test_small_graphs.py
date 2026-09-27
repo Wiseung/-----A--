@@ -13,6 +13,8 @@ from solver.partition import (
     partition_cagg_lite,
     partition_cagg_lite_coverage,
     partition_contiguous,
+    partition_with_strategy,
+    candidate_group_counts,
 )
 from solver.schedule_a import generate_schedule as schedule_1
 from solver.schedule_b import generate_schedule as schedule_2
@@ -106,6 +108,32 @@ class SmallGraphTests(unittest.TestCase):
                 partition_strategy="chain_contiguous",
             )
             validate_plan(graph, plan, 2)
+
+    def test_chain_partition_accepts_cut_weight_override(self) -> None:
+        graph = parse_graph(make_shared_input_graph(4))
+        analysis = analyze_graph(graph)
+        partition = partition_with_strategy(
+            analysis,
+            2,
+            1,
+            partition_strategy="chain_contiguous",
+            cut_weight=0.12,
+        )
+
+        self.assertEqual(set(partition.op_to_subgraph), analysis.eligible_ops)
+        plan = schedule_partition(analysis, partition, 2, 1, self.config)
+        validate_plan(graph, plan, 2)
+
+    def test_problem_one_candidates_cover_small_and_legacy_group_counts(self) -> None:
+        self.assertEqual(
+            candidate_group_counts(100, 3, 1),
+            [1, 2, 3, 4, 5, 6, 12],
+        )
+        self.assertEqual(
+            candidate_group_counts(100, 5, 1),
+            [1, 2, 3, 4, 5, 10, 20],
+        )
+        self.assertEqual(candidate_group_counts(100, 5, 2), [10, 20, 30])
 
     def test_two_independent_ops_can_use_two_cores(self) -> None:
         graph = parse_graph(make_shared_input_graph(2))

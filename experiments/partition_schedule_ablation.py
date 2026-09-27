@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -67,6 +68,7 @@ def main() -> int:
         "--placement-scoring", choices=("baseline", "soft"),
         default="baseline",
     )
+    parser.add_argument("--cut-weight", type=float)
     parser.add_argument("--official-root", type=Path, default=ROOT / "2026_official")
     parser.add_argument("--config", type=Path)
     parser.add_argument("--results-dir", type=Path)
@@ -75,7 +77,15 @@ def main() -> int:
     parser.add_argument("--retain-traces", action="store_true")
     args = parser.parse_args()
 
-    if not 1 <= args.ncores <= 5 or args.group_count < 1 or args.evaluator_timeout <= 0:
+    if (
+        not 1 <= args.ncores <= 5
+        or args.group_count < 1
+        or args.evaluator_timeout <= 0
+        or (
+            args.cut_weight is not None
+            and (not math.isfinite(args.cut_weight) or args.cut_weight < 0)
+        )
+    ):
         parser.error("ncores must be 1..5; group-count and evaluator-timeout must be positive")
     if not valid_run_label(args.case):
         parser.error("case must be a path-safe case stem")
@@ -111,6 +121,7 @@ def main() -> int:
             "requested_group_count": args.group_count,
             "partition_strategy": args.partition_strategy,
             "placement_scoring": args.placement_scoring,
+            "cut_weight": args.cut_weight,
             "evaluation_problem": 3,
             "evaluator_timeout_sec": args.evaluator_timeout,
             "retain_traces": args.retain_traces,
@@ -141,6 +152,7 @@ def main() -> int:
                 args.group_count,
                 problem=partition_problem,
                 partition_strategy=args.partition_strategy,
+                cut_weight=args.cut_weight,
             )
             placement_diagnostics: dict[str, Any] = {}
             plan = schedule_partition(
@@ -174,6 +186,7 @@ def main() -> int:
                 "requested_group_count": args.group_count,
                 "partition_strategy": args.partition_strategy,
                 "placement_scoring": args.placement_scoring,
+                "cut_weight": args.cut_weight,
                 "actual_group_count": len(partition.groups),
                 "plan_hash": plan_hash,
                 "plan_path": _portable_path(plan_path),
@@ -223,6 +236,7 @@ def main() -> int:
         "requested_group_count": args.group_count,
         "partition_strategy": args.partition_strategy,
         "placement_scoring": args.placement_scoring,
+        "cut_weight": args.cut_weight,
         "comparisons": comparisons,
     })
     _write_json(results_dir / "subgraph_diagnostics.json", {

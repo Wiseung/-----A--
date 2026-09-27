@@ -267,6 +267,20 @@ class ResultCollectionTests(unittest.TestCase):
             len(ARMS) * 2,
         )
 
+    def test_phase4_cut_weight_variants_have_distinct_candidates(self) -> None:
+        candidates = _candidate_matrix(
+            ["case_001"], [2], [2], ["chain_contiguous_p1"], "run-1",
+            [0.12, 0.30],
+        )
+
+        self.assertEqual(
+            [candidate["cut_weight"] for candidate in candidates],
+            [0.12, 0.30],
+        )
+        self.assertEqual(
+            len({candidate["candidate_id"] for candidate in candidates}), 2
+        )
+
     def test_chain_safety_gate_filters_boundary_explosion(self) -> None:
         candidates = _candidate_matrix(
             ["case_028"], [4], [8], ["contiguous_p2", "chain_contiguous"], "run-1"

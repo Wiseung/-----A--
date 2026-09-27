@@ -17,6 +17,7 @@ def generate_schedule(
     partition_strategy: str = "contiguous",
     placement_scoring: str = "baseline",
     cache_ordering: str = "fifo",
+    cut_weight: float | None = None,
 ) -> dict[str, Any]:
     partition = partition_with_strategy(
         analysis,
@@ -24,6 +25,7 @@ def generate_schedule(
         problem=3,
         partition_strategy=partition_strategy,
         topology_strategy=topology_strategy,
+        cut_weight=cut_weight,
     )
     return schedule_partition(
         analysis, partition, ncores, problem=3, config=config,

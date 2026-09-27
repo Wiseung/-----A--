@@ -5,7 +5,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 from .graph_analysis import GraphAnalysis
-from .partition import Partition
+from .partition import Partition, resolve_cut_weight
 
 
 @dataclass(slots=True)
@@ -154,6 +154,7 @@ def _chain_intervals(
     edge_bytes: dict[tuple[int, int], int],
     group_count: int,
     problem: int,
+    cut_weight: float | None = None,
 ) -> list[list[int]]:
     if not order:
         return []
@@ -177,7 +178,7 @@ def _chain_intervals(
 
     crossing = _crossing_bytes(order, edge_bytes)
     max_crossing = max(crossing, default=0)
-    cut_weight = {1: 0.30, 2: 0.12, 3: 0.05}[problem]
+    resolved_cut_weight = resolve_cut_weight(problem, cut_weight)
     cuts: list[int] = []
     previous = 0
     total_load = interval_load(0, len(order) - 1)
@@ -190,7 +191,7 @@ def _chain_intervals(
             key=lambda boundary: (
                 abs(interval_load(0, boundary - 1) - target)
                 / max(total_load, 1)
-                + cut_weight * crossing[boundary] / max(max_crossing, 1),
+                + resolved_cut_weight * crossing[boundary] / max(max_crossing, 1),
                 boundary,
             ),
         )
@@ -209,6 +210,7 @@ def partition_chain_contiguous(
     analysis: GraphAnalysis,
     group_count: int,
     problem: int,
+    cut_weight: float | None = None,
 ) -> Partition:
     if problem not in {1, 2, 3}:
         raise ValueError(f"unknown problem: {problem}")
@@ -216,7 +218,7 @@ def partition_chain_contiguous(
     successors, predecessors = _chain_dag(chains, chain_of_op, analysis)
     order = _chain_topological_order(chains, successors, predecessors)
     intervals = _chain_intervals(
-        chains, order, edge_bytes, group_count, problem
+        chains, order, edge_bytes, group_count, problem, cut_weight
     )
     groups = [
         [op_id for chain_id in interval for op_id in chains[chain_id].members]
